@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "RESTful api based on NodeJs to give middle/back-end support a React web application",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -23,14 +23,14 @@
     "update-version": "node update-version.js"
   },
   "dependencies": {
+    "apollo-server-express": "^2.21.0",
     "bcryptjs": "^2.4.3",
-    "cors": "^2.8.5",
     "crypto-js": "^4.0.0",
     "express": "^4.17.1",
+    "graphql": "^15.5.0",
     "hbs": "^4.1.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.11.8",
-    "multer": "^1.4.2",
     "nodemon": "^2.0.6",
     "validator": "^13.5.2"
   },
@@ -59,7 +59,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test && lint-staged",
+      "pre-commit": "lint-staged",
       "pre-push": "npm run update-version"
     }
   }
