@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "RESTful api based on NodeJs to give middle/back-end support a React web application",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -16,8 +16,6 @@
   "scripts": {
     "start": "env-cmd -f ./env/local.env nodemon ./src/index.js",
     "start:prod": "nodemon ./src/index.js",
-    "test": "env-cmd -f ./env/test.env jest --runInBand --collectCoverage",
-    "setup:ci": "npm i && npm i -g codecov",
     "lint": "eslint --fix src",
     "prettier": "prettier --write src",
     "update-version": "node update-version.js"

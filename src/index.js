@@ -4,18 +4,21 @@ const { ApolloServer } = require('apollo-server-express')
 // IMPORT EXPRESS APP
 const app = require('./app')
 // IMPORT SCHEMAS SPLITED IN TYPE FILES
-const CustomTypes = require('./graphQl/schemas/Customs')
-const OperationTypes = require('./graphQl/schemas/Operations')
+const CustomTypes = require('./schemas/Customs')
+const OperationTypes = require('./schemas/Operations')
 // IMPORT RESOLVERS SPLITED BY OPERATIONS
-const Query = require('./graphQl/resolvers/Queries')
-const Mutation = require('./graphQl/resolvers/Mutations')
+const Query = require('./resolvers/Queries')
+const Mutation = require('./resolvers/Mutations')
 // IMPORT CONTEXT DATA
 const User = require('./models/user.model')
 // DESTRUCTURE ENVIRONMENTS VARIABLES
 const { CONNECTION_URL, PORT } = process.env
 
 const server = new ApolloServer({
-  typeDefs: [CustomTypes, OperationTypes],
+  typeDefs: [
+    CustomTypes,
+    OperationTypes
+  ],
   resolvers: {
     Query,
     Mutation
