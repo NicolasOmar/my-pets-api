@@ -5,7 +5,6 @@ const CustomTypes = gql`
     name: String!
     lastName: String!
     email: String!
-    password: String!
     token: String!
   }
 `

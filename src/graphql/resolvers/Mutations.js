@@ -1,18 +1,19 @@
-const { decryptPass } = require('../../helpers/methods')
-// ERROR CODES AND ERROR_MSG
-const { handleErrorMessages } = require('../../config/errors')
+const User = require('../../mongo/models/user.model')
+// PARSERS
+const { decryptPass, handleErrorMessages } = require('../../functions/parsers')
 
 const Mutation = {
-  loginUser: async (_, { email, password }, { User }) => {
+  loginUser: async (_, { email, password }) => {
     try {
       const userLogged = await User.findByCredentials(email, decryptPass(password))
       const token = await userLogged.generateAuthToken()
-      return { userLogged, token }
+
+      return { ...userLogged.toJSON(), token }
     } catch (error) {
       return error
     }
   },
-  createUser: async (_, args, { User }) => {
+  createUser: async (_, args) => {
     const newUser = new User({
       ...args,
       password: decryptPass(args.password)
@@ -21,7 +22,8 @@ const Mutation = {
     try {
       await newUser.save()
       const token = await newUser.generateAuthToken()
-      return { ...newUser, token }
+
+      return { ...newUser.toJSON(), token }
     } catch (error) {
       return handleErrorMessages(error, 'User')
     }

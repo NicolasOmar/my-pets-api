@@ -14,20 +14,7 @@ const ERROR_MSG = {
   ALREADY_EXISTS: entity => `There is an already registered use ${entity}`
 }
 
-const handleErrorMessages = (error, entity) => {
-  const errorMsgs = error.errors
-    ? Object.keys(error.errors)
-        .map(key => error.errors[key].message)
-        .join(', ')
-    : ERROR_MSG.ALREADY_EXISTS(entity)
-  return {
-    ...error,
-    message: errorMsgs
-  }
-}
-
 module.exports = {
   ERROR_CODE,
-  ERROR_MSG,
-  handleErrorMessages
+  ERROR_MSG
 }

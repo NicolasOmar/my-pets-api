@@ -24,9 +24,7 @@ const server = new ApolloServer({
     const token =
       req.headers['authorization'] && req.headers['authorization'].replace('Bearer ', '')
 
-    if (!token) {
-      return { User }
-    }
+    if (!token) return
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
     const loggedUser = await User.findOne({ _id: decodedToken._id, 'tokens.token': token })
@@ -35,7 +33,7 @@ const server = new ApolloServer({
       throw new Error()
     }
 
-    return { User, loggedUser, token }
+    return { ...loggedUser.toJSON(), token }
   }
 })
 
