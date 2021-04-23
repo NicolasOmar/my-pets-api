@@ -1,8 +1,6 @@
 const express = require('express')
 const cryptoJs = require('crypto-js')
 const router = new express.Router()
-// MIDDLEWARE
-const authenticator = require('../middleware/auth')
 // MODEL
 const User = require('../models/user.model')
 // ERROR CODES AND ERROR_MSG
@@ -27,7 +25,7 @@ router.post(USERS_ROUTES.MAIN, async (request, response) => {
 })
 
 // FIND YOUR USER DATA
-router.get(USERS_ROUTES.ME, authenticator, async (request, response) => {
+router.get(USERS_ROUTES.ME, async (request, response) => {
   try {
     response.send(request.user)
   } catch (error) {
@@ -36,7 +34,7 @@ router.get(USERS_ROUTES.ME, authenticator, async (request, response) => {
 })
 
 // UPDATE YOUR USER DATA
-router.patch(USERS_ROUTES.ME, authenticator, async (request, response) => {
+router.patch(USERS_ROUTES.ME, async (request, response) => {
   const updates = Object.keys(request.body)
   const allowedUpdates = ['name', 'lastName', 'email', 'password']
 
@@ -63,7 +61,7 @@ router.patch(USERS_ROUTES.ME, authenticator, async (request, response) => {
 })
 
 // DELETE YOUR USER
-router.delete(USERS_ROUTES.ME, authenticator, async (request, response) => {
+router.delete(USERS_ROUTES.ME, async (request, response) => {
   try {
     await request.user.remove()
     response.send(request.user)
@@ -87,7 +85,6 @@ router.post(USERS_ROUTES.LOGIN, async (request, response) => {
 // LOGOUT YOUR USER FROM ONE DEVICE USING ITS TOKEN
 router.post(
   USERS_ROUTES.LOGOUT,
-  authenticator,
   async (request, response) => {
     try {
       request.user.tokens = request.user.tokens.filter(token => token.token !== request.token)
@@ -104,7 +101,7 @@ router.post(
 )
 
 // LOGOUT YOUR USER FROM ALL CONNECTED DEVICES
-router.post(USERS_ROUTES.LOGOUT_ALL, authenticator, async (request, response) => {
+router.post(USERS_ROUTES.LOGOUT_ALL, async (request, response) => {
   try {
     request.user.tokens = []
     await request.user.save()

@@ -13,7 +13,7 @@ app.set('views', viewsPath)
 // SETUP STATIC DIRECTORY TO SERVE
 app.use(express.static(publicPath))
 
-app.get('/', (request, response) => {
+app.get('/', (_, response) => {
   // DESTRUCTURE ENVIRONMENTS VARIABLES
   const { REPOISTORY_URL, WEB_URL, API_VERSION, API_ENVIRONMENT } = process.env
 

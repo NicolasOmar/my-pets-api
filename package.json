@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "RESTful api based on NodeJs to give middle/back-end support a React web application",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -18,7 +18,7 @@
     "start:prod": "nodemon ./src/index.js",
     "lint": "eslint --fix src",
     "prettier": "prettier --write src",
-    "update-version": "node update-version.js"
+    "update-version": "node ./scripts/update-version.js"
   },
   "dependencies": {
     "apollo-server-express": "^2.21.0",

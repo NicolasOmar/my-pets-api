@@ -1,6 +1,6 @@
 const cryptoJs = require('crypto-js')
 
-const sendErrorMsg = (errorMessage) => {
+const sendErrorMsg = errorMessage => {
   return { message: errorMessage }
 }
 

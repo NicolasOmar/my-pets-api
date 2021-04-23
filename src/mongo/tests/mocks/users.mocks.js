@@ -1,7 +1,8 @@
 const cryptoJs = require('crypto-js')
-const User = require('../../src/models/user.model')
+const User = require('../../models/user.model')
 
-const encryptPass = (pass) => cryptoJs[process.env.CRYPT_METH].encrypt(pass, process.env.CRYPT_SECRET).toString()
+const encryptPass = pass =>
+  cryptoJs[process.env.CRYPT_METH].encrypt(pass, process.env.CRYPT_SECRET).toString()
 
 const goodMock = {
   name: 'Virgie',
@@ -25,7 +26,7 @@ const badMocks = {
   },
   badMail: {
     ...goodMock,
-    email: 'virgie.gmail.net',
+    email: 'virgie.gmail.net'
   },
   badPass: {
     ...goodMock,

@@ -11,9 +11,9 @@ const {
   setUpDatabase,
 } = require('./mocks/users.mocks')
 // ERROR CODES AND MESSAGES
-const { ERROR_CODE, ERROR_MSG } = require('../config/errors')
+const { ERROR_CODE, ERROR_MSG } = require('../../config/errors')
 // ROUTES
-const { USERS_ROUTES } = require('../config/routes')
+const { USERS_ROUTES } = require('../../config/routes')
 
 beforeEach(async () => await setUpDatabase())
 
