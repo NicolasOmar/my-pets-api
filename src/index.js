@@ -4,6 +4,7 @@ const { ApolloServer } = require('apollo-server-express')
 // IMPORT EXPRESS APP
 const app = require('./app')
 // IMPORT SCHEMAS SPLITED IN TYPE FILES
+const InputTypes = require('./graphql/schemas/Inputs')
 const CustomTypes = require('./graphql/schemas/Customs')
 const OperationTypes = require('./graphql/schemas/Operations')
 // IMPORT RESOLVERS SPLITED BY OPERATIONS
@@ -15,7 +16,7 @@ const User = require('./mongo/models/user.model')
 const { CONNECTION_URL, PORT } = process.env
 
 const server = new ApolloServer({
-  typeDefs: [CustomTypes, OperationTypes],
+  typeDefs: [InputTypes, CustomTypes, OperationTypes],
   resolvers: {
     Query,
     Mutation

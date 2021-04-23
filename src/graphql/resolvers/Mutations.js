@@ -13,17 +13,17 @@ const Mutation = {
       return error
     }
   },
-  createUser: async (_, args) => {
-    const newUser = new User({
-      ...args,
-      password: decryptPass(args.password)
+  createUser: async (_, { newUser }) => {
+    const parsedNewUser = new User({
+      ...newUser,
+      password: decryptPass(newUser.password)
     })
 
     try {
-      await newUser.save()
-      const token = await newUser.generateAuthToken()
+      await parsedNewUser.save()
+      const token = await parsedNewUser.generateAuthToken()
 
-      return { ...newUser.toJSON(), token }
+      return { ...parsedNewUser.toJSON(), token }
     } catch (error) {
       return handleErrorMessages(error, 'User')
     }

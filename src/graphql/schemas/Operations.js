@@ -7,7 +7,7 @@ const Operations = gql`
 
   type Mutation {
     loginUser(email: String!, password: String!): User
-    createUser(name: String!, lastName: String!, email: String!, password: String!): User
+    createUser(newUser: UserInput): User
     updateUser(name: String!, lastName: String!): User
     logout: Boolean!
     logoutAll: Boolean!
