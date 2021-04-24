@@ -27,32 +27,33 @@ const Mutation = {
     } catch (error) {
       return handleErrorMessages(error, 'User')
     }
+  },
+  updateUser: async (_, args) => {
+    // const updates = Object.keys(args)
+    // const allowedUpdates = ['name', 'lastName']
+    console.log(args)
+    return args
+    // const isValidOperation = Object.keys(request.body).every(update =>
+    //   allowedUpdates.includes(update)
+    // )
+
+    // if (!isValidOperation) {
+    //   return { message: ERROR_MSG.UPDATES }
+    // }
+
+    // try {
+    //   updates.forEach(update => (loggedUser[update] = request.body[update]))
+    //   await loggedUser.save()
+
+    //   if (!loggedUser) {
+    //     return response.status(404).send()
+    //   }
+
+    //   return loggedUser
+    // } catch (error) {
+    //   return handleErrorMessages(error, 'User')
+    // }
   }
-  // updateUser: async(_, args, { loggedUser }) => {
-  //   const updates = Object.keys(args)
-  //   const allowedUpdates = ['name', 'lastName']
-
-  //   const isValidOperation = Object.keys(request.body).every(update =>
-  //     allowedUpdates.includes(update)
-  //   )
-
-  //   if (!isValidOperation) {
-  //     return { message: ERROR_MSG.UPDATES }
-  //   }
-
-  //   try {
-  //     updates.forEach(update => (loggedUser[update] = request.body[update]))
-  //     await loggedUser.save()
-
-  //     if (!loggedUser) {
-  //       return response.status(404).send()
-  //     }
-
-  //     return loggedUser
-  //   } catch (error) {
-  //     return handleErrorMessages(error, 'User')
-  //   }
-  // },
   // logout: async(_, __, { loggedUser }) => {
   //   try {
   //     loggedUser.tokens = loggedUser.tokens.filter(token => token.token !== request.token)

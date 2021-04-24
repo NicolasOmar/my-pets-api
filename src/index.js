@@ -22,11 +22,12 @@ const server = new ApolloServer({
     Mutation
   },
   context: async ({ req }) => {
-    const token =
-      req.headers['authorization'] && req.headers['authorization'].replace('Bearer ', '')
+    const token = req.headers['authorization']
+      ? req.headers['authorization'].replace('Bearer ', '')
+      : null
 
     if (!token) return
-
+    token && console.log(token)
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
     const loggedUser = await User.findOne({ _id: decodedToken._id, 'tokens.token': token })
 
