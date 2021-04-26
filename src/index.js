@@ -34,7 +34,7 @@ const server = new ApolloServer({
       throw new Error()
     }
 
-    return { ...loggedUser.toJSON(), token }
+    return { loggedUser }
   }
 })
 

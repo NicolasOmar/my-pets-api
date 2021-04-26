@@ -9,8 +9,8 @@ const Operations = gql`
     loginUser(email: String!, password: String!): User
     createUser(newUser: UserInput): User
     updateUser(name: String!, lastName: String!): User
-    logout: Boolean!
-    logoutAll: Boolean!
+    # logout: Boolean!
+    # logoutAll: Boolean!
   }
 `
 

@@ -14,6 +14,7 @@
     "quotes": ["error", "single"],
     "node/exports-style": ["error", "module.exports"],
     "node/no-exports-assign": "error",
+    "node/no-extraneous-require": "off",
     "node/no-deprecated-api": 2
   }
 }

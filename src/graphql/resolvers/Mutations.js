@@ -1,6 +1,8 @@
 const User = require('../../mongo/models/user.model')
 // PARSERS
 const { decryptPass, handleErrorMessages } = require('../../functions/parsers')
+const { ERROR_MSG } = require('../../constants/errors')
+const { ApolloError } = require('apollo-server-errors')
 
 const Mutation = {
   loginUser: async (_, { email, password }) => {
@@ -27,32 +29,29 @@ const Mutation = {
     } catch (error) {
       return handleErrorMessages(error, 'User')
     }
+  },
+  updateUser: async (_, args, { loggedUser }) => {
+    const updates = Object.keys(args)
+    const allowedUpdates = ['name', 'lastName']
+    const isValidOperation = Object.keys(args).every(update => allowedUpdates.includes(update))
+
+    if (!isValidOperation) {
+      return { message: ERROR_MSG.UPDATES }
+    }
+
+    try {
+      updates.forEach(update => (loggedUser[update] = args[update]))
+      await loggedUser.save()
+
+      if (loggedUser) {
+        return loggedUser.toJSON()
+      } else {
+        throw new ApolloError('', '404')
+      }
+    } catch (error) {
+      return handleErrorMessages(error, 'User')
+    }
   }
-  // updateUser: async(_, args, { loggedUser }) => {
-  //   const updates = Object.keys(args)
-  //   const allowedUpdates = ['name', 'lastName']
-
-  //   const isValidOperation = Object.keys(request.body).every(update =>
-  //     allowedUpdates.includes(update)
-  //   )
-
-  //   if (!isValidOperation) {
-  //     return { message: ERROR_MSG.UPDATES }
-  //   }
-
-  //   try {
-  //     updates.forEach(update => (loggedUser[update] = request.body[update]))
-  //     await loggedUser.save()
-
-  //     if (!loggedUser) {
-  //       return response.status(404).send()
-  //     }
-
-  //     return loggedUser
-  //   } catch (error) {
-  //     return handleErrorMessages(error, 'User')
-  //   }
-  // },
   // logout: async(_, __, { loggedUser }) => {
   //   try {
   //     loggedUser.tokens = loggedUser.tokens.filter(token => token.token !== request.token)
