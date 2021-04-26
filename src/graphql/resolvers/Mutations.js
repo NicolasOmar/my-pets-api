@@ -51,21 +51,21 @@ const Mutation = {
     } catch (error) {
       return handleErrorMessages(error, 'User')
     }
+  },
+  logout: async (_, __, { loggedUser, token }) => {
+    try {
+      loggedUser.tokens = loggedUser.tokens.filter(_token => _token.token !== token)
+      await loggedUser.save()
+      return true
+    } catch (error) {
+      // response.status(500).send(error)
+      return error
+    }
+    // (error, request, response) => {
+    //   // IN CASE OF A MIDDLEWARE ERROR, THE ROUTER USES A SECOND ARGUMENT TO HANDLE SUCH ERRORS (LIKE A THEN <> CATCH STRUCTURE)
+    //   response.status(400).send({ error: error.message })
+    // }
   }
-  // logout: async(_, __, { loggedUser }) => {
-  //   try {
-  //     loggedUser.tokens = loggedUser.tokens.filter(token => token.token !== request.token)
-  //     await loggedUser.save()
-  //     return true
-  //   } catch (error) {
-  //     // response.status(500).send(error)
-  //     return error
-  //   }
-  //   // (error, request, response) => {
-  //   //   // IN CASE OF A MIDDLEWARE ERROR, THE ROUTER USES A SECOND ARGUMENT TO HANDLE SUCH ERRORS (LIKE A THEN <> CATCH STRUCTURE)
-  //   //   response.status(400).send({ error: error.message })
-  //   // }
-  // },
   // logoutAll: async(_, __, { loggedUser }) => {
   //   try {
   //     loggedUser.tokens = []
