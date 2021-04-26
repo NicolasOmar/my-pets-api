@@ -1,6 +1,8 @@
 const User = require('../../mongo/models/user.model')
 // PARSERS
 const { decryptPass, handleErrorMessages } = require('../../functions/parsers')
+const { ERROR_MSG } = require('../../constants/errors')
+const { ApolloError } = require('apollo-server-errors')
 
 const Mutation = {
   loginUser: async (_, { email, password }) => {
@@ -28,46 +30,42 @@ const Mutation = {
       return handleErrorMessages(error, 'User')
     }
   },
-  updateUser: async (_, args) => {
-    // const updates = Object.keys(args)
-    // const allowedUpdates = ['name', 'lastName']
-    console.log(args)
-    return args
-    // const isValidOperation = Object.keys(request.body).every(update =>
-    //   allowedUpdates.includes(update)
-    // )
+  updateUser: async (_, args, { loggedUser }) => {
+    const updates = Object.keys(args)
+    const allowedUpdates = ['name', 'lastName']
+    const isValidOperation = Object.keys(args).every(update => allowedUpdates.includes(update))
 
-    // if (!isValidOperation) {
-    //   return { message: ERROR_MSG.UPDATES }
-    // }
+    if (!isValidOperation) {
+      return { message: ERROR_MSG.UPDATES }
+    }
 
-    // try {
-    //   updates.forEach(update => (loggedUser[update] = request.body[update]))
-    //   await loggedUser.save()
+    try {
+      updates.forEach(update => (loggedUser[update] = args[update]))
+      await loggedUser.save()
 
-    //   if (!loggedUser) {
-    //     return response.status(404).send()
-    //   }
-
-    //   return loggedUser
-    // } catch (error) {
-    //   return handleErrorMessages(error, 'User')
+      if (loggedUser) {
+        return loggedUser.toJSON()
+      } else {
+        throw new ApolloError('', '404')
+      }
+    } catch (error) {
+      return handleErrorMessages(error, 'User')
+    }
+  },
+  logout: async (_, __, { loggedUser, token }) => {
+    try {
+      loggedUser.tokens = loggedUser.tokens.filter(_token => _token.token !== token)
+      await loggedUser.save()
+      return true
+    } catch (error) {
+      // response.status(500).send(error)
+      return error
+    }
+    // (error, request, response) => {
+    //   // IN CASE OF A MIDDLEWARE ERROR, THE ROUTER USES A SECOND ARGUMENT TO HANDLE SUCH ERRORS (LIKE A THEN <> CATCH STRUCTURE)
+    //   response.status(400).send({ error: error.message })
     // }
   }
-  // logout: async(_, __, { loggedUser }) => {
-  //   try {
-  //     loggedUser.tokens = loggedUser.tokens.filter(token => token.token !== request.token)
-  //     await loggedUser.save()
-  //     return true
-  //   } catch (error) {
-  //     // response.status(500).send(error)
-  //     return error
-  //   }
-  //   // (error, request, response) => {
-  //   //   // IN CASE OF A MIDDLEWARE ERROR, THE ROUTER USES A SECOND ARGUMENT TO HANDLE SUCH ERRORS (LIKE A THEN <> CATCH STRUCTURE)
-  //   //   response.status(400).send({ error: error.message })
-  //   // }
-  // },
   // logoutAll: async(_, __, { loggedUser }) => {
   //   try {
   //     loggedUser.tokens = []
