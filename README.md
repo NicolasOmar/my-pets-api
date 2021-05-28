@@ -6,7 +6,6 @@ Before cloning this repo, I recommend installing the following software:
 - [Node](https://nodejs.org/en/download/) >=12.16.1 to install packages
 - [MongoDB](https://www.mongodb.com/download-center/community) >=4.2.3 to have a local database
 - [Robo 3T](https://robomongo.org/download) to visualize data on your Mongo Database
-- [Postman](https://www.postman.com/downloads/) to test the API
 
 ## Setup
 After cloning the repo, go to the created folder and install the node packages.
@@ -21,7 +20,12 @@ To run it correctly (as a non-stopping server using local environment variables)
 ```sh
 npm start
 ```
-After start the server, you can access the Graph Plauground through the [local link](http://localhost:4000/graphql).
+After start the server, you can access the GraphQL Plauground through the [local link](http://localhost:4000/graphql).
+
+## Find out more
+| [Project Status](https://trello.com/b/79XvwOYa/mypets) | [React Repo](https://github.com/NicolasOmar/my-pets) |
+| :--- | :--- |
+| Trello board for project status & tracking | React front-end repository |
 
 ## License
 **MIT**
