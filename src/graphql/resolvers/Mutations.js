@@ -1,4 +1,4 @@
-import User from '../../mongo/models/user.model'
+import User from '../../mongo/user.model'
 // PARSERS
 import { decryptPass, handleErrorMessages } from '../../functions/parsers'
 import { ERROR_MSG } from '../../constants/errors'

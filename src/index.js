@@ -11,7 +11,7 @@ import OperationTypes from './graphql/schemas/Operations.gql'
 import Query from './graphql/resolvers/Queries'
 import Mutation from './graphql/resolvers/Mutations'
 // CONTEXT DATA
-import User from './mongo/models/user.model'
+import User from './mongo/user.model'
 // ENVIRONMENTS VARIABLES
 const { CONNECTION_URL, PORT } = process.env
 

@@ -3,7 +3,7 @@ import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 // ERRORS
-import { ERROR_MSG } from '../../constants/errors'
+import { ERROR_MSG } from '../constants/errors'
 
 const userSchema = new mongoose.Schema(
   {
