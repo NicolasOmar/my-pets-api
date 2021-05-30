@@ -1,8 +1,8 @@
-const express = require('express')
-require('hbs')
-const path = require('path')
+import express from 'express'
+import 'hbs'
+import path from 'path'
 
-// IMPORT AND SET EXPRESS SERVER
+// SET EXPRESS SERVER
 const app = express()
 // SETUP PATHS
 const publicPath = path.join(__dirname, '../public')
@@ -24,4 +24,4 @@ app.get('/', (_, response) => {
   })
 })
 
-module.exports = app
+export default app

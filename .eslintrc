@@ -1,6 +1,7 @@
 {
   "parserOptions": {
-    "ecmaVersion": 2019
+    "ecmaVersion": 2019,
+    "sourceType": "module"
   },
   "extends": [
     "eslint:recommended",
@@ -10,11 +11,13 @@
     "browser": true,
     "node": true
   },
+  "globals": {
+    "__dirname": "readonly"
+  },
   "rules": {
     "quotes": ["error", "single"],
     "node/exports-style": ["error", "module.exports"],
     "node/no-exports-assign": "error",
-    "node/no-extraneous-require": "off",
     "node/no-deprecated-api": 2
   }
 }

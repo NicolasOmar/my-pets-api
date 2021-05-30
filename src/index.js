@@ -1,22 +1,22 @@
-const mongoose = require('mongoose')
-const jwt = require('jsonwebtoken')
-const { ApolloServer } = require('apollo-server-express')
-// IMPORT EXPRESS APP
-const app = require('./app')
-// IMPORT SCHEMAS SPLITED IN TYPE FILES
-const InputTypes = require('./graphql/schemas/Inputs')
-const CustomTypes = require('./graphql/schemas/Customs')
-const OperationTypes = require('./graphql/schemas/Operations')
-// IMPORT RESOLVERS SPLITED BY OPERATIONS
-const Query = require('./graphql/resolvers/Queries')
-const Mutation = require('./graphql/resolvers/Mutations')
-// IMPORT CONTEXT DATA
-const User = require('./mongo/models/user.model')
-// DESTRUCTURE ENVIRONMENTS VARIABLES
+import mongoose from 'mongoose'
+import jwt from 'jsonwebtoken'
+import { ApolloServer } from 'apollo-server-express'
+// EXPRESS APP
+import app from './app'
+// SCHEMAS SPLITED IN TYPE FILES
+import InputTypes from './graphql/schemas/Inputs.gql'
+import CustomTypes from './graphql/schemas/Customs.gql'
+import OperationTypes from './graphql/schemas/Operations.gql'
+// RESOLVERS SPLITED BY OPERATIONS
+import Query from './graphql/resolvers/Queries'
+import Mutation from './graphql/resolvers/Mutations'
+// CONTEXT DATA
+import User from './mongo/models/user.model'
+// ENVIRONMENTS VARIABLES
 const { CONNECTION_URL, PORT } = process.env
 
 const server = new ApolloServer({
-  typeDefs: [InputTypes, CustomTypes, OperationTypes],
+  typeDefs: [CustomTypes, InputTypes, OperationTypes],
   resolvers: {
     Query,
     Mutation
@@ -27,7 +27,7 @@ const server = new ApolloServer({
       : null
 
     if (!token) return
-    token && console.log(token)
+
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
     const loggedUser = await User.findOne({ _id: decodedToken._id, 'tokens.token': token })
 

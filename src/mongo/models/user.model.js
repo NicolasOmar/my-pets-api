@@ -1,24 +1,48 @@
-const mongoose = require('mongoose')
-const validator = require('validator')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+import mongoose from 'mongoose'
+import validator from 'validator'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 // ERRORS
-const { ERROR_MSG } = require('../../constants/errors')
+import { ERROR_MSG } from '../../constants/errors'
 
 const userSchema = new mongoose.Schema(
   {
-    // TODO: INCLUDE MINLENGTH AND MAXLENGTH
     name: {
       type: String,
       required: [true, ERROR_MSG.MISSING('Name')],
-      minlength: [3, ERROR_MSG.MIN('Name', 3)],
-      trim: true
+      minlength: [3, ERROR_MSG.MIN_MAX('Name', 3, true)],
+      maxlength: [25, ERROR_MSG.MIN_MAX('Name', 25, false)],
+      trim: true,
+      validate: value => {
+        if (!validator.isAlpha(value)) {
+          throw { message: ERROR_MSG.ALPHA }
+        }
+      }
     },
     lastName: {
       type: String,
       required: [true, ERROR_MSG.MISSING('Last Name')],
-      minlength: [3, ERROR_MSG.MIN('Last Name', 3)],
-      trim: true
+      minlength: [3, ERROR_MSG.MIN_MAX('Last Name', 3, true)],
+      maxlength: [25, ERROR_MSG.MIN_MAX('Last Name', 25, false)],
+      trim: true,
+      validate: value => {
+        if (!validator.isAlpha(value)) {
+          throw { message: ERROR_MSG.ALPHA }
+        }
+      }
+    },
+    userName: {
+      type: String,
+      unique: true,
+      required: [true, ERROR_MSG.MISSING('Username')],
+      minlength: [4, ERROR_MSG.MIN_MAX('Username', 4, true)],
+      maxlength: [10, ERROR_MSG.MIN_MAX('Username', 10, false)],
+      trim: true,
+      validate: value => {
+        if (!validator.isAlpha(value)) {
+          throw { message: ERROR_MSG.ALPHA }
+        }
+      }
     },
     email: {
       type: String,
@@ -35,7 +59,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, ERROR_MSG.MISSING('Password')],
-      minlength: [6, ERROR_MSG.MIN('Password', 6)],
+      minlength: [6, ERROR_MSG.MIN_MAX('Password', 6, true)],
       trim: true
     },
     tokens: [
@@ -115,4 +139,4 @@ userSchema.methods.toJSON = function () {
 
 const User = mongoose.model('User', userSchema)
 
-module.exports = User
+export default User

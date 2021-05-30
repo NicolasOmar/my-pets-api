@@ -1,0 +1,7 @@
+input UserInput {
+  name: String!
+  lastName: String!
+  userName: String!
+  email: String!
+  password: String!
+}

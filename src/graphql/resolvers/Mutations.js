@@ -1,8 +1,8 @@
-const User = require('../../mongo/models/user.model')
+import User from '../../mongo/models/user.model'
 // PARSERS
-const { decryptPass, handleErrorMessages } = require('../../functions/parsers')
-const { ERROR_MSG } = require('../../constants/errors')
-const { ApolloError } = require('apollo-server-errors')
+import { decryptPass, handleErrorMessages } from '../../functions/parsers'
+import { ERROR_MSG } from '../../constants/errors'
+import { ApolloError } from 'apollo-server-errors'
 
 const Mutation = {
   loginUser: async (_, { email, password }) => {
@@ -27,7 +27,7 @@ const Mutation = {
 
       return { ...parsedNewUser.toJSON(), token }
     } catch (error) {
-      return handleErrorMessages(error, 'User')
+      throw new Error(handleErrorMessages(error, 'User'))
     }
   },
   updateUser: async (_, args, { loggedUser }) => {
@@ -78,4 +78,4 @@ const Mutation = {
   // }
 }
 
-module.exports = Mutation
+export default Mutation

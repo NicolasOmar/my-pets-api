@@ -9,4 +9,4 @@ const Queries = {
   }
 }
 
-module.exports = Queries
+export default Queries

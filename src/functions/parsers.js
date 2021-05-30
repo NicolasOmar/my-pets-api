@@ -1,11 +1,11 @@
-const cryptoJs = require('crypto-js')
-const { ERROR_MSG } = require('../constants/errors')
+import cryptoJs from 'crypto-js'
+import { ERROR_MSG } from '../constants/errors'
 
-const sendErrorMsg = errorMessage => {
+export const sendErrorMsg = errorMessage => {
   return { message: errorMessage }
 }
 
-const decryptPass = pass => {
+export const decryptPass = pass => {
   return pass
     ? cryptoJs[process.env.CRYPT_METH]
         .decrypt(pass, process.env.CRYPT_SECRET)
@@ -13,20 +13,10 @@ const decryptPass = pass => {
     : null
 }
 
-const handleErrorMessages = (error, entity) => {
-  const errorMsgs = error.errors
+export const handleErrorMessages = (error, entity) => {
+  return error.errors
     ? Object.keys(error.errors)
         .map(key => error.errors[key].message)
         .join(', ')
     : ERROR_MSG.ALREADY_EXISTS(entity)
-  return {
-    ...error,
-    message: errorMsgs
-  }
-}
-
-module.exports = {
-  sendErrorMsg,
-  decryptPass,
-  handleErrorMessages
 }
