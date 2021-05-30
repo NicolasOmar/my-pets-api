@@ -1,6 +1,8 @@
-const util = require('util');
-const exec = util.promisify(require('child_process').exec);
-const prompts = require('prompts');
+import util from 'util';
+import child_process from 'child_process'
+import prompts from 'prompts';
+
+const exec = util.promisify(child_process.exec);
 
 const runVersionUpdate = async () => {
   try {
