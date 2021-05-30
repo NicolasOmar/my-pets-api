@@ -1,15 +1,21 @@
-import cryptoJs from 'crypto-js'
+import CryptoJs from 'crypto-js'
 import { ERROR_MSG } from '../constants/errors'
 
 export const sendErrorMsg = errorMessage => {
   return { message: errorMessage }
 }
 
+export const encryptPass = pass => {
+  return pass
+    ? CryptoJs[process.env.CRYPT_METH].encrypt(pass, process.env.CRYPT_SECRET).toString()
+    : null
+}
+
 export const decryptPass = pass => {
   return pass
-    ? cryptoJs[process.env.CRYPT_METH]
+    ? CryptoJs[process.env.CRYPT_METH]
         .decrypt(pass, process.env.CRYPT_SECRET)
-        .toString(cryptoJs.enc.Utf8)
+        .toString(CryptoJs.enc.Utf8)
     : null
 }
 

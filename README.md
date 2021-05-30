@@ -1,4 +1,4 @@
-# My Pets API ![My Pets APIversion](https://img.shields.io/github/package-json/v/nicolasomar/my-pets-api?color=success&label=%20&style=flat-square)
+# My Pets API ![My Pets API version](https://img.shields.io/github/package-json/v/nicolasomar/my-pets-api?color=success&label=%20&style=flat-square) ![My Pets API Coverage](https://img.shields.io/codecov/c/github/nicolasomar/my-pets-api?label=%20&logo=codecov&style=flat-square)
 GraphQL API based on NodeJs to give middle/back-end support for a web client based on [React](https://my-pets-prod.netlify.app/).
 
 ## What do I need?
