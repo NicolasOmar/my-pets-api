@@ -16,6 +16,8 @@
   "scripts": {
     "start": "env-cmd -f ./env/local.env nodemon src/index.js --ext js,gql --exec babel-node",
     "start:ci": "babel ./src/index.js -d ./build ./src && node ./build/index.js",
+    "test": "jest",
+    "test:ci": "jest --coverage",
     "lint": "eslint --fix src",
     "prettier": "prettier --write src",
     "update-version": "node ./scripts/update-version.js"
@@ -55,7 +57,8 @@
     "npm": "7.15.0"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "collectCoverageFrom": ["src/**/!(*model|*mocks).js"]
   },
   "lint-staged": {
     "src/**/!(*test).js": [
