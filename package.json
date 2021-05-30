@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "RESTful api based on NodeJs to give middle/back-end support a React web application",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -39,6 +39,7 @@
     "validator": "^13.5.2"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.14.4",
     "env-cmd": "^10.1.0",
     "eslint": "^7.16.0",
     "eslint-plugin-import": "^2.23.4",
