@@ -13,5 +13,5 @@ export const ERROR_MSG = {
   LOGIN: 'Your email and/or password is incorrect. Try again with other credentials',
   AUTHENTICATE: 'Please authenticate to keep using the app',
   MISSING: value => `The user needs a valid ${value} to be created`,
-  ALREADY_EXISTS: entity => `There is an already registered use ${entity}`
+  ALREADY_EXISTS: entity => `There is an already created ${entity}`
 }

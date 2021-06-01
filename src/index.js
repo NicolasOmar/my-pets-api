@@ -1,6 +1,6 @@
-import mongoose from 'mongoose'
+import { createServer } from 'http'
 import jwt from 'jsonwebtoken'
-import { ApolloServer } from 'apollo-server-express'
+import { ApolloServer, AuthenticationError } from 'apollo-server-express'
 // EXPRESS APP
 import app from './app'
 // SCHEMAS SPLITED IN TYPE FILES
@@ -13,7 +13,7 @@ import Mutation from './graphql/resolvers/Mutations'
 // CONTEXT DATA
 import User from './mongo/user.model'
 // ENVIRONMENTS VARIABLES
-const { CONNECTION_URL, PORT } = process.env
+const { PORT } = process.env
 
 const server = new ApolloServer({
   typeDefs: [CustomTypes, InputTypes, OperationTypes],
@@ -32,7 +32,7 @@ const server = new ApolloServer({
     const loggedUser = await User.findOne({ _id: decodedToken._id, 'tokens.token': token })
 
     if (!loggedUser) {
-      throw new Error()
+      throw new AuthenticationError()
     }
 
     return { loggedUser, token }
@@ -41,12 +41,6 @@ const server = new ApolloServer({
 
 server.applyMiddleware({ app })
 
-mongoose
-  .connect(`${CONNECTION_URL}`, {
-    useNewUrlParser: true,
-    useCreateIndex: true, //ACCESS TO DATA NEEDED
-    useFindAndModify: true,
-    useUnifiedTopology: true
-  })
-  .then(() => app.listen(PORT, () => console.log(`Server up and working on port ${PORT}`)))
-  .catch(error => console.log(error))
+const httpServer = createServer(server)
+
+httpServer.listen(PORT, () => console.log(`Server up and working on port ${PORT}`))

@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "RESTful api based on NodeJs to give middle/back-end support a React web application",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -16,7 +16,7 @@
   "scripts": {
     "start": "env-cmd -f ./env/local.env nodemon src/index.js --ext js,gql --exec babel-node",
     "start:ci": "babel ./src/index.js -d ./build ./src && node ./build/index.js",
-    "test": "env-cmd -f ./env/test.env jest",
+    "test": "env-cmd -f ./env/local.env jest --runInBand --forceExit",
     "test:ci": "npm test -- --coverage",
     "lint": "eslint --fix src",
     "prettier": "prettier --write src",
@@ -58,6 +58,9 @@
   },
   "jest": {
     "testEnvironment": "node",
+    "setupFiles": [
+      "./tests/setup.js"
+    ],
     "collectCoverageFrom": [
       "src/**/!(*model|*mocks).js"
     ]
@@ -66,12 +69,15 @@
     "src/**/!(*test).js": [
       "prettier --write",
       "eslint --fix"
+    ],
+    "src/**/(*test).js": [
+      "prettier --write"
     ]
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "npm test && npm run update-version"
+      "pre-commit": "lint-staged && npm run test:ci && git add .",
+      "pre-push": "npm run update-version"
     }
   }
 }

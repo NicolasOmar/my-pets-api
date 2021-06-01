@@ -1,0 +1,11 @@
+{
+  "context": {
+    "newUser": {
+      "name": "new name",
+      "lastName": "new lastName",
+      "userName": "userName",
+      "email": "newUser@test.com",
+      "password": "newUserEmailPass"
+    }
+  }
+}

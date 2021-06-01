@@ -12,24 +12,24 @@ const userSchema = new mongoose.Schema(
       required: [true, ERROR_MSG.MISSING('Name')],
       minlength: [3, ERROR_MSG.MIN_MAX('Name', 3, true)],
       maxlength: [25, ERROR_MSG.MIN_MAX('Name', 25, false)],
-      trim: true,
-      validate: value => {
-        if (!validator.isAlpha(value)) {
-          throw { message: ERROR_MSG.ALPHA }
-        }
-      }
+      trim: true
+      // validate: value => {
+      //   if (!validator.isAlpha(value)) {
+      //     throw { message: ERROR_MSG.ALPHA }
+      //   }
+      // }
     },
     lastName: {
       type: String,
       required: [true, ERROR_MSG.MISSING('Last Name')],
       minlength: [3, ERROR_MSG.MIN_MAX('Last Name', 3, true)],
       maxlength: [25, ERROR_MSG.MIN_MAX('Last Name', 25, false)],
-      trim: true,
-      validate: value => {
-        if (!validator.isAlpha(value)) {
-          throw { message: ERROR_MSG.ALPHA }
-        }
-      }
+      trim: true
+      // validate: value => {
+      //   if (!validator.isAlpha(value)) {
+      //     throw { message: ERROR_MSG.ALPHA }
+      //   }
+      // }
     },
     userName: {
       type: String,

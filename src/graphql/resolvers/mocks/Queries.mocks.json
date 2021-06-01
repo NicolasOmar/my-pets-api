@@ -1,0 +1,10 @@
+{
+  "context": {
+    "loggedUser": {
+      "name": "test",
+      "lastName": "test",
+      "email": "test@test.com"
+    },
+    "token": "test"
+  }
+}

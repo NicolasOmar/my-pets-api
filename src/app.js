@@ -1,9 +1,11 @@
 import express from 'express'
-import 'hbs'
 import path from 'path'
+import 'hbs'
+// MONGOOSE INSTANCE READY TO CONNECT
+import mongoose from './db/mongoose'
 
 // SET EXPRESS SERVER
-const app = express()
+const app = express(mongoose)
 // SETUP PATHS
 const publicPath = path.join(__dirname, '../public')
 const viewsPath = path.join(__dirname, '../templates/views')

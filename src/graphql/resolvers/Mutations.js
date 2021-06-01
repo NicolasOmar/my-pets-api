@@ -1,10 +1,11 @@
-import User from '../../mongo/user.model'
-// PARSERS
-import { decryptPass, handleErrorMessages } from '../../functions/parsers'
-import { ERROR_MSG } from '../../constants/errors'
 import { ApolloError } from 'apollo-server-errors'
+import User from '../../mongo/user.model'
+// CONSTANTS
+import { ERROR_MSG } from '../../constants/errors'
+// PARSER FUNCTIONS
+import { decryptPass, handleErrorMessages } from '../../functions/parsers'
 
-const Mutation = {
+const Mutations = {
   loginUser: async (_, { email, password }) => {
     try {
       const userLogged = await User.findByCredentials(email, decryptPass(password))
@@ -78,4 +79,4 @@ const Mutation = {
   // }
 }
 
-export default Mutation
+export default Mutations
