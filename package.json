@@ -1,7 +1,7 @@
 {
   "name": "my-pets-api",
-  "version": "0.0.15",
-  "description": "RESTful api based on NodeJs to give middle/back-end support a React web application",
+  "version": "0.0.16",
+  "description": "GraphQL server based on NodeJs to give back-end support a web client based on React",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
   "private": false,
