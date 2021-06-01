@@ -17,11 +17,12 @@ app.use(express.static(publicPath))
 
 app.get('/', (_, response) => {
   // DESTRUCTURE ENVIRONMENTS VARIABLES
-  const { REPOISTORY_URL, WEB_URL, API_VERSION, API_ENVIRONMENT } = process.env
+  const { REPOISTORY_URL, PLAYGROUND_URL, WEB_URL, API_VERSION, API_ENVIRONMENT } = process.env
 
   response.render('index', {
     repoUrl: REPOISTORY_URL,
-    projDocsUrl: WEB_URL,
+    playgroundUrl: PLAYGROUND_URL,
+    webClientUrl: WEB_URL,
     version: `v${API_VERSION} on ${API_ENVIRONMENT} environment`
   })
 })

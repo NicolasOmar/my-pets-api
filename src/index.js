@@ -1,4 +1,3 @@
-// import { createServer } from 'http'
 import jwt from 'jsonwebtoken'
 import { ApolloServer, AuthenticationError } from 'apollo-server-express'
 // EXPRESS APP
@@ -40,7 +39,5 @@ const server = new ApolloServer({
 })
 
 server.applyMiddleware({ app })
-
-// const httpServer = createServer(server)
 
 app.listen(PORT, () => console.log(`Server up and working on port ${PORT}`))
