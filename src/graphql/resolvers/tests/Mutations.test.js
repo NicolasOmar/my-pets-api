@@ -10,35 +10,67 @@ import { encryptPass } from '../../../functions/parsers'
 // CONSTANTS
 import { ERROR_MSG } from '../../../constants/errors'
 
+const newUser = {
+  ...context.newUser,
+  password: encryptPass(context.newUser.password)
+}
+
 describe('[Mutations]', () => {
   afterEach(async () => await User.deleteMany())
 
   afterAll(async () => await mongoose.disconnect())
 
-  describe('[createUser]', () => {
-    test('Should create a User as expected', async () => {
-      const newUser = {
-        ...context.newUser,
-        password: encryptPass(context.newUser.password)
-      }
+  describe('[loginUser]', () => {
+    test('Should login a Created User as expected', async () => {
+      await Mutation.createUser(null, { newUser })
 
-      const mutationRes = await Mutation.createUser(null, { newUser })
-      expect(mutationRes.token).toBeDefined()
+      const { email, password } = newUser
+      const loginRes = await Mutation.loginUser(null, { email, password })
+
+      expect(loginRes.token).toBeDefined()
     })
 
-    test('Should return an by sending an incomplete User', async () => {
-      const newUser = {
-        ...context.newUser,
-        password: encryptPass(context.newUser.password)
-      }
-
+    test('Should return an "LOGIN" Error by login a non-created User', async () => {
       try {
-        let mutationRes = await Mutation.createUser(null, { newUser })
-        expect(mutationRes.token).toBeDefined()
+        const { email, password } = newUser
+        await Mutation.loginUser(null, { email, password })
+      } catch (e) {
+        expect(e.message).toBe(ERROR_MSG.LOGIN)
+      }
+    })
 
-        mutationRes = await Mutation.createUser(null, { newUser })
+    test('Should return an "LOGIN" Error by login a User with a non-encrypted password', async () => {
+      try {
+        const { email, password } = context.newUser
+        await Mutation.loginUser(null, { email, password })
+      } catch (e) {
+        expect(e.message).toBe(ERROR_MSG.LOGIN)
+      }
+    })
+  })
+
+  describe('[createUser]', () => {
+    test('Should create a new User as expected', async () => {
+      const creationRes = await Mutation.createUser(null, { newUser })
+      expect(creationRes.token).toBeDefined()
+    })
+
+    test('Should return an "ALREADY_EXISTS" Error by sending an already created User', async () => {
+      try {
+        let userCreationRes = await Mutation.createUser(null, { newUser })
+        expect(userCreationRes.token).toBeDefined()
+
+        await Mutation.createUser(null, { newUser })
       } catch (e) {
         expect(e.message).toBe(ERROR_MSG.ALREADY_EXISTS('User'))
+      }
+    })
+
+    test('Should return an "LOGIN" Error by sending an already created User', async () => {
+      try {
+        await Mutation.createUser(null, { ...context })
+      } catch (e) {
+        expect(e.message).toBe(ERROR_MSG.LOGIN)
       }
     })
   })

@@ -1,5 +1,5 @@
 export const ERROR_CODE = {
-  ALREADY_EXISTS: 11000
+  ALREADY_CREATED: 11000
 }
 
 export const ERROR_MSG = {
@@ -11,6 +11,7 @@ export const ERROR_MSG = {
   DATE: 'The date of the transaction should be in a valid format (DD/MM/YYYY)',
   UPDATES: 'Invalid update data',
   LOGIN: 'Your email and/or password is incorrect. Try again with other credentials',
+  NON_ENCRYPTED_DATA: 'Malformed UTF-8 data',
   AUTHENTICATE: 'Please authenticate to keep using the app',
   MISSING: value => `The user needs a valid ${value} to be created`,
   ALREADY_EXISTS: entity => `There is an already created ${entity}`

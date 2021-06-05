@@ -13,16 +13,16 @@ const Mutations = {
 
       return { ...userLogged.toJSON(), token }
     } catch (error) {
-      return error
+      throw new Error(handleErrorMessages(error))
     }
   },
   createUser: async (_, { newUser }) => {
-    const parsedNewUser = new User({
-      ...newUser,
-      password: decryptPass(newUser.password)
-    })
-
     try {
+      const parsedNewUser = new User({
+        ...newUser,
+        password: decryptPass(newUser.password)
+      })
+
       await parsedNewUser.save()
       const token = await parsedNewUser.generateAuthToken()
 
