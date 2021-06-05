@@ -5,8 +5,9 @@ import User from '../../../mongo/user.model'
 import Mutation from '../Mutations'
 // MOCKS
 import { context } from '../mocks/Mutations.mocks.json'
-// HELPER FUNCTIONS
-import { encryptPass } from '../../../functions/parsers'
+// FUNCTIONS
+import { parseErrorMsg } from '../../../functions/parsers'
+import { encryptPass } from '../../../functions/encrypt'
 // CONSTANTS
 import { ERROR_MSG } from '../../../constants/errors'
 
@@ -34,8 +35,8 @@ describe('[Mutations]', () => {
       try {
         const { email, password } = newUser
         await Mutation.loginUser(null, { email, password })
-      } catch (e) {
-        expect(e.message).toBe(ERROR_MSG.LOGIN)
+      } catch (error) {
+        expect(error.message).toBe(ERROR_MSG.LOGIN)
       }
     })
 
@@ -43,8 +44,8 @@ describe('[Mutations]', () => {
       try {
         const { email, password } = context.newUser
         await Mutation.loginUser(null, { email, password })
-      } catch (e) {
-        expect(e.message).toBe(ERROR_MSG.LOGIN)
+      } catch (error) {
+        expect(error.message).toBe(ERROR_MSG.LOGIN)
       }
     })
   })
@@ -61,16 +62,16 @@ describe('[Mutations]', () => {
         expect(userCreationRes.token).toBeDefined()
 
         await Mutation.createUser(null, { newUser })
-      } catch (e) {
-        expect(e.message).toBe(ERROR_MSG.ALREADY_EXISTS('User'))
+      } catch (error) {
+        expect(error.message).toBe(parseErrorMsg.ALREADY_EXISTS('User'))
       }
     })
 
     test('Should return an "LOGIN" Error by sending an already created User', async () => {
       try {
         await Mutation.createUser(null, { ...context })
-      } catch (e) {
-        expect(e.message).toBe(ERROR_MSG.LOGIN)
+      } catch (error) {
+        expect(error.message).toBe(ERROR_MSG.LOGIN)
       }
     })
   })

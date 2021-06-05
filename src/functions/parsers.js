@@ -1,49 +1,49 @@
-import CryptoJs from 'crypto-js'
+// CONSTANTS
 import { ERROR_CODE, ERROR_MSG } from '../constants/errors'
 
-export const sendErrorMsg = errorMessage => {
-  return { message: errorMessage }
+export const parseError = (error, entity) => {
+  return (
+    errorParsers.find(({ prop }) => error[prop])?.fn(error, entity) ||
+    parseErrorMsg.ALREADY_EXISTS(entity)
+  )
 }
 
-export const encryptPass = pass => {
-  return pass
-    ? CryptoJs[process.env.CRYPT_METH].encrypt(pass, process.env.CRYPT_SECRET).toString()
-    : null
+export const parseErrorMsg = {
+  MIN_MAX: (control, value, isMinValue) =>
+    `The ${control} needs to have ${isMinValue ? 'more' : 'less'} than ${value} characters`,
+  MISSING: value => `The user needs a valid ${value} to be created`,
+  ALREADY_EXISTS: entity => `There is an already created ${entity || 'Entity'}`,
+  NO_IDEA_CODE: code => `No idea dude, the code ${code} has not been mapped so far`
 }
 
-export const decryptPass = pass => {
-  return pass
-    ? CryptoJs[process.env.CRYPT_METH]
-        .decrypt(pass, process.env.CRYPT_SECRET)
-        .toString(CryptoJs.enc.Utf8)
-    : null
-}
-
-export const handleErrorMessages = (error, entity) => {
-  // TODO: HANDLE ERROR USING DESTRUCTURING PATTERN OR WITH A MORE ELLEGANT WAY
-  return error.errors
-    ? Object.keys(error.errors)
-        .map(key => error.errors[key].message)
+const errorParsers = [
+  {
+    prop: 'errors',
+    fn: ({ errors }) =>
+      Object.keys(errors)
+        .map(key => errors[key].message)
         .join(', ')
-    : (error.code && parseErrorCode(error.code, entity)) ||
-        (error.message && parseErrorMsg(error.message)) ||
-        ERROR_MSG.ALREADY_EXISTS(entity || 'Entity')
-}
-
-const parseErrorCode = (errorCode, entity) => {
-  switch (errorCode) {
-    case ERROR_CODE.ALREADY_CREATED:
-      return ERROR_MSG.ALREADY_EXISTS(entity || 'Entity')
-    default:
-      return `No idea dude, the code ${errorCode} has not been mapped so far`
+  },
+  {
+    prop: 'code',
+    fn: ({ code }, entity) => {
+      switch (code) {
+        case ERROR_CODE.ALREADY_CREATED:
+          return parseErrorMsg.ALREADY_EXISTS(entity)
+        default:
+          return parseErrorMsg.NO_IDEA_CODE(code)
+      }
+    }
+  },
+  {
+    prop: 'message',
+    fn: ({ message }) => {
+      switch (message) {
+        case ERROR_MSG.NON_ENCRYPTED_DATA:
+          return ERROR_MSG.LOGIN
+        default:
+          return message
+      }
+    }
   }
-}
-
-const parseErrorMsg = errorMsg => {
-  switch (errorMsg) {
-    case ERROR_MSG.NON_ENCRYPTED_DATA:
-      return ERROR_MSG.LOGIN
-    default:
-      return errorMsg
-  }
-}
+]

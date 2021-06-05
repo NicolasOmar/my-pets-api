@@ -1,9 +1,11 @@
 import { ApolloError } from 'apollo-server-errors'
+// MODELS
 import User from '../../mongo/user.model'
+// FUNCTIONS
+import { parseError } from '../../functions/parsers'
+import { decryptPass } from '../../functions/encrypt'
 // CONSTANTS
 import { ERROR_MSG } from '../../constants/errors'
-// PARSER FUNCTIONS
-import { decryptPass, handleErrorMessages } from '../../functions/parsers'
 
 const Mutations = {
   loginUser: async (_, { email, password }) => {
@@ -13,7 +15,7 @@ const Mutations = {
 
       return { ...userLogged.toJSON(), token }
     } catch (error) {
-      throw new Error(handleErrorMessages(error))
+      throw new Error(parseError(error))
     }
   },
   createUser: async (_, { newUser }) => {
@@ -28,7 +30,7 @@ const Mutations = {
 
       return { ...parsedNewUser.toJSON(), token }
     } catch (error) {
-      throw new Error(handleErrorMessages(error, 'User'))
+      throw new Error(parseError(error, 'User'))
     }
   },
   updateUser: async (_, args, { loggedUser }) => {
@@ -50,7 +52,7 @@ const Mutations = {
         throw new ApolloError('', '404')
       }
     } catch (error) {
-      return handleErrorMessages(error, 'User')
+      return parseError(error, 'User')
     }
   },
   logout: async (_, __, { loggedUser, token }) => {

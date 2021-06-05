@@ -1,0 +1,12 @@
+{
+  "decryptPassMocks": [
+    {
+      "title": "Should decrypt a encrypted pass",
+      "value": "RawTestPass"
+    },
+    {
+      "title": "Should return a null value",
+      "value": null
+    }
+  ]
+}

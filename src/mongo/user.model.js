@@ -2,16 +2,18 @@ import mongoose from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-// ERRORS
+// CONSTANTS
 import { ERROR_MSG } from '../constants/errors'
+// FUNCTIONS
+import { parseErrorMsg } from '../functions/parsers'
 
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, ERROR_MSG.MISSING('Name')],
-      minlength: [3, ERROR_MSG.MIN_MAX('Name', 3, true)],
-      maxlength: [25, ERROR_MSG.MIN_MAX('Name', 25, false)],
+      required: [true, parseErrorMsg.MISSING('Name')],
+      minlength: [3, parseErrorMsg.MIN_MAX('Name', 3, true)],
+      maxlength: [25, parseErrorMsg.MIN_MAX('Name', 25, false)],
       trim: true
       // validate: value => {
       //   if (!validator.isAlpha(value)) {
@@ -21,9 +23,9 @@ const userSchema = new mongoose.Schema(
     },
     lastName: {
       type: String,
-      required: [true, ERROR_MSG.MISSING('Last Name')],
-      minlength: [3, ERROR_MSG.MIN_MAX('Last Name', 3, true)],
-      maxlength: [25, ERROR_MSG.MIN_MAX('Last Name', 25, false)],
+      required: [true, parseErrorMsg.MISSING('Last Name')],
+      minlength: [3, parseErrorMsg.MIN_MAX('Last Name', 3, true)],
+      maxlength: [25, parseErrorMsg.MIN_MAX('Last Name', 25, false)],
       trim: true
       // validate: value => {
       //   if (!validator.isAlpha(value)) {
@@ -34,9 +36,9 @@ const userSchema = new mongoose.Schema(
     userName: {
       type: String,
       unique: true,
-      required: [true, ERROR_MSG.MISSING('Username')],
-      minlength: [4, ERROR_MSG.MIN_MAX('Username', 4, true)],
-      maxlength: [10, ERROR_MSG.MIN_MAX('Username', 10, false)],
+      required: [true, parseErrorMsg.MISSING('Username')],
+      minlength: [4, parseErrorMsg.MIN_MAX('Username', 4, true)],
+      maxlength: [10, parseErrorMsg.MIN_MAX('Username', 10, false)],
       trim: true,
       validate: value => {
         if (!validator.isAlpha(value)) {
@@ -47,7 +49,7 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       unique: true, // CANNOT BE OTHER EQUAL THAT THIS VALUE
-      required: [true, ERROR_MSG.MISSING('Email')], // CANNOT AVOID INCLUDING THIS FIELD WHEN INSERT A NEW DOCUMENT
+      required: [true, parseErrorMsg.MISSING('Email')], // CANNOT AVOID INCLUDING THIS FIELD WHEN INSERT A NEW DOCUMENT
       trim: true, // REMOVE EMPTY SPACES BEFORE AND AFTER STRING
       lowercase: true, // CHANGE ENTIRE STRING INTO LOWERCASE
       validate: value => {
@@ -58,8 +60,8 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, ERROR_MSG.MISSING('Password')],
-      minlength: [6, ERROR_MSG.MIN_MAX('Password', 6, true)],
+      required: [true, parseErrorMsg.MISSING('Password')],
+      minlength: [6, parseErrorMsg.MIN_MAX('Password', 6, true)],
       trim: true
     },
     tokens: [

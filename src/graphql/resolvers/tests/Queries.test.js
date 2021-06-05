@@ -1,3 +1,4 @@
+// QUERIES
 import Query from '../Queries'
 // MOCKS
 import { context } from '../mocks/Queries.mocks.json'

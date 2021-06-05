@@ -2,14 +2,14 @@ import jwt from 'jsonwebtoken'
 import { ApolloServer, AuthenticationError } from 'apollo-server-express'
 // EXPRESS APP
 import app from './app'
-// SCHEMAS SPLITED IN TYPE FILES
+// SCHEMAS SPLITED BY CONCERNS
 import InputTypes from './graphql/schemas/Inputs.gql'
 import CustomTypes from './graphql/schemas/Customs.gql'
 import OperationTypes from './graphql/schemas/Operations.gql'
 // RESOLVERS SPLITED BY OPERATIONS
 import Query from './graphql/resolvers/Queries'
 import Mutation from './graphql/resolvers/Mutations'
-// CONTEXT DATA
+// MODELS
 import User from './mongo/user.model'
 // ENVIRONMENTS VARIABLES
 const { PORT } = process.env
