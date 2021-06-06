@@ -9,7 +9,7 @@ import { context } from '../mocks/Mutations.mocks.json'
 import { parseErrorMsg } from '../../../functions/parsers'
 import { encryptPass } from '../../../functions/encrypt'
 // CONSTANTS
-import { ERROR_MSG } from '../../../constants/errors'
+import { ERROR_MSG } from '../../../constants/errors.json'
 
 const newUser = {
   ...context.newUser,
@@ -22,7 +22,7 @@ describe('[Mutations]', () => {
   afterAll(async () => await mongoose.disconnect())
 
   describe('[loginUser]', () => {
-    test('Should login a Created User as expected', async () => {
+    test('Should login a created User', async () => {
       await Mutation.createUser(null, { newUser })
 
       const { email, password } = newUser
@@ -31,7 +31,7 @@ describe('[Mutations]', () => {
       expect(loginRes.token).toBeDefined()
     })
 
-    test('Should return an "LOGIN" Error by login a non-created User', async () => {
+    test('Should return an "LOGIN" Error trying to login a non-created User', async () => {
       try {
         const { email, password } = newUser
         await Mutation.loginUser(null, { email, password })
@@ -40,7 +40,7 @@ describe('[Mutations]', () => {
       }
     })
 
-    test('Should return an "LOGIN" Error by login a User with a non-encrypted password', async () => {
+    test('Should return an "LOGIN" Error trying to login a User with a non-encrypted password', async () => {
       try {
         const { email, password } = context.newUser
         await Mutation.loginUser(null, { email, password })
@@ -51,7 +51,7 @@ describe('[Mutations]', () => {
   })
 
   describe('[createUser]', () => {
-    test('Should create a new User as expected', async () => {
+    test('Should create a new User', async () => {
       const creationRes = await Mutation.createUser(null, { newUser })
       expect(creationRes.token).toBeDefined()
     })
@@ -67,7 +67,7 @@ describe('[Mutations]', () => {
       }
     })
 
-    test('Should return an "LOGIN" Error by sending an already created User', async () => {
+    test('Should return an "LOGIN" Error trying to create an already created User', async () => {
       try {
         await Mutation.createUser(null, { ...context })
       } catch (error) {
@@ -77,10 +77,25 @@ describe('[Mutations]', () => {
   })
 
   xdescribe('[updateUser]', () => {
-    test('Should work as expected', () => {})
+    test('Should work', () => {})
   })
 
-  xdescribe('[logout]', () => {
-    test('Should work as expected', () => {})
+  describe('[logout]', () => {
+    test('Should logout created user', async () => {
+      const { token } = await Mutation.createUser(null, { newUser })
+      const loggedUser = await User.findOne({ 'tokens.token': token })
+      const logOutRes = await Mutation.logout(null, null, { loggedUser, token })
+
+      expect(logOutRes).toBeTruthy()
+    })
+
+    test('Should return a "MISSING_USER_DATA" trying to logout a created user', async () => {
+      try {
+        const loggedUser = await User.findOne({ email: newUser.email })
+        await Mutation.logout(null, null, { loggedUser })
+      } catch (error) {
+        expect(error).toBe(ERROR_MSG.MISSING_USER_DATA)
+      }
+    })
   })
 })

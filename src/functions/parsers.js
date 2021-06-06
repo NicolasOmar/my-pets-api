@@ -1,5 +1,5 @@
 // CONSTANTS
-import { ERROR_CODE, ERROR_MSG } from '../constants/errors'
+import { ERROR_CODE, ERROR_MSG } from '../constants/errors.json'
 
 export const parseError = (error, entity) => {
   return (

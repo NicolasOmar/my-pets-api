@@ -3,7 +3,7 @@ import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 // CONSTANTS
-import { ERROR_MSG } from '../constants/errors'
+import { ERROR_MSG } from '../constants/errors.json'
 // FUNCTIONS
 import { parseErrorMsg } from '../functions/parsers'
 

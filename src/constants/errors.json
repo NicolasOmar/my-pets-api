@@ -10,6 +10,7 @@
     "UPDATES": "Invalid update data",
     "LOGIN": "Your email and/or password is incorrect. Try again with other credentials",
     "NON_ENCRYPTED_DATA": "Malformed UTF-8 data",
-    "AUTHENTICATE": "Please authenticate to keep using the app"
+    "AUTHENTICATE": "Please authenticate to keep using the app",
+    "MISSING_USER_DATA": "Missing user data"
   }
 }

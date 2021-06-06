@@ -5,7 +5,7 @@ import User from '../../mongo/user.model'
 import { parseError } from '../../functions/parsers'
 import { decryptPass } from '../../functions/encrypt'
 // CONSTANTS
-import { ERROR_MSG } from '../../constants/errors'
+import { ERROR_MSG } from '../../constants/errors.json'
 
 const Mutations = {
   loginUser: async (_, { email, password }) => {
@@ -52,22 +52,21 @@ const Mutations = {
         throw new ApolloError('', '404')
       }
     } catch (error) {
-      return parseError(error, 'User')
+      throw new Error(parseError(error, 'User'))
     }
   },
   logout: async (_, __, { loggedUser, token }) => {
     try {
+      if (!loggedUser || !token) {
+        return ERROR_MSG.MISSING_USER_DATA
+      }
+
       loggedUser.tokens = loggedUser.tokens.filter(_token => _token.token !== token)
       await loggedUser.save()
       return true
     } catch (error) {
-      // response.status(500).send(error)
-      return error
+      throw new Error(parseError(error, 'User'))
     }
-    // (error, request, response) => {
-    //   // IN CASE OF A MIDDLEWARE ERROR, THE ROUTER USES A SECOND ARGUMENT TO HANDLE SUCH ERRORS (LIKE A THEN <> CATCH STRUCTURE)
-    //   response.status(400).send({ error: error.message })
-    // }
   }
   // logoutAll: async(_, __, { loggedUser }) => {
   //   try {
