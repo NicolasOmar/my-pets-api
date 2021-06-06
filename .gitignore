@@ -107,3 +107,4 @@ dist
 # Specific files/folders
 .DS_Store
 !*.env
+build/
