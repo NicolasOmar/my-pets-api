@@ -1,5 +1,5 @@
 // CONSTANTS
-import { ERROR_CODE, ERROR_MSG } from '../constants/errors.json'
+import { MONGO_CODES, ERROR_MSGS } from '../constants/errors.json'
 
 export const parseError = (error, entity) => {
   return (
@@ -28,7 +28,7 @@ const errorParsers = [
     prop: 'code',
     fn: ({ code }, entity) => {
       switch (code) {
-        case ERROR_CODE.ALREADY_CREATED:
+        case MONGO_CODES.ALREADY_CREATED:
           return parseErrorMsg.ALREADY_EXISTS(entity)
         default:
           return parseErrorMsg.NO_IDEA_CODE(code)
@@ -39,8 +39,8 @@ const errorParsers = [
     prop: 'message',
     fn: ({ message }) => {
       switch (message) {
-        case ERROR_MSG.NON_ENCRYPTED_DATA:
-          return ERROR_MSG.LOGIN
+        case ERROR_MSGS.NON_ENCRYPTED_DATA:
+          return ERROR_MSGS.LOGIN
         default:
           return message
       }

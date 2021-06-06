@@ -1,11 +1,11 @@
 import { ApolloError } from 'apollo-server-errors'
 // MODELS
-import User from '../../mongo/user.model'
+import User from '../../db/models/user.model'
 // FUNCTIONS
 import { parseError } from '../../functions/parsers'
 import { decryptPass } from '../../functions/encrypt'
 // CONSTANTS
-import { ERROR_MSG } from '../../constants/errors.json'
+import { ERROR_MSGS, HTTP_CODES } from '../../constants/errors.json'
 
 const Mutations = {
   loginUser: async (_, { email, password }) => {
@@ -15,7 +15,7 @@ const Mutations = {
 
       return { ...userLogged.toJSON(), token }
     } catch (error) {
-      throw new Error(parseError(error))
+      throw new ApolloError(parseError(error, 'User'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
   createUser: async (_, { newUser }) => {
@@ -30,42 +30,46 @@ const Mutations = {
 
       return { ...parsedNewUser.toJSON(), token }
     } catch (error) {
-      throw new Error(parseError(error, 'User'))
+      throw new ApolloError(parseError(error, 'User'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
   updateUser: async (_, args, { loggedUser }) => {
-    const updates = Object.keys(args)
+    if (!loggedUser) {
+      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+    }
+
+    const updatedFields = Object.keys(args)
     const allowedUpdates = ['name', 'lastName']
-    const isValidOperation = Object.keys(args).every(update => allowedUpdates.includes(update))
+    const isValidOperation = updatedFields.every(update => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
-      return { message: ERROR_MSG.UPDATES }
+      throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
     }
 
     try {
-      updates.forEach(update => (loggedUser[update] = args[update]))
+      updatedFields.forEach(update => (loggedUser[update] = args[update]))
       await loggedUser.save()
 
       if (loggedUser) {
         return loggedUser.toJSON()
       } else {
-        throw new ApolloError('', '404')
+        throw new ApolloError('', HTTP_CODES.NOT_FOUND)
       }
     } catch (error) {
-      throw new Error(parseError(error, 'User'))
+      throw new ApolloError(parseError(error, 'User'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
   logout: async (_, __, { loggedUser, token }) => {
-    try {
-      if (!loggedUser || !token) {
-        return ERROR_MSG.MISSING_USER_DATA
-      }
+    if (!loggedUser || !token) {
+      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+    }
 
+    try {
       loggedUser.tokens = loggedUser.tokens.filter(_token => _token.token !== token)
       await loggedUser.save()
       return true
     } catch (error) {
-      throw new Error(parseError(error, 'User'))
+      throw new ApolloError(parseError(error, 'User'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   }
   // logoutAll: async(_, __, { loggedUser }) => {

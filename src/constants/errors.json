@@ -1,8 +1,8 @@
 {
-  "ERROR_CODE": {
+  "MONGO_CODES": {
     "ALREADY_CREATED": 11000
   },
-  "ERROR_MSG": {
+  "ERROR_MSGS": {
     "ALPHA": "The field needs to contain letters only",
     "EMAIL": "The user needs a valid mail format (@site.com) to be created",
     "AMOUNT": "The amount of the transaction should be composed by numbers only",
@@ -12,5 +12,11 @@
     "NON_ENCRYPTED_DATA": "Malformed UTF-8 data",
     "AUTHENTICATE": "Please authenticate to keep using the app",
     "MISSING_USER_DATA": "Missing user data"
+  },
+  "HTTP_CODES": {
+    "UNAUTHORIZED": 401,
+    "NOT_FOUND": 404,
+    "UNPROCESSABLE_ENTITY": 422,
+    "INTERNAL_ERROR_SERVER": 500
   }
 }

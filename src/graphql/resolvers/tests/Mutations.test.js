@@ -1,6 +1,6 @@
 // MONGOOSE CODE RELATED
 import mongoose from '../../../db/mongoose'
-import User from '../../../mongo/user.model'
+import User from '../../../db/models/user.model'
 // MUTATIONS
 import Mutation from '../Mutations'
 // MOCKS
@@ -9,7 +9,7 @@ import { context } from '../mocks/Mutations.mocks.json'
 import { parseErrorMsg } from '../../../functions/parsers'
 import { encryptPass } from '../../../functions/encrypt'
 // CONSTANTS
-import { ERROR_MSG } from '../../../constants/errors.json'
+import { ERROR_MSGS } from '../../../constants/errors.json'
 
 const newUser = {
   ...context.newUser,
@@ -36,7 +36,7 @@ describe('[Mutations]', () => {
         const { email, password } = newUser
         await Mutation.loginUser(null, { email, password })
       } catch (error) {
-        expect(error.message).toBe(ERROR_MSG.LOGIN)
+        expect(error.message).toBe(ERROR_MSGS.LOGIN)
       }
     })
 
@@ -45,7 +45,7 @@ describe('[Mutations]', () => {
         const { email, password } = context.newUser
         await Mutation.loginUser(null, { email, password })
       } catch (error) {
-        expect(error.message).toBe(ERROR_MSG.LOGIN)
+        expect(error.message).toBe(ERROR_MSGS.LOGIN)
       }
     })
   })
@@ -71,17 +71,35 @@ describe('[Mutations]', () => {
       try {
         await Mutation.createUser(null, { ...context })
       } catch (error) {
-        expect(error.message).toBe(ERROR_MSG.LOGIN)
+        expect(error.message).toBe(ERROR_MSGS.LOGIN)
       }
     })
   })
 
-  xdescribe('[updateUser]', () => {
-    test('Should work', () => {})
+  describe('[updateUser]', () => {
+    test('Should update a created User', async () => {
+      const { token } = await Mutation.createUser(null, { newUser })
+      const loggedUser = await User.findOne({ 'tokens.token': token })
+      const updatedData = { name: 'UPDATED', lastName: 'USER' }
+
+      const { name, lastName } = await Mutation.updateUser(null, updatedData, { loggedUser })
+      expect(name).toBe(updatedData.name)
+      expect(lastName).toBe(updatedData.lastName)
+    })
+
+    test('Should return a "MISSING_USER_DATA" trying to update a not logged User', async () => {
+      try {
+        const loggedUser = await User.findOne({ email: newUser.email })
+        const updatedData = { name: 'UPDATED', lastName: 'USER' }
+        await Mutation.updateUser(null, updatedData, { loggedUser })
+      } catch (error) {
+        expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
+      }
+    })
   })
 
   describe('[logout]', () => {
-    test('Should logout created user', async () => {
+    test('Should logout created User', async () => {
       const { token } = await Mutation.createUser(null, { newUser })
       const loggedUser = await User.findOne({ 'tokens.token': token })
       const logOutRes = await Mutation.logout(null, null, { loggedUser, token })
@@ -89,12 +107,12 @@ describe('[Mutations]', () => {
       expect(logOutRes).toBeTruthy()
     })
 
-    test('Should return a "MISSING_USER_DATA" trying to logout a created user', async () => {
+    test('Should return a "MISSING_USER_DATA" trying to logout without a logged token', async () => {
       try {
         const loggedUser = await User.findOne({ email: newUser.email })
         await Mutation.logout(null, null, { loggedUser })
       } catch (error) {
-        expect(error).toBe(ERROR_MSG.MISSING_USER_DATA)
+        expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
       }
     })
   })

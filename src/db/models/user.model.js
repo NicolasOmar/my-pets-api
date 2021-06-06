@@ -3,9 +3,9 @@ import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 // CONSTANTS
-import { ERROR_MSG } from '../constants/errors.json'
+import { ERROR_MSGS } from '../../constants/errors.json'
 // FUNCTIONS
-import { parseErrorMsg } from '../functions/parsers'
+import { parseErrorMsg } from '../../functions/parsers'
 
 const userSchema = new mongoose.Schema(
   {
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
       trim: true
       // validate: value => {
       //   if (!validator.isAlpha(value)) {
-      //     throw { message: ERROR_MSG.ALPHA }
+      //     throw { message: ERROR_MSGS.ALPHA }
       //   }
       // }
     },
@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       trim: true
       // validate: value => {
       //   if (!validator.isAlpha(value)) {
-      //     throw { message: ERROR_MSG.ALPHA }
+      //     throw { message: ERROR_MSGS.ALPHA }
       //   }
       // }
     },
@@ -42,7 +42,7 @@ const userSchema = new mongoose.Schema(
       trim: true,
       validate: value => {
         if (!validator.isAlpha(value)) {
-          throw { message: ERROR_MSG.ALPHA }
+          throw { message: ERROR_MSGS.ALPHA }
         }
       }
     },
@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true, // CHANGE ENTIRE STRING INTO LOWERCASE
       validate: value => {
         if (!validator.isEmail(value)) {
-          throw { message: ERROR_MSG.EMAIL }
+          throw { message: ERROR_MSGS.EMAIL }
         }
       }
     },
@@ -92,13 +92,13 @@ userSchema.statics.findByCredentials = async (email, password) => {
   const finded = await User.findOne({ email })
 
   if (!finded) {
-    throw { message: ERROR_MSG.LOGIN }
+    throw { message: ERROR_MSGS.LOGIN }
   }
 
   const user = await bcrypt.compare(password, finded.password)
 
   if (!user) {
-    throw { message: ERROR_MSG.LOGIN }
+    throw { message: ERROR_MSGS.LOGIN }
   }
 
   return finded
