@@ -59,6 +59,27 @@ const Mutations = {
       throw new ApolloError(parseError(error, 'User'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
+  updatePass: async (_, args, { loggedUser }) => {
+    if (!loggedUser) {
+      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+    }
+
+    try {
+      await User.findByCredentials(loggedUser.email, decryptPass(args.oldPass))
+      loggedUser.password = decryptPass(args.newPass)
+
+      await loggedUser.save()
+
+      if (loggedUser) {
+        return true
+      } else {
+        throw new ApolloError('BAD IDEA', HTTP_CODES.NOT_FOUND)
+      }
+    } catch (error) {
+      const errorMsg = error.message === ERROR_MSGS.LOGIN ? ERROR_MSGS.PASSWORD : parseError(error)
+      throw new ApolloError(errorMsg, HTTP_CODES.INTERNAL_ERROR_SERVER)
+    }
+  },
   logout: async (_, __, { loggedUser, token }) => {
     if (!loggedUser || !token) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)

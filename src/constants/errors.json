@@ -9,6 +9,7 @@
     "DATE": "The date of the transaction should be in a valid format (DD/MM/YYYY)",
     "UPDATES": "Invalid update data",
     "LOGIN": "Your email and/or password is incorrect. Try again with other credentials",
+    "PASSWORD": "The provided password is not the current one. Try again with the correct one",
     "NON_ENCRYPTED_DATA": "Malformed UTF-8 data",
     "AUTHENTICATE": "Please authenticate to keep using the app",
     "MISSING_USER_DATA": "Missing user data"
