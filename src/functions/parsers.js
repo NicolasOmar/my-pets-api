@@ -16,6 +16,15 @@ export const parseErrorMsg = {
   NO_IDEA_CODE: code => `No idea dude, the code ${code} has not been mapped so far`
 }
 
+export const checkAllowedUpdates = (obj, allowedFields) => {
+  const updateFields = Object.keys(obj)
+
+  return (
+    updateFields.length === allowedFields.length &&
+    updateFields.every(update => allowedFields.includes(update))
+  )
+}
+
 const errorParsers = [
   {
     prop: 'errors',

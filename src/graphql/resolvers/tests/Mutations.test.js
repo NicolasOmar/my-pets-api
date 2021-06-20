@@ -98,13 +98,109 @@ describe('[Mutations]', () => {
     })
 
     describe('[SAD PATH]', () => {
-      test('Should return a "MISSING_USER_DATA" trying to update a not logged User', async () => {
+      test('Should return a "MISSING_USER_DATA" Error trying to update a not logged User', async () => {
         try {
           const loggedUser = await User.findOne({ email: newUser.email })
           const updatedData = { name: 'UPDATED', lastName: 'USER' }
           await Mutation.updateUser(null, updatedData, { loggedUser })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
+        }
+      })
+
+      test('Should return a "MISSING_USER_DATA" Error trying to update with missing args', async () => {
+        try {
+          const { token } = await Mutation.createUser(null, { newUser })
+          const loggedUser = await User.findOne({ 'tokens.token': token })
+          const updatedData = { name: 'UPDATED' }
+          await Mutation.updateUser(null, updatedData, { loggedUser })
+        } catch (error) {
+          expect(error.message).toBe(ERROR_MSGS.UPDATES)
+        }
+      })
+    })
+  })
+
+  describe('[updatePass]', () => {
+    describe('[HAPPY PATH]', () => {
+      test('Should update the password of a created User', async () => {
+        const { token } = await Mutation.createUser(null, { newUser })
+        const loggedUser = await User.findOne({ 'tokens.token': token })
+        const args = {
+          oldPass: encryptPass(context.newUser.password),
+          newPass: encryptPass('testing')
+        }
+        const updateResponse = await Mutation.updatePass(null, args, { loggedUser })
+        expect(updateResponse).toBeTruthy()
+      })
+    })
+
+    describe('[SAD PATH]', () => {
+      test('Should return a "MISSING_USER_DATA" Error trying to update the pass of a not created user', async () => {
+        try {
+          const loggedUser = await User.findOne({ email: newUser.email })
+          const args = {
+            oldPass: encryptPass(context.newUser.password),
+            newPass: encryptPass('testing')
+          }
+          await Mutation.updatePass(null, args, { loggedUser })
+        } catch (error) {
+          expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
+        }
+      })
+
+      test('Should return a "UPDATES" Error trying to update with missing args', async () => {
+        try {
+          const { token } = await Mutation.createUser(null, { newUser })
+          const loggedUser = await User.findOne({ 'tokens.token': token })
+          const args = {
+            oldPass: encryptPass(context.newUser.password)
+          }
+          await Mutation.updatePass(null, args, { loggedUser })
+        } catch (error) {
+          expect(error.message).toBe(ERROR_MSGS.UPDATES)
+        }
+      })
+
+      test('Should return a "PASSWORD" Error trying to update a without the old pass', async () => {
+        try {
+          const { token } = await Mutation.createUser(null, { newUser })
+          const loggedUser = await User.findOne({ 'tokens.token': token })
+          const args = {
+            oldPass: null,
+            newPass: encryptPass('testing')
+          }
+          await Mutation.updatePass(null, args, { loggedUser })
+        } catch (error) {
+          expect(error.message).toBe(ERROR_MSGS.PASSWORD)
+        }
+      })
+
+      test('Should return a "MIN_MAX" Error trying to update with a new pass with less than 6 characters', async () => {
+        try {
+          const { token } = await Mutation.createUser(null, { newUser })
+          const loggedUser = await User.findOne({ 'tokens.token': token })
+          const args = {
+            oldPass: encryptPass(context.newUser.password),
+            newPass: encryptPass('test')
+          }
+          await Mutation.updatePass(null, args, { loggedUser })
+        } catch (error) {
+          expect(error.message).toBe(parseErrorMsg.MIN_MAX('Password', 6, true))
+        }
+      })
+
+      test('Should return a "PASSWORD" Error trying to update with worng current/old password', async () => {
+        try {
+          const { token } = await Mutation.createUser(null, { newUser })
+          const loggedUser = await User.findOne({ 'tokens.token': token })
+          const args = {
+            oldPass: encryptPass('testing'),
+            newPass: null
+          }
+          await Mutation.updatePass(null, args, { loggedUser })
+        } catch (error) {
+          expect(error.message).toBe(ERROR_MSGS.PASSWORD)
         }
       })
     })
@@ -122,7 +218,7 @@ describe('[Mutations]', () => {
     })
 
     describe('[SAD PATH]', () => {
-      test('Should return a "MISSING_USER_DATA" trying to logout without a logged token', async () => {
+      test('Should return a "MISSING_USER_DATA" Error trying to logout without a logged token', async () => {
         try {
           const loggedUser = await User.findOne({ email: newUser.email })
           await Mutation.logout(null, null, { loggedUser })

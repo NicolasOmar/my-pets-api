@@ -2,7 +2,7 @@ import { ApolloError } from 'apollo-server-errors'
 // MODELS
 import User from '../../db/models/user.model'
 // FUNCTIONS
-import { parseError } from '../../functions/parsers'
+import { checkAllowedUpdates, parseError } from '../../functions/parsers'
 import { decryptPass } from '../../functions/encrypt'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '../../constants/errors.json'
@@ -38,23 +38,18 @@ const Mutations = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
-    const updatedFields = Object.keys(args)
     const allowedUpdates = ['name', 'lastName']
-    const isValidOperation = updatedFields.every(update => allowedUpdates.includes(update))
+    const isValidOperation = checkAllowedUpdates(args, allowedUpdates)
 
     if (!isValidOperation) {
       throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
     }
 
     try {
-      updatedFields.forEach(update => (loggedUser[update] = args[update]))
+      Object.keys(args).forEach(update => (loggedUser[update] = args[update]))
       await loggedUser.save()
 
-      if (loggedUser) {
-        return loggedUser.toJSON()
-      } else {
-        throw new ApolloError('', HTTP_CODES.NOT_FOUND)
-      }
+      return loggedUser.toJSON()
     } catch (error) {
       throw new ApolloError(parseError(error, 'User'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
@@ -64,17 +59,24 @@ const Mutations = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
+    const allowedFields = ['oldPass', 'newPass']
+    const isValidOperation = checkAllowedUpdates(args, allowedFields)
+
+    if (!isValidOperation) {
+      throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
+    }
+
+    if (!args.oldPass) {
+      throw new ApolloError(ERROR_MSGS.PASSWORD, HTTP_CODES.NOT_FOUND)
+    }
+
     try {
       await User.findByCredentials(loggedUser.email, decryptPass(args.oldPass))
       loggedUser.password = decryptPass(args.newPass)
 
       await loggedUser.save()
 
-      if (loggedUser) {
-        return true
-      } else {
-        throw new ApolloError('BAD IDEA', HTTP_CODES.NOT_FOUND)
-      }
+      return true
     } catch (error) {
       const errorMsg = error.message === ERROR_MSGS.LOGIN ? ERROR_MSGS.PASSWORD : parseError(error)
       throw new ApolloError(errorMsg, HTTP_CODES.INTERNAL_ERROR_SERVER)
