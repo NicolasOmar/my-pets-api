@@ -7,6 +7,11 @@ import { decryptPass } from '../../functions/encrypt'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '../../constants/errors.json'
 
+const allowedFieldUpdates = {
+  user: ['name', 'lastName'],
+  password: ['oldPass', 'newPass']
+}
+
 const Mutations = {
   loginUser: async (_, { email, password }) => {
     try {
@@ -38,10 +43,7 @@ const Mutations = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
-    const allowedUpdates = ['name', 'lastName']
-    const isValidOperation = checkAllowedUpdates(args, allowedUpdates)
-
-    if (!isValidOperation) {
+    if (!checkAllowedUpdates(args, allowedFieldUpdates.user)) {
       throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
     }
 
@@ -59,10 +61,7 @@ const Mutations = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
-    const allowedFields = ['oldPass', 'newPass']
-    const isValidOperation = checkAllowedUpdates(args, allowedFields)
-
-    if (!isValidOperation) {
+    if (!checkAllowedUpdates(args, allowedFieldUpdates.password)) {
       throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
     }
 

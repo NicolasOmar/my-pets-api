@@ -8,14 +8,6 @@ export const parseError = (error, entity) => {
   )
 }
 
-export const parseErrorMsg = {
-  MIN_MAX: (control, value, isMinValue) =>
-    `The ${control} needs to have ${isMinValue ? 'more' : 'less'} than ${value} characters`,
-  MISSING: value => `The user needs a valid ${value} to be created`,
-  ALREADY_EXISTS: entity => `There is an already created ${entity || 'Entity'}`,
-  NO_IDEA_CODE: code => `No idea dude, the code ${code} has not been mapped so far`
-}
-
 export const checkAllowedUpdates = (obj, allowedFields) => {
   const updateFields = Object.keys(obj)
 
@@ -23,6 +15,14 @@ export const checkAllowedUpdates = (obj, allowedFields) => {
     updateFields.length === allowedFields.length &&
     updateFields.every(update => allowedFields.includes(update))
   )
+}
+
+export const parseErrorMsg = {
+  MIN_MAX: (control, value, isMinValue) =>
+    `The ${control} needs to have ${isMinValue ? 'more' : 'less'} than ${value} characters`,
+  MISSING: value => `The user needs a valid ${value} to be created`,
+  ALREADY_EXISTS: entity => `There is an already created ${entity || 'Entity'}`,
+  NO_IDEA_CODE: code => `No idea dude, the code ${code} has not been mapped so far`
 }
 
 const errorParsers = [

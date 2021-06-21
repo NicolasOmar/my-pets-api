@@ -12,5 +12,11 @@
     },
     "entity": "Test",
     "errorMsg": "First is not working well, Second is not working well"
+  },
+  "handleErrorCodesMocks": {
+    "codes": [
+      11000,
+      911
+    ]
   }
 }

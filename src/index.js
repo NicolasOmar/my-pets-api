@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { ApolloServer, AuthenticationError } from 'apollo-server-express'
+import { ApolloError, ApolloServer } from 'apollo-server-express'
 // EXPRESS APP
 import app from './app'
 // SCHEMAS SPLITED BY CONCERNS
@@ -11,6 +11,8 @@ import Query from './graphql/resolvers/Queries'
 import Mutation from './graphql/resolvers/Mutations'
 // MODELS
 import User from './db/models/user.model'
+// CONSTANTS
+import { ERROR_MSGS, HTTP_CODES } from './constants/errors.json'
 // ENVIRONMENTS VARIABLES
 const { PORT } = process.env
 
@@ -30,8 +32,8 @@ const server = new ApolloServer({
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
     const loggedUser = await User.findOne({ _id: decodedToken._id, 'tokens.token': token })
 
-    if (!loggedUser) {
-      throw new AuthenticationError()
+    if (!loggedUser || !token) {
+      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
     return { loggedUser, token }
