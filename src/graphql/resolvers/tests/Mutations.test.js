@@ -65,7 +65,7 @@ describe('[Mutations]', () => {
     describe('[SAD PATH]', () => {
       test('Should return an "ALREADY_EXISTS" Error by sending an already created User', async () => {
         try {
-          let userCreationRes = await Mutation.createUser(null, { newUser })
+          const userCreationRes = await Mutation.createUser(null, { newUser })
           expect(userCreationRes.token).toBeDefined()
 
           await Mutation.createUser(null, { newUser })
@@ -136,14 +136,41 @@ describe('[Mutations]', () => {
     })
 
     describe('[SAD PATH]', () => {
+      let token = null
+      let loggedUser = null
+      const args = jest
+        .fn()
+        .mockReturnValueOnce({
+          oldPass: encryptPass(context.newUser.password),
+          newPass: encryptPass('testing')
+        })
+        .mockReturnValueOnce({
+          oldPass: encryptPass(context.newUser.password)
+        })
+        .mockReturnValueOnce({
+          oldPass: null,
+          newPass: encryptPass('testing')
+        })
+        .mockReturnValueOnce({
+          oldPass: encryptPass(context.newUser.password),
+          newPass: encryptPass('test')
+        })
+        .mockReturnValueOnce({
+          oldPass: encryptPass('testing'),
+          newPass: null
+        })
+
+      beforeEach(async () => {
+        token = (await Mutation.createUser(null, { newUser })).token
+        loggedUser = await User.findOne({ 'tokens.token': token })
+      })
+
+      afterEach(async () => await User.deleteMany())
+
       test('Should return a "MISSING_USER_DATA" Error trying to update the pass of a not created user', async () => {
         try {
-          const loggedUser = await User.findOne({ email: newUser.email })
-          const args = {
-            oldPass: encryptPass(context.newUser.password),
-            newPass: encryptPass('testing')
-          }
-          await Mutation.updatePass(null, args, { loggedUser })
+          const loggedUserWithEmail = await User.findOne({ email: newUser.email })
+          await Mutation.updatePass(null, args(), { loggedUserWithEmail })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
@@ -151,12 +178,7 @@ describe('[Mutations]', () => {
 
       test('Should return a "UPDATES" Error trying to update with missing args', async () => {
         try {
-          const { token } = await Mutation.createUser(null, { newUser })
-          const loggedUser = await User.findOne({ 'tokens.token': token })
-          const args = {
-            oldPass: encryptPass(context.newUser.password)
-          }
-          await Mutation.updatePass(null, args, { loggedUser })
+          await Mutation.updatePass(null, args(), { loggedUser })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.UPDATES)
         }
@@ -164,13 +186,7 @@ describe('[Mutations]', () => {
 
       test('Should return a "PASSWORD" Error trying to update a without the old pass', async () => {
         try {
-          const { token } = await Mutation.createUser(null, { newUser })
-          const loggedUser = await User.findOne({ 'tokens.token': token })
-          const args = {
-            oldPass: null,
-            newPass: encryptPass('testing')
-          }
-          await Mutation.updatePass(null, args, { loggedUser })
+          await Mutation.updatePass(null, args(), { loggedUser })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.PASSWORD)
         }
@@ -178,13 +194,7 @@ describe('[Mutations]', () => {
 
       test('Should return a "MIN_MAX" Error trying to update with a new pass with less than 6 characters', async () => {
         try {
-          const { token } = await Mutation.createUser(null, { newUser })
-          const loggedUser = await User.findOne({ 'tokens.token': token })
-          const args = {
-            oldPass: encryptPass(context.newUser.password),
-            newPass: encryptPass('test')
-          }
-          await Mutation.updatePass(null, args, { loggedUser })
+          await Mutation.updatePass(null, args(), { loggedUser })
         } catch (error) {
           expect(error.message).toBe(parseErrorMsg.MIN_MAX('Password', 6, true))
         }
@@ -192,13 +202,7 @@ describe('[Mutations]', () => {
 
       test('Should return a "PASSWORD" Error trying to update with worng current/old password', async () => {
         try {
-          const { token } = await Mutation.createUser(null, { newUser })
-          const loggedUser = await User.findOne({ 'tokens.token': token })
-          const args = {
-            oldPass: encryptPass('testing'),
-            newPass: null
-          }
-          await Mutation.updatePass(null, args, { loggedUser })
+          await Mutation.updatePass(null, args(), { loggedUser })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.PASSWORD)
         }
