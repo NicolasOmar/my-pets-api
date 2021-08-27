@@ -22,10 +22,23 @@ npm start
 ```
 After start the server, you can access the GraphQL Plauground through the [local link](http://localhost:4000/graphql).
 
+## Folder structure
+Once you have clone the repo, it will show you the following folders
+- `env:` environment variables.
+- `public:` only a `css` folder for specific home page styling.
+- `scripts:` where is located the `update-version.js` file, responsable of update package version number on each push
+- `src`
+  - `constants:` JSON files used for static values
+  - `db:` Connection to the MongoDB trough `mongoose` as well as its Model declarations
+  - `functions:` helper methods related to encryption and data parsing
+  - `graphql:` Apollo Server connection with its Schemas and Resolver declarations
+- `templates:` environment variables
+- `tests:` environment variables
+
 ## Find out more
-| [Project Status](https://trello.com/b/79XvwOYa/mypets) | [React Repo](https://github.com/NicolasOmar/my-pets) |
-| :--- | :--- |
-| Trello board for project status & tracking | React front-end repository |
+| [Project Status](https://trello.com/b/79XvwOYa/mypets) | [Storybook site](https://my-pets-storybook.netlify.app/) | [React Repo](https://github.com/NicolasOmar/my-pets) |
+| :--- | :--- | :--- |
+| Trello board for project status tracking | Site dedicated to show and test all the created components | React front-end repository |
 
 ## License
 **MIT**
