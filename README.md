@@ -23,17 +23,18 @@ npm start
 After start the server, you can access the GraphQL Plauground through the [local link](http://localhost:4000/graphql).
 
 ## Folder structure
-Once you have clone the repo, it will show you the following folders
-- `env:` environment variables.
-- `public:` only a `css` folder for specific home page styling.
-- `scripts:` where is located the `update-version.js` file, responsable of update package version number on each push
+Once you have cloned the repo, it will show you the following folders:
+- `.github:` [Github Actions](https://github.com/features/actions) files used to run post-merge.
+- `env:` Environment variables.
+- `public:` Contains only a `css` folder for specific home page styling.
+- `scripts:` Location of the `update-version.js` file, responsible of update package's version on each push.
 - `src`
-  - `constants:` JSON files used for static values
-  - `db:` Connection to the MongoDB trough `mongoose` as well as its Model declarations
-  - `functions:` helper methods related to encryption and data parsing
-  - `graphql:` Apollo Server connection with its Schemas and Resolver declarations
-- `templates:` environment variables
-- `tests:` environment variables
+  - `constants:` JSON files used for static values.
+  - `db:` Connection to the Mongo database trough [Mongoose](https://mongoosejs.com/) as well as its Model declarations.
+  - `functions:` Helper methods related to encryption and data parsing.
+  - `graphql:` Server configuration based on [Apollo GraphQl](https://www.apollographql.com/) connection with its Schemas and Resolver declarations.
+- `templates:` Structure dedicated to show a start page based in [Moustache.js](https://github.com/janl/mustache.js). Shows links of other useful sites related to the project.
+- `tests:` Specific Jest configurations to test using a custom Mongoose connection.
 
 ## Find out more
 | [Project Status](https://trello.com/b/79XvwOYa/mypets) | [Storybook site](https://my-pets-storybook.netlify.app/) | [React Repo](https://github.com/NicolasOmar/my-pets) |
