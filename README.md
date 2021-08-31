@@ -37,7 +37,7 @@ Once you have cloned the repo, it will show you the following folders:
 - `tests:` Specific Jest configurations to test using a custom Mongoose connection.
 
 ## Find out more
-| [Project Status](https://trello.com/b/79XvwOYa/mypets) | [Storybook site](https://my-pets-storybook.netlify.app/) | [React Repo](https://github.com/NicolasOmar/my-pets) |
+| [Project Status](https://trello.com/b/LdEm74Tq/mypets) | [Storybook site](https://my-pets-storybook.netlify.app/) | [React Repo](https://github.com/NicolasOmar/my-pets) |
 | :--- | :--- | :--- |
 | Trello board for project status tracking | Site dedicated to show and test all the created components | React front-end repository |
 
