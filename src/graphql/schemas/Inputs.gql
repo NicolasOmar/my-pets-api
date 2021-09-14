@@ -5,3 +5,19 @@ input UserInput {
   email: String!
   password: String!
 }
+
+input PetInput {
+  name: String!
+  petType: Int!
+  birthday: String!
+  isAdopted: Boolean
+  adoptionDate: String
+  height: Float!
+  length: Float!
+  weight: Float!
+  gender: Boolean!
+  hairColor: Int
+  eyeColor: Int
+  hasHeterochromia: Boolean
+  userId: ID
+}

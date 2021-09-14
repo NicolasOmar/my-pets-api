@@ -93,7 +93,7 @@ const Mutations = {
     } catch (error) {
       throw new ApolloError(parseError(error, 'User'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
-  }
+  },
   // logoutAll: async(_, __, { loggedUser }) => {
   //   try {
   //     loggedUser.tokens = []
@@ -104,6 +104,7 @@ const Mutations = {
   //     return error
   //   }
   // }
+  createPet: () => {}
 }
 
 export default Mutations

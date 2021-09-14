@@ -5,4 +5,21 @@ type User {
   email: String!
   password: String
   token: String!
+  pet: Pet
+}
+
+type Pet {
+  name: String!
+  petType: Int!
+  birthday: String!
+  isAdopted: Boolean
+  adoptionDate: String
+  height: Float!
+  length: Float!
+  weight: Float!
+  gender: Boolean!
+  hairColor: Int
+  eyeColor: Int
+  hasHeterochromia: Boolean
+  user: User
 }
