@@ -19,5 +19,4 @@ input PetInput {
   hairColor: Int
   eyeColor: Int
   hasHeterochromia: Boolean
-  userId: ID
 }

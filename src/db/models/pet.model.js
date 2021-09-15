@@ -5,11 +5,13 @@ const petSchema = new Schema({
   name: {
     type: String,
     required: [true, parseErrorMsg.MISSING('Name')],
+    minlength: [2, parseErrorMsg.MIN_MAX('Name', 3, true)],
+    maxlength: [20, parseErrorMsg.MIN_MAX('Name', 25, false)],
     trim: true
   },
   petType: {
     type: Number,
-    required: [true, parseErrorMsg.MISSING('Type')]
+    required: [true, parseErrorMsg.MISSING('Pet Type')]
   },
   birthday: {
     type: Date
@@ -21,22 +23,31 @@ const petSchema = new Schema({
     type: Date
   },
   height: {
-    type: Number
+    type: Number,
+    min: 0,
+    required: [true, parseErrorMsg.MISSING('Height')]
   },
   length: {
-    type: Number
+    type: Number,
+    min: 0,
+    required: [true, parseErrorMsg.MISSING('Length')]
   },
   weight: {
-    type: Number
+    type: Number,
+    min: 0,
+    required: [true, parseErrorMsg.MISSING('Weight')]
   },
   gender: {
-    type: Boolean
+    type: Boolean,
+    required: [true, parseErrorMsg.MISSING('Gender')]
   },
   hairColor: {
-    type: Number
+    type: Number,
+    required: [true, parseErrorMsg.MISSING('Gender')]
   },
   eyeColor: {
-    type: Number
+    type: Number,
+    required: [true, parseErrorMsg.MISSING('Gender')]
   },
   hasHeterochromia: {
     type: Boolean

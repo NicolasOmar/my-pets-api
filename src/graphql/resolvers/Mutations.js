@@ -1,6 +1,7 @@
 import { ApolloError } from 'apollo-server-errors'
 // MODELS
 import User from '../../db/models/user.model'
+import Pet from '../../db/models/pet.model'
 // FUNCTIONS
 import { checkAllowedUpdates, parseError } from '../../functions/parsers'
 import { decryptPass } from '../../functions/encrypt'
@@ -94,6 +95,24 @@ const Mutations = {
       throw new ApolloError(parseError(error, 'User'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
+  createPet: async (_, { petInfo }, { loggedUser }) => {
+    if (!loggedUser) {
+      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+    }
+
+    try {
+      const parsedNewPet = new Pet({
+        ...petInfo,
+        user: loggedUser._id
+      })
+
+      await parsedNewPet.save()
+
+      return parsedNewPet.toJSON()
+    } catch (error) {
+      console.log(error)
+    }
+  }
   // logoutAll: async(_, __, { loggedUser }) => {
   //   try {
   //     loggedUser.tokens = []
@@ -104,7 +123,6 @@ const Mutations = {
   //     return error
   //   }
   // }
-  createPet: () => {}
 }
 
 export default Mutations

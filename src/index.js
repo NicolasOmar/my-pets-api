@@ -17,7 +17,7 @@ import { ERROR_MSGS, HTTP_CODES } from './constants/errors.json'
 const { PORT } = process.env
 
 const server = new ApolloServer({
-  typeDefs: [CustomTypes, InputTypes, OperationTypes],
+  typeDefs: [InputTypes, CustomTypes, OperationTypes],
   resolvers: {
     Query,
     Mutation
