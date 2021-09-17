@@ -232,4 +232,22 @@ describe('[Mutations]', () => {
       })
     })
   })
+
+  describe('[createPet]', () => {
+    describe('[HAPPY PATH]', () => {
+      test('Should create a pet for a logged User', async () => {
+        const { petInfo } = context
+        const { token } = await Mutation.createUser(null, { newUser })
+        const loggedUser = await User.findOne({ 'tokens.token': token })
+
+        const createPetRes = await Mutation.createPet(null, context, { loggedUser })
+
+        Object.keys(petInfo).forEach(key => expect(createPetRes[key]).toBe(petInfo[key]))
+      })
+    })
+
+    // describe('[SAD PATH]', () => {
+
+    // })
+  })
 })
