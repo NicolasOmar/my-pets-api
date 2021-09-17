@@ -11,9 +11,9 @@ const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, parseErrorMsg.MISSING('Name')],
-      minlength: [3, parseErrorMsg.MIN_MAX('Name', 3, true)],
-      maxlength: [25, parseErrorMsg.MIN_MAX('Name', 25, false)],
+      required: [true, parseErrorMsg.missingValue('Name')],
+      minlength: [3, parseErrorMsg.minMaxValue('Name', 3, true)],
+      maxlength: [25, parseErrorMsg.minMaxValue('Name', 25, false)],
       trim: true
       // validate: value => {
       //   if (!validator.isAlpha(value)) {
@@ -23,9 +23,9 @@ const userSchema = new mongoose.Schema(
     },
     lastName: {
       type: String,
-      required: [true, parseErrorMsg.MISSING('Last Name')],
-      minlength: [3, parseErrorMsg.MIN_MAX('Last Name', 3, true)],
-      maxlength: [25, parseErrorMsg.MIN_MAX('Last Name', 25, false)],
+      required: [true, parseErrorMsg.missingValue('Last Name')],
+      minlength: [3, parseErrorMsg.minMaxValue('Last Name', 3, true)],
+      maxlength: [25, parseErrorMsg.minMaxValue('Last Name', 25, false)],
       trim: true
       // validate: value => {
       //   if (!validator.isAlpha(value)) {
@@ -35,10 +35,10 @@ const userSchema = new mongoose.Schema(
     },
     userName: {
       type: String,
-      unique: [true, parseErrorMsg.ALREADY_EXISTS('User')],
-      required: [true, parseErrorMsg.MISSING('Username')],
-      minlength: [4, parseErrorMsg.MIN_MAX('Username', 4, true)],
-      maxlength: [10, parseErrorMsg.MIN_MAX('Username', 10, false)],
+      unique: [true, parseErrorMsg.alreadyExists('User')],
+      required: [true, parseErrorMsg.missingValue('Username')],
+      minlength: [4, parseErrorMsg.minMaxValue('Username', 4, true)],
+      maxlength: [10, parseErrorMsg.minMaxValue('Username', 10, false)],
       trim: true,
       validate: value => {
         if (!validator.isAlpha(value)) {
@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       unique: true, // CANNOT BE OTHER EQUAL THAT THIS VALUE
-      required: [true, parseErrorMsg.MISSING('Email')], // CANNOT AVOID INCLUDING THIS FIELD WHEN INSERT A NEW DOCUMENT
+      required: [true, parseErrorMsg.missingValue('Email')], // CANNOT AVOID INCLUDING THIS FIELD WHEN INSERT A NEW DOCUMENT
       trim: true, // REMOVE EMPTY SPACES BEFORE AND AFTER STRING
       lowercase: true, // CHANGE ENTIRE STRING INTO LOWERCASE
       validate: value => {
@@ -60,8 +60,8 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, parseErrorMsg.MISSING('Password')],
-      minlength: [6, parseErrorMsg.MIN_MAX('Password', 6, true)],
+      required: [true, parseErrorMsg.missingValue('Password')],
+      minlength: [6, parseErrorMsg.minMaxValue('Password', 6, true)],
       trim: true
     },
     tokens: [

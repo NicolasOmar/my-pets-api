@@ -4,7 +4,7 @@ import { MONGO_CODES, ERROR_MSGS } from '../constants/errors.json'
 export const parseError = (error, entity) => {
   return (
     errorParsers.find(({ prop }) => error[prop])?.fn(error, entity) ||
-    parseErrorMsg.ALREADY_EXISTS(entity)
+    parseErrorMsg.alreadyExists(entity)
   )
 }
 
@@ -18,11 +18,14 @@ export const checkAllowedUpdates = (obj, allowedFields) => {
 }
 
 export const parseErrorMsg = {
-  MIN_MAX: (control, value, isMinValue) =>
+  minMaxValue: (control, value, isMinValue) =>
     `The ${control} needs to have ${isMinValue ? 'more' : 'less'} than ${value} characters`,
-  MISSING: (value, entity = 'User') => `The ${entity} needs a valid ${value} to be created`,
-  ALREADY_EXISTS: (entity = 'Entity') => `There is an already created ${entity}`,
-  NO_IDEA_CODE: code => `No idea dude, the code ${code} has not been mapped so far`
+  missingValue: (value, entity = 'User') => `The ${entity} needs a valid ${value} to be created`,
+  alreadyExists: (entity = 'Entity') => `There is an already created ${entity}`,
+  invalidDateFormat: (field = 'date') =>
+    `The provided ${field} should be in a valid format (DD/MM/YYYY)`,
+  invalidDateBefore: (field = 'date', date) => `The provided ${field} should be after ${date}`,
+  noIdeaCode: code => `No idea dude, the code ${code} has not been mapped so far`
 }
 
 const errorParsers = [
@@ -38,9 +41,9 @@ const errorParsers = [
     fn: ({ code }, entity) => {
       switch (code) {
         case MONGO_CODES.ALREADY_CREATED:
-          return parseErrorMsg.ALREADY_EXISTS(entity)
+          return parseErrorMsg.alreadyExists(entity)
         default:
-          return parseErrorMsg.NO_IDEA_CODE(code)
+          return parseErrorMsg.noIdeaCode(code)
       }
     }
   },

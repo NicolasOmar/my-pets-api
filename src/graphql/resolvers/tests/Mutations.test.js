@@ -19,10 +19,7 @@ const newUser = {
 describe('[Mutations]', () => {
   afterEach(async () => await User.deleteMany())
 
-  afterAll(done => {
-    mongoose.connection.close()
-    done()
-  })
+  afterAll(async () => await mongoose.connection.close())
 
   describe('[loginUser]', () => {
     describe('[HAPPY PATH]', () => {
@@ -66,14 +63,14 @@ describe('[Mutations]', () => {
     })
 
     describe('[SAD PATH]', () => {
-      test('Should return an "ALREADY_EXISTS" Error by sending an already created User', async () => {
+      test('Should return an "alreadyExists" Error by sending an already created User', async () => {
         try {
           const userCreationRes = await Mutation.createUser(null, { newUser })
           expect(userCreationRes.token).toBeDefined()
 
           await Mutation.createUser(null, { newUser })
         } catch (error) {
-          expect(error.message).toBe(parseErrorMsg.ALREADY_EXISTS('User'))
+          expect(error.message).toBe(parseErrorMsg.alreadyExists('User'))
         }
       })
 
@@ -195,11 +192,11 @@ describe('[Mutations]', () => {
         }
       })
 
-      test('Should return a "MIN_MAX" Error trying to update with a new pass with less than 6 characters', async () => {
+      test('Should return a "minMaxValue" Error trying to update with a new pass with less than 6 characters', async () => {
         try {
           await Mutation.updatePass(null, args(), { loggedUser })
         } catch (error) {
-          expect(error.message).toBe(parseErrorMsg.MIN_MAX('Password', 6, true))
+          expect(error.message).toBe(parseErrorMsg.minMaxValue('Password', 6, true))
         }
       })
 
