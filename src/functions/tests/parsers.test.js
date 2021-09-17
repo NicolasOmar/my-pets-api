@@ -18,10 +18,8 @@ describe('[Parsers]', () => {
 
     test('Should parse different Error messages based on different MongoDb codes', () => {
       handleErrorCodesMocks.codes.forEach((code, i) => {
-        const fnResult = parseError({ code }, null)
-        const expectedRes = !i
-          ? parseErrorMsg.ALREADY_EXISTS('Entity')
-          : parseErrorMsg.NO_IDEA_CODE(code)
+        const fnResult = parseError({ code }, 'Entity')
+        const expectedRes = !i ? parseErrorMsg.ALREADY_EXISTS() : parseErrorMsg.NO_IDEA_CODE(code)
 
         expect(fnResult).toBe(expectedRes)
       })

@@ -20,8 +20,8 @@ export const checkAllowedUpdates = (obj, allowedFields) => {
 export const parseErrorMsg = {
   MIN_MAX: (control, value, isMinValue) =>
     `The ${control} needs to have ${isMinValue ? 'more' : 'less'} than ${value} characters`,
-  MISSING: value => `The user needs a valid ${value} to be created`,
-  ALREADY_EXISTS: entity => `There is an already created ${entity || 'Entity'}`,
+  MISSING: (value, entity = 'User') => `The ${entity} needs a valid ${value} to be created`,
+  ALREADY_EXISTS: (entity = 'Entity') => `There is an already created ${entity}`,
   NO_IDEA_CODE: code => `No idea dude, the code ${code} has not been mapped so far`
 }
 

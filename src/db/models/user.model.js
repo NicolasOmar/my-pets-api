@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema(
     },
     userName: {
       type: String,
-      unique: true,
+      unique: [true, parseErrorMsg.ALREADY_EXISTS('User')],
       required: [true, parseErrorMsg.MISSING('Username')],
       minlength: [4, parseErrorMsg.MIN_MAX('Username', 4, true)],
       maxlength: [10, parseErrorMsg.MIN_MAX('Username', 10, false)],

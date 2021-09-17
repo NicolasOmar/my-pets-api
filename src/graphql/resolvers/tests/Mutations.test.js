@@ -19,7 +19,10 @@ const newUser = {
 describe('[Mutations]', () => {
   afterEach(async () => await User.deleteMany())
 
-  afterAll(async () => await mongoose.disconnect())
+  afterAll(done => {
+    mongoose.connection.close()
+    done()
+  })
 
   describe('[loginUser]', () => {
     describe('[HAPPY PATH]', () => {

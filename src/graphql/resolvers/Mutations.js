@@ -110,7 +110,7 @@ const Mutations = {
 
       return parsedNewPet.toJSON()
     } catch (error) {
-      console.log(error)
+      throw new ApolloError(parseError(error, 'Pet'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   }
   // logoutAll: async(_, __, { loggedUser }) => {
