@@ -1,11 +1,12 @@
 type User {
+  id: ID!
   name: String!
   lastName: String!
   userName: String
   email: String!
   password: String
   token: String!
-  pet: Pet
+  pets: [Pet]!
 }
 
 type Pet {

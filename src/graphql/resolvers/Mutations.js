@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-server-errors'
-// MODELS
+// DB MODELS
 import User from '../../db/models/user.model'
 import Pet from '../../db/models/pet.model'
 // FUNCTIONS

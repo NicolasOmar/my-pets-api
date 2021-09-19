@@ -134,7 +134,6 @@ userSchema.methods.toJSON = function () {
   delete userObj.createdAt
   delete userObj.updatedAt
   delete userObj.__v
-  delete userObj._id
 
   return userObj
 }

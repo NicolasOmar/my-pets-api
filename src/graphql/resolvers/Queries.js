@@ -1,12 +1,5 @@
 const Queries = {
-  getUser: async (_, __, { loggedUser, token }) => {
-    return {
-      name: loggedUser.name,
-      lastName: loggedUser.lastName,
-      email: loggedUser.email,
-      token
-    }
-  }
+  getUser: async (_, __, { loggedUser, token }) => ({ ...loggedUser.toJSON(), token })
 }
 
 export default Queries

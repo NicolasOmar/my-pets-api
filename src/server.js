@@ -2,22 +2,20 @@ import jwt from 'jsonwebtoken'
 import { ApolloError, ApolloServer } from 'apollo-server-express'
 // SCHEMAS SPLITED BY CONCERNS
 import InputTypes from './graphql/schemas/Inputs.gql'
-import CustomTypes from './graphql/schemas/Customs.gql'
+import EntityTypes from './graphql/schemas/Entities.gql'
 import OperationTypes from './graphql/schemas/Operations.gql'
 // RESOLVERS SPLITED BY OPERATIONS
 import Query from './graphql/resolvers/Queries'
 import Mutation from './graphql/resolvers/Mutations'
+import Relationships from './graphql/resolvers/Relationships'
 // MODELS
 import User from './db/models/user.model'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from './constants/errors.json'
 
 const server = new ApolloServer({
-  typeDefs: [InputTypes, CustomTypes, OperationTypes],
-  resolvers: {
-    Query,
-    Mutation
-  },
+  typeDefs: [InputTypes, EntityTypes, OperationTypes],
+  resolvers: { Query, Mutation, ...Relationships },
   context: async ({ req }) => {
     const token = req.headers['authorization']
       ? req.headers['authorization'].replace('Bearer ', '')
