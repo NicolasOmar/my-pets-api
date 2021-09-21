@@ -1,7 +1,7 @@
 // QUERIES
 import Query from '../Queries'
 // MOCKS
-import { context } from '../mocks/Queries.mocks.json'
+import context from '../mocks/Queries.mocks.json'
 
 describe('[Queries]', () => {
   describe('[getUser]', () => {

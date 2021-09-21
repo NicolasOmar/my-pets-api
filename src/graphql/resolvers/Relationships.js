@@ -4,10 +4,13 @@ import User from '../../db/models/user.model'
 
 const Relationships = {
   User: {
-    pets: async ({ _id }) => (await Pet.find({ user: _id })) || []
+    pets: async ({ userName }) => {
+      const { _id } = await User.findOne({ userName })
+      return (await Pet.find({ user: _id })) || []
+    }
   },
   Pet: {
-    user: async ({ userId }) => (await User.findById(userId)) || []
+    user: async ({ user }) => (await User.findById(user)) || []
   }
 }
 

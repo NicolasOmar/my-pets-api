@@ -1,0 +1,23 @@
+{
+  "ALLOWED_CREATION": {
+    "PET": [
+      "name",
+      "petType",
+      "birthday",
+      "isAdopted",
+      "adoptionDate",
+      "height",
+      "length",
+      "weight",
+      "gender",
+      "hairColor",
+      "eyeColor",
+      "hasHeterochromia",
+      "user"
+    ]
+  },
+  "ALLOWED_UPDATE": {
+    "USER": ["name", "lastName"],
+    "PASSWORD": ["oldPass", "newPass"]
+  }
+}
