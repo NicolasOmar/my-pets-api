@@ -21,5 +21,17 @@
       "eyeColor": 1,
       "hasHeterochromia": false
     }
+  },
+  "requiredCases": {
+    "pet": [
+      { "field": "name", "message": "Name" },
+      { "field": "petType", "message": "Pet Type" },
+      { "field": "height", "message": "Height" },
+      { "field": "length", "message": "Length" },
+      { "field": "weight", "message": "Weight" },
+      { "field": "gender", "message": "Gender" },
+      { "field": "hairColor", "message": "Hair Color" },
+      { "field": "eyeColor", "message": "Eye Color" }
+    ]
   }
 }

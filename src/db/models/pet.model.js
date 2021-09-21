@@ -44,13 +44,13 @@ const petSchema = new Schema({
   },
   length: {
     type: Number,
-    min: 0,
-    required: [true, parseErrorMsg.missingValue('Length')]
+    required: [true, parseErrorMsg.missingValue('Length')],
+    min: 0
   },
   weight: {
     type: Number,
-    min: 0,
-    required: [true, parseErrorMsg.missingValue('Weight')]
+    required: [true, parseErrorMsg.missingValue('Weight')],
+    min: 0
   },
   gender: {
     type: Boolean,
@@ -58,11 +58,11 @@ const petSchema = new Schema({
   },
   hairColor: {
     type: Number,
-    required: [true, parseErrorMsg.missingValue('Gender')]
+    required: [true, parseErrorMsg.missingValue('Hair Color')]
   },
   eyeColor: {
     type: Number,
-    required: [true, parseErrorMsg.missingValue('Gender')]
+    required: [true, parseErrorMsg.missingValue('Eye Color')]
   },
   hasHeterochromia: {
     type: Boolean

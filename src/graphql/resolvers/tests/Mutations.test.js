@@ -4,12 +4,12 @@ import User from '../../../db/models/user.model'
 // MUTATIONS
 import Mutation from '../Mutations'
 // MOCKS
-import { context } from '../mocks/Mutations.mocks.json'
+import { context, requiredCases } from '../mocks/Mutations.mocks.json'
 // FUNCTIONS
 import { parseErrorMsg } from '../../../functions/parsers'
 import { encryptPass } from '../../../functions/encrypt'
 // CONSTANTS
-import { ERROR_MSGS } from '../../../constants/errors.json'
+import { ERROR_MSGS, HTTP_CODES } from '../../../constants/errors.json'
 
 const newUser = {
   ...context.newUser,
@@ -236,18 +236,33 @@ describe('[Mutations]', () => {
   describe('[createPet]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should create a pet for a logged User', async () => {
-        const { petInfo } = context
-        const { token } = await Mutation.createUser(null, { newUser })
-        const loggedUser = await User.findOne({ 'tokens.token': token })
+        const { userName } = await Mutation.createUser(null, { newUser })
+        const loggedUser = await User.findOne({ userName })
 
         const createPetRes = await Mutation.createPet(null, context, { loggedUser })
 
-        Object.keys(petInfo).forEach(key => expect(createPetRes[key]).toBe(petInfo[key]))
+        Object.keys(context.petInfo).forEach(key =>
+          expect(createPetRes[key]).toBe(context.petInfo[key])
+        )
       })
     })
 
-    // describe('[SAD PATH]', () => {
+    describe('[SAD PATH]', () => {
+      test('Should return an "missingValue" error for each null required field value', async () => {
+        const { userName } = await Mutation.createUser(null, { newUser })
+        const loggedUser = await User.findOne({ userName })
 
-    // })
+        requiredCases.pet.forEach(async ({ field, message }) => {
+          try {
+            const petInfo = { ...context.petInfo }
+            delete petInfo[field]
+            await Mutation.createPet(null, { petInfo }, { loggedUser })
+          } catch (e) {
+            expect(e.message).toBe(parseErrorMsg.missingValue(message))
+            expect(e.extensions.code).toBe(HTTP_CODES.INTERNAL_ERROR_SERVER)
+          }
+        })
+      })
+    })
   })
 })
