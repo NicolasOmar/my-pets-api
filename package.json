@@ -14,7 +14,8 @@
     "url": "https://github.com/NicolasOmar/my-pets-api/issues"
   },
   "scripts": {
-    "start": "env-cmd -f ./env/local.env nodemon src/index.js --ext js,gql --exec babel-node",
+    "start": "env-cmd -f ./env/local.env nodemon --ext js,gql --exec npm run server",
+    "server": "babel-node src/index.js",
     "start:ci": "babel ./src/index.js -d ./build ./src --copy-files && node ./build/index.js",
     "test": "env-cmd -f ./env/test.env jest --runInBand",
     "test:ci": "npm test -- --coverage",
