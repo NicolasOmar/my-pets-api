@@ -1,5 +1,6 @@
 type Query {
   getUser: User!
+  getPetTypes: [PetType]!
 }
 
 type Mutation {

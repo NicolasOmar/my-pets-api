@@ -6,3 +6,8 @@ type User {
   password: String
   token: String!
 }
+
+type PetType {
+  id: ID!
+  name: String!
+}
