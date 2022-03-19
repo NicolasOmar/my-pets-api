@@ -1,41 +1,58 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>MyBudget API</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" integrity="sha256-9mbkOfVho3ZPXfM7W8sV2SndrGDuh7wuyLjtsWeTI1Q=" crossorigin="anonymous" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyPets API | v{{version}}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css"
+      integrity="sha512-IgmDkwzs96t4SrChW29No3NXBIBv8baW490zk5aXvhCD8vuZM3yUSkbyTBcXohkySecyzIrUwiF/qV0cuPcL3Q=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
 
   <body>
-    <div class="ui middle aligned grid" style="height: 100vh; width: 100%;">
-      <div class="four wide column"></div>
-      <div class="eight wide column">
-        <div class="ui raised segment">
-          <h2 class="ui center aligned header">Welcome to My Pets API</h2>
-          <div class="ui clearing divider"></div>
-
-          <div class="ui three column grid">
-            <div class="center aligned column">
-              <a href="{{repoUrl}}" target="_blank">
-                <i class="massive black github link icon" title="Repository"></i>
-              </a>
-            </div>
-            <div class="center aligned column">
-              <a href="{{playgroundUrl}}" target="_blank">
-                <i class="massive black terminal link icon" title="GraphQL Playground"></i>
-              </a>
-            </div>
-            <div class="center aligned column">
-              <a href="{{webClientUrl}}" target="_blank">
-                <i class="massive black react link icon" title="Web client"></i>
-              </a>
-            </div>
-          </div>
-
-          <div class="ui clearing divider"></div>
-          <p class="ui center aligned header">{{version}}</p>
-        </div>
-      </div>
-      <div class="four wide column"></div>
-    </div>
+    <section class="columns is-centered is-vcentered" style="height: 100vh">
+      <section class="column is-four-fifths">
+        <section class="box">
+          <section class="block">
+            <h1 class="title is-1 has-text-centered">Welcome to My Pets API</h1>
+          </section>
+        
+          <section class="block" style="margin: 0; padding: 1rem 0">
+            <section class="columns has-text-centered">
+              <section class="column" style="padding: 2rem 0.75rem">
+                <a href="{{repoUrl}}" target="_blank">
+                  <span class="icon is-large">
+                    <i class="fab fa-github fa-6x" style="color: #1b1c1d" title="Repository"></i>
+                  </span>
+                </a>
+              </section>
+        
+              <section class="column" style="padding: 2rem 0.75rem">
+                <a href="{{playgroundUrl}}" target="_blank">
+                  <span class="icon is-large">
+                    <i class="fas fa-terminal fa-6x" style="color: #1b1c1d" title="GraphQL Playground"></i>
+                  </span>
+                </a>
+              </section>
+        
+              <section class="column" style="padding: 2rem 0.75rem">
+                <a href="{{webClientUrl}}" target="_blank">
+                  <span class="icon is-large">
+                    <i class="fab fa-react fa-6x" style="color: #1b1c1d" title="Web client"></i>
+                  </span>
+                </a>
+              </section>
+            </section>
+          </section>
+        
+          <section class="block has-text-centered">
+            <p class="is-size-4 has-text-weight-semibold">{{fullVersion}}</p>
+          </section>
+        </section>
+      </section>
+    </section>
   </body>
 </html>

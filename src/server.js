@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken'
 import { ApolloError, ApolloServer } from 'apollo-server-express'
 // SCHEMAS SPLITED BY CONCERNS
-import InputTypes from './graphql/schemas/Inputs.gql'
 import EntityTypes from './graphql/schemas/Entities.gql'
+import InputTypes from './graphql/schemas/Inputs.gql'
 import OperationTypes from './graphql/schemas/Operations.gql'
 // RESOLVERS SPLITED BY OPERATIONS
 import Query from './graphql/resolvers/Queries'
@@ -14,7 +14,7 @@ import User from './db/models/user.model'
 import { ERROR_MSGS, HTTP_CODES } from './constants/errors.json'
 
 const server = new ApolloServer({
-  typeDefs: [InputTypes, EntityTypes, OperationTypes],
+  typeDefs: [EntityTypes, InputTypes, OperationTypes],
   resolvers: { Query, Mutation, ...Relationships },
   context: async ({ req }) => {
     const token = req.headers['authorization']

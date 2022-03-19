@@ -23,7 +23,8 @@ app.get('/', (_, response) => {
     repoUrl: REPOISTORY_URL,
     playgroundUrl: PLAYGROUND_URL,
     webClientUrl: WEB_URL,
-    version: `v${API_VERSION} on ${API_ENVIRONMENT} environment`
+    version: API_VERSION,
+    fullVersion: `v${API_VERSION} on ${API_ENVIRONMENT} environment`
   })
 })
 
