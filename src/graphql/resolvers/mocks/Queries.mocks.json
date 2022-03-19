@@ -1,8 +1,14 @@
 {
-  "loggedUser": {
-    "name": "test",
-    "lastName": "test",
-    "email": "test@test.com"
+  "context": {
+    "loggedUser": {
+      "name": "test",
+      "lastName": "test",
+      "email": "test@test.com"
+    },
+    "token": "test"
   },
-  "token": "test"
+  "getPetTypesMocks": [
+    { "name": "cat" },
+    { "name": "dog" }
+  ]
 }

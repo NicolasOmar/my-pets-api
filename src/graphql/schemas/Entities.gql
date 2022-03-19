@@ -24,3 +24,8 @@ type Pet {
   hasHeterochromia: Boolean
   user: User
 }
+
+type PetType {
+  id: ID!
+  name: String!
+}
