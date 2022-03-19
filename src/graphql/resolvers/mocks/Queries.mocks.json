@@ -6,5 +6,9 @@
       "email": "test@test.com"
     },
     "token": "test"
-  }
+  },
+  "getPetTypesMocks": [
+    { "name": "cat" },
+    { "name": "dog" }
+  ]
 }
