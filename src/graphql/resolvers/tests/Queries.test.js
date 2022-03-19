@@ -1,5 +1,5 @@
 // MONGOOSE IMPORTS
-import _mongoose from '../../../db/mongoose'
+import mongoose from '../../../db/mongoose'
 import PetType from '../../../db/models/petTypes.model'
 // QUERIES
 import Query from '../Queries'
@@ -16,7 +16,7 @@ describe('[Queries]', () => {
 
   afterAll(async () => {
     await PetType.deleteMany()
-    await _mongoose.disconnect()
+    await mongoose.connection.close()
   })
 
   describe('[getUser]', () => {

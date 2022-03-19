@@ -1,0 +1,6 @@
+{
+  "petTypesStart": [
+    { "name": "cat" },
+    { "name": "dog" }
+  ]
+}

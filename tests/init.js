@@ -7,5 +7,5 @@ const { PORT } = process.env
 
 module.exports = () => {
   server.applyMiddleware({ app })
-  app.listen(PORT)
+  app.listen(PORT, () => console.log('Test server up and working'))
 }

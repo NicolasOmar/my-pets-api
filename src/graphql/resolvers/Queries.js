@@ -9,7 +9,10 @@ const Queries = {
       token
     }
   },
-  getPetTypes: async () => (await PetTypes.find()).map(({ _id, name }) => ({ id: _id, name }))
+  getPetTypes: async () => {
+    const queryResult = await PetTypes.find()
+    return queryResult?.map(({ _id, name }) => ({ id: _id, name })) || []
+  }
 }
 
 export default Queries
