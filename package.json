@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "GraphQL server based on NodeJs to give back-end support a web client based on React",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -14,11 +14,13 @@
     "url": "https://github.com/NicolasOmar/my-pets-api/issues"
   },
   "scripts": {
-    "start": "env-cmd -f ./env/local.env nodemon --ext js,gql --exec npm run server",
+    "start": "npm run local -- nodemon --ext js,gql --exec npm run server",
     "server": "babel-node src/index.js",
     "start:ci": "babel ./src/index.js -d ./build ./src --copy-files && node ./build/index.js",
     "test": "env-cmd -f ./env/test.env jest --runInBand",
-    "test:ci": "npm test -- --coverage || exit 0",
+    "test:ci": "npm test -- --coverage",
+    "local": "env-cmd -f ./env/local.env",
+    "db": "npm run local -- babel-node src/generateData.js",
     "lint": "eslint --fix src",
     "prettier": "prettier --write src",
     "update-version": "node ./scripts/update-version.js"
