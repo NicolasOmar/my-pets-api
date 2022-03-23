@@ -1,6 +1,3 @@
 {
-  "petTypesStart": [
-    { "name": "cat" },
-    { "name": "dog" }
-  ]
+  "petTypeSeeds": [ "Cat", "Dog" ]
 }
