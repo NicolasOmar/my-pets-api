@@ -1,25 +1,34 @@
 // QUERIES
 import Query from '../Queries'
 // MOCKS
-import { context, getPetTypesMocks } from '../mocks/Queries.mocks.json'
+import { context, getPetTypeMocks, getColorMocks } from '../mocks/Queries.mocks.json'
 import _mongoose from '../../../db/mongoose'
 import PetType from '../../../db/models/petType.model'
+import Color from '../../../db/models/color.model'
+
+const insertMocks = [
+  {
+    mock: getPetTypeMocks,
+    model: PetType
+  },
+  {
+    mock: getColorMocks,
+    model: Color
+  }
+]
 
 describe('[Queries]', () => {
   beforeAll(async () => {
-    /**TODOS
-     * add mock creation for colors
-     * make this foreach a common function
-     * add the test for the color
-     */
-    getPetTypesMocks.forEach(async _petType => {
-      const mongoPetType = new PetType({ ..._petType })
-      await mongoPetType.save()
+    await insertMocks.forEach(async ({ mock, model }) => {
+      await mock.forEach(async _mock => {
+        const mongoType = new model({ ..._mock })
+        await mongoType.save()
+      })
     })
   })
 
   afterAll(async () => {
-    await PetType.deleteMany()
+    await insertMocks.forEach(async ({ model }) => await model.deleteMany())
     await _mongoose.disconnect()
   })
 
@@ -38,6 +47,14 @@ describe('[Queries]', () => {
       const queryResponse = await Query.getPetTypes()
       console.log(queryResponse)
       expect(queryResponse).not.toBeNull()
+    })
+  })
+
+  describe('[getColors]', () => {
+    test('Should return an array of colors', async () => {
+      const queryResponse = await Query.getColors()
+      expect(queryResponse.length).toEqual(getColorMocks.length)
+      queryResponse.forEach((_res, i) => expect(_res.name).toEqual(getColorMocks[i].name))
     })
   })
 })
