@@ -43,7 +43,8 @@ describe('[Queries]', () => {
 
     test('Should return an array of pet types', async () => {
       const queryResponse = await Query.getPetTypes()
-      expect(queryResponse).not.toBeNull()
+      expect(queryResponse.length).toEqual(getPetTypeMocks.length)
+      queryResponse.forEach((_res, i) => expect(_res.name).toEqual(getPetTypeMocks[i].name))
     })
   })
 
