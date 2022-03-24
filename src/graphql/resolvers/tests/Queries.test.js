@@ -8,25 +8,21 @@ import Color from '../../../db/models/color.model'
 
 const insertMocks = [
   {
-    mock: getPetTypeMocks,
+    mockArray: getPetTypeMocks,
     model: PetType
   },
   {
-    mock: getColorMocks,
+    mockArray: getColorMocks,
     model: Color
   }
 ]
 
-describe('[Queries]', () => {
-  beforeAll(async () => {
-    await insertMocks.forEach(async ({ mock, model }) => {
-      await mock.forEach(async _mock => {
-        const mongoType = new model({ ..._mock })
-        await mongoType.save()
-      })
-    })
-  })
+const fillTestDb = async i => {
+  const { mockArray, model } = insertMocks[i]
+  await model.collection.insertMany(mockArray)
+}
 
+describe('[Queries]', () => {
   afterAll(async () => {
     await insertMocks.forEach(async ({ model }) => await model.deleteMany())
     await _mongoose.disconnect()
@@ -43,14 +39,17 @@ describe('[Queries]', () => {
   })
 
   describe('[getPetTypes]', () => {
+    beforeAll(async () => await fillTestDb(0))
+
     test('Should return an array of pet types', async () => {
       const queryResponse = await Query.getPetTypes()
-      console.log(queryResponse)
       expect(queryResponse).not.toBeNull()
     })
   })
 
   describe('[getColors]', () => {
+    beforeAll(async () => await fillTestDb(1))
+
     test('Should return an array of colors', async () => {
       const queryResponse = await Query.getColors()
       expect(queryResponse.length).toEqual(getColorMocks.length)
