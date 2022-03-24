@@ -7,8 +7,12 @@
     },
     "token": "test"
   },
-  "getPetTypesMocks": [
-    { "name": "cat" },
-    { "name": "dog" }
+  "getPetTypeMocks": [
+    { "name": "Cat" },
+    { "name": "Dog" }
+  ],
+  "getColorMocks": [
+    { "name": "Brown" },
+    { "name": "Blue" }
   ]
 }

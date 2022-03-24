@@ -11,3 +11,8 @@ type PetType {
   id: ID!
   name: String!
 }
+
+type Color {
+  id: ID!
+  name: String!
+}
