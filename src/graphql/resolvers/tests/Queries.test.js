@@ -1,22 +1,32 @@
 // MONGOOSE IMPORTS
-import mongoose from '../../../db/mongoose'
-import PetType from '../../../db/models/petTypes.model'
+import _mongoose from '../../../db/mongoose'
+import PetType from '../../../db/models/petType.model'
+import Color from '../../../db/models/color.model'
 // QUERIES
 import Query from '../Queries'
 // MOCKS
-import { context, getPetTypesMocks } from '../mocks/Queries.mocks.json'
+import { context, getPetTypeMocks, getColorMocks } from '../mocks/Queries.mocks.json'
+
+const insertMocks = [
+  {
+    mockArray: getPetTypeMocks,
+    model: PetType
+  },
+  {
+    mockArray: getColorMocks,
+    model: Color
+  }
+]
+
+const fillTestDb = async i => {
+  const { mockArray, model } = insertMocks[i]
+  await model.collection.insertMany(mockArray)
+}
 
 describe('[Queries]', () => {
-  beforeAll(async () => {
-    getPetTypesMocks.forEach(async _petType => {
-      const mongoPetType = new PetType({ ..._petType })
-      await mongoPetType.save()
-    })
-  })
-
   afterAll(async () => {
-    await PetType.deleteMany()
-    await mongoose.connection.close()
+    await insertMocks.forEach(async ({ model }) => await model.deleteMany())
+    await _mongoose.disconnect()
   })
 
   describe('[getUser]', () => {
@@ -30,9 +40,22 @@ describe('[Queries]', () => {
   })
 
   describe('[getPetTypes]', () => {
+    beforeAll(async () => await fillTestDb(0))
+
     test('Should return an array of pet types', async () => {
       const queryResponse = await Query.getPetTypes()
-      expect(queryResponse).not.toBeNull()
+      expect(queryResponse.length).toEqual(getPetTypeMocks.length)
+      queryResponse.forEach((_res, i) => expect(_res.name).toEqual(getPetTypeMocks[i].name))
+    })
+  })
+
+  describe('[getColors]', () => {
+    beforeAll(async () => await fillTestDb(1))
+
+    test('Should return an array of colors', async () => {
+      const queryResponse = await Query.getColors()
+      expect(queryResponse.length).toEqual(getColorMocks.length)
+      queryResponse.forEach((_res, i) => expect(_res.name).toEqual(getColorMocks[i].name))
     })
   })
 })
