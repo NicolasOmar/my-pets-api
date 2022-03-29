@@ -1,21 +1,30 @@
 // DB
-import PetType from '../db/models/petTypes.model'
+import Color from '../db/models/color.model'
+import PetType from '../db/models/petType.model'
 // MOCKS
-import { petTypeSeeds } from './mocks/populate.mocks.json'
+import { petTypeSeeds, colorSeeds } from './mocks/populate.mocks.json'
 
-export const logger = (entity, data) => console.log(`${entity} created => ${data}`)
-
-export const populatePetTypes = () => {
+const insertNewData = (seeds = [], model) => {
   return Promise.allSettled([
-    ...petTypeSeeds.map(name => {
+    seeds.map(name => {
       return new Promise(resolve => {
-        const mongoPetType = new PetType({ name })
-        resolve(mongoPetType.save())
+        const mongoObj = new model({ name })
+        resolve(mongoObj.save())
       })
     })
   ])
 }
 
-export const dropTables = () => {
-  return Promise.allSettled([new Promise(resolve => resolve(PetType.deleteMany()))])
+const clearTables = (tables = []) => {
+  return Promise.allSettled([
+    tables.map(table => new Promise(resolve => resolve(table.deleteMany())))
+  ])
 }
+
+export const logger = (entity, data = null) =>
+  console.log(`${entity} ${data ? `created => ${data}` : 'created'}`)
+
+export const insertPetTypes = () => insertNewData(petTypeSeeds, PetType)
+export const insertColors = () => insertNewData(colorSeeds, Color)
+
+export const dropTables = () => clearTables([PetType, Color])
