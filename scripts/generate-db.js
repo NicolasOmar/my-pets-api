@@ -1,8 +1,8 @@
 // EXPRESS INSTANCE
-import app from '../src/app'
+import app from '../src/server/app'
 import { dropTables, insertColors, insertPetTypes } from '../src/functions/populate'
 // APOLLO SERVER INSTANCE
-import server from '../src/server'
+import server from '../src/server/server'
 
 server.applyMiddleware({ app })
 

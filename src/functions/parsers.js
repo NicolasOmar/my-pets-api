@@ -1,33 +1,6 @@
 // CONSTANTS
 import { MONGO_CODES, ERROR_MSGS } from '../constants/errors.json'
 
-export const parseError = (error, entity) => {
-  return (
-    errorParsers.find(({ prop }) => error[prop])?.fn(error, entity) ||
-    parseErrorMsg.alreadyExists(entity)
-  )
-}
-
-export const checkAllowedUpdates = (obj, allowedFields) => {
-  const updateFields = Object.keys(obj)
-
-  return (
-    updateFields.length === allowedFields.length &&
-    updateFields.every(update => allowedFields.includes(update))
-  )
-}
-
-export const parseErrorMsg = {
-  minMaxValue: (control, value, isMinValue) =>
-    `The ${control} needs to have ${isMinValue ? 'more' : 'less'} than ${value} characters`,
-  missingValue: (value, entity = 'User') => `The ${entity} needs a valid ${value} to be created`,
-  alreadyExists: (entity = 'Entity') => `There is an already created ${entity}`,
-  invalidDateFormat: (field = 'date') =>
-    `The provided ${field} should be in a valid format (DD/MM/YYYY)`,
-  invalidDateBefore: (field = 'date', date) => `The provided ${field} should be after ${date}`,
-  noIdeaCode: code => `No idea dude, the code ${code} has not been mapped so far`
-}
-
 const errorParsers = [
   {
     prop: 'errors',
@@ -59,3 +32,32 @@ const errorParsers = [
     }
   }
 ]
+
+export const parseError = (error, entity) => {
+  return (
+    errorParsers.find(({ prop }) => error[prop])?.fn(error, entity) ||
+    parseErrorMsg.alreadyExists(entity)
+  )
+}
+
+export const checkAllowedUpdates = (obj, allowedFields) => {
+  const updateFields = Object.keys(obj)
+
+  return (
+    updateFields.length === allowedFields.length &&
+    updateFields.every(update => allowedFields.includes(update))
+  )
+}
+
+export const parseErrorMsg = {
+  minMaxValue: (control, value, isMinValue) =>
+    `The ${control} needs to have ${isMinValue ? 'more' : 'less'} than ${value} characters`,
+  missingValue: (value, entity = 'User') => `The ${entity} needs a valid ${value} to be created`,
+  alreadyExists: (entity = 'Entity') => `There is an already created ${entity}`,
+  invalidDateFormat: (field = 'date') =>
+    `The provided ${field} should be in a valid format (DD/MM/YYYY)`,
+  invalidDateBefore: (field = 'date', date) => `The provided ${field} should be after ${date}`,
+  noIdeaCode: code => `No idea dude, the code ${code} has not been mapped so far`
+}
+
+export const parseAuxiliaryData = ({ _id: id, name }) => ({ id, name })

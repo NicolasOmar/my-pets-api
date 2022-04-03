@@ -2,7 +2,7 @@ import express from 'express'
 import path from 'path'
 import 'hbs'
 // MONGOOSE INSTANCE READY TO CONNECT
-import mongoose from './db/mongoose'
+import mongoose from '../db/mongoose'
 
 // SET EXPRESS SERVER
 const app = express(mongoose)

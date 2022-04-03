@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose'
+import { parseAuxiliaryData } from '../../functions/parsers'
 
 const colorSchema = new Schema({
   name: {
@@ -8,8 +9,7 @@ const colorSchema = new Schema({
 })
 
 colorSchema.methods.toJSON = function () {
-  const { _id: id, name } = this
-  return { id, name }
+  return parseAuxiliaryData(this)
 }
 
 const Color = model('Color', colorSchema)

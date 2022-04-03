@@ -1,10 +1,15 @@
 // EXPRESS INSTANCE
-import app from './app'
+import app from './server/app'
 // APOLLO SERVER INSTANCE
-import server from './server'
+import server from './server/server'
 // ENVIRONMENTS VARIABLES
 const { PORT } = process.env
 
-server.applyMiddleware({ app })
+const startServer = async () => {
+  await server.start()
+  server.applyMiddleware({ app })
 
-app.listen(PORT, () => console.log(`Server up and working on port ${PORT}`))
+  app.listen(PORT, () => console.log(`Server up and working on port ${PORT}`))
+}
+
+startServer()

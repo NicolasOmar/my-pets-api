@@ -19,8 +19,6 @@ const newUser = {
 describe('[Mutations]', () => {
   afterEach(async () => await User.deleteMany())
 
-  afterAll(async () => await mongoose.connection.close())
-
   describe('[loginUser]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should login a created User', async () => {

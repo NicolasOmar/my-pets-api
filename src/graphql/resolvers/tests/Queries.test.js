@@ -26,7 +26,6 @@ const fillTestDb = async i => {
 describe('[Queries]', () => {
   afterAll(async () => {
     await insertMocks.forEach(async ({ model }) => await model.deleteMany())
-    await _mongoose.disconnect()
   })
 
   describe('[getUser]', () => {

@@ -1,4 +1,5 @@
 import { model, Schema } from 'mongoose'
+import { parseAuxiliaryData } from '../../functions/parsers'
 
 const petTypeSchema = new Schema({
   name: {
@@ -8,8 +9,7 @@ const petTypeSchema = new Schema({
 })
 
 petTypeSchema.methods.toJSON = function () {
-  const { _id: id, name } = this
-  return { id, name }
+  return parseAuxiliaryData(this)
 }
 
 const PetType = model('PetType', petTypeSchema)
