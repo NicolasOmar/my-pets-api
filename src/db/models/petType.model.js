@@ -7,6 +7,11 @@ const petTypeSchema = new Schema({
   }
 })
 
+petTypeSchema.methods.toJSON = function () {
+  const { _id: id, name } = this
+  return { id, name }
+}
+
 const PetType = model('PetType', petTypeSchema)
 
 export default PetType

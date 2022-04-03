@@ -1,18 +1,18 @@
 import { model, Schema } from 'mongoose'
-import validator from 'validator'
+// import validator from 'validator'
 // FUNCTIONS
 import { parseErrorMsg } from '../../functions/parsers'
 
-const validateDate = (value, field, beforeDate = null) => {
-  if (value) {
-    switch (value) {
-      case !validator.isDate(value):
-        throw { message: parseErrorMsg.invalidDateFormat(field) }
-      case beforeDate && !validator.isBefore(value):
-        throw { message: parseErrorMsg.invalidDateBefore(field, beforeDate) }
-    }
-  }
-}
+// const validateDate = (value, field, beforeDate = null) => {
+//   if (value) {
+//     switch (value) {
+//       case !validator.isDate(value):
+//         throw { message: parseErrorMsg.invalidDateFormat(field) }
+//       case beforeDate && !validator.isBefore(value):
+//         throw { message: parseErrorMsg.invalidDateBefore(field, beforeDate) }
+//     }
+//   }
+// }
 
 const petSchema = new Schema({
   name: {
@@ -23,46 +23,42 @@ const petSchema = new Schema({
     trim: true
   },
   petType: {
-    type: Number,
-    required: [true, parseErrorMsg.missingValue('Pet Type')]
+    type: Schema.Types.ObjectId,
+    required: [true, parseErrorMsg.missingValue('Pet Type')],
+    ref: 'PetType'
   },
   birthday: {
-    type: Date,
-    validate: value => validateDate(value, 'birthday', '1/1/1900')
+    type: Date
+    // validate: value => validateDate(value, 'birthday', '1/1/1900')
   },
   isAdopted: {
     type: Boolean
   },
   adoptionDate: {
-    type: Date,
-    validate: value => validateDate(value, 'adoption date', '1/1/1900')
+    type: Date
   },
   height: {
-    type: Number,
-    min: 0,
-    required: [true, parseErrorMsg.missingValue('Height')]
+    type: Number
   },
   length: {
-    type: Number,
-    required: [true, parseErrorMsg.missingValue('Length')],
-    min: 0
+    type: Number
   },
   weight: {
-    type: Number,
-    required: [true, parseErrorMsg.missingValue('Weight')],
-    min: 0
+    type: Number
   },
   gender: {
     type: Boolean,
     required: [true, parseErrorMsg.missingValue('Gender')]
   },
-  hairColor: {
-    type: Number,
-    required: [true, parseErrorMsg.missingValue('Hair Color')]
+  hairColors: {
+    type: Schema.Types.ObjectId,
+    required: [true, parseErrorMsg.missingValue('Hair Color')],
+    ref: 'Color'
   },
-  eyeColor: {
-    type: Number,
-    required: [true, parseErrorMsg.missingValue('Eye Color')]
+  eyeColors: {
+    type: Schema.Types.ObjectId,
+    required: [true, parseErrorMsg.missingValue('Eye Color')],
+    ref: 'Color'
   },
   hasHeterochromia: {
     type: Boolean

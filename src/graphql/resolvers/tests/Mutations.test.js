@@ -233,7 +233,7 @@ describe('[Mutations]', () => {
     })
   })
 
-  describe('[createPet]', () => {
+  describe.skip('[createPet]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should create a pet for a logged User', async () => {
         const { userName } = await Mutation.createUser(null, { newUser })

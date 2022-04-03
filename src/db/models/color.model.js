@@ -7,6 +7,11 @@ const colorSchema = new Schema({
   }
 })
 
+colorSchema.methods.toJSON = function () {
+  const { _id: id, name } = this
+  return { id, name }
+}
+
 const Color = model('Color', colorSchema)
 
 export default Color

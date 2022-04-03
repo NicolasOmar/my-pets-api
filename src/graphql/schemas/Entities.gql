@@ -11,17 +11,17 @@ type User {
 
 type Pet {
   name: String!
-  petType: Int!
-  birthday: String!
-  isAdopted: Boolean
+  petType: PetType!
+  birthday: String
+  isAdopted: Boolean!
   adoptionDate: String
-  height: Float!
-  length: Float!
-  weight: Float!
+  height: Float
+  length: Float
+  weight: Float
   gender: Boolean!
-  hairColor: Int
-  eyeColor: Int
+  hairColors: Color
   hasHeterochromia: Boolean
+  eyeColors: Color
   user: User
 }
 
