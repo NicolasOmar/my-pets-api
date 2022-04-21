@@ -24,7 +24,7 @@ const clearTables = (tables = []) => {
 export const logger = (entity, data = null) =>
   console.log(`${entity} ${data ? `created => ${data}` : 'created'}`)
 
-export const insertPetTypes = () => insertNewData(petTypeSeeds, PetType)
-export const insertColors = () => insertNewData(colorSeeds, Color)
+export const insertPetTypes = async () => await insertNewData(petTypeSeeds, PetType)
+export const insertColors = async () => await insertNewData(colorSeeds, Color)
 
-export const dropTables = () => clearTables([PetType, Color])
+export const dropTables = async () => await clearTables([PetType, Color])
