@@ -16,7 +16,7 @@ input PetInput {
   length: Float
   weight: Float
   gender: Boolean!
-  hairColors: ID
+  hairColors: [ID]
   hasHeterochromia: Boolean
-  eyeColors: ID
+  eyeColors: [ID]
 }

@@ -51,12 +51,12 @@ const petSchema = new Schema({
     required: [true, parseErrorMsg.missingValue('Gender')]
   },
   hairColors: {
-    type: Schema.Types.ObjectId,
+    type: [Schema.Types.ObjectId],
     required: [true, parseErrorMsg.missingValue('Hair Color')],
     ref: 'Color'
   },
   eyeColors: {
-    type: Schema.Types.ObjectId,
+    type: [Schema.Types.ObjectId],
     required: [true, parseErrorMsg.missingValue('Eye Color')],
     ref: 'Color'
   },

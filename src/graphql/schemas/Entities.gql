@@ -19,9 +19,9 @@ type Pet {
   length: Float
   weight: Float
   gender: Boolean!
-  hairColors: AuxiliaryData
+  hairColors: [AuxiliaryData]
   hasHeterochromia: Boolean
-  eyeColors: AuxiliaryData
+  eyeColors: [AuxiliaryData]
   user: User
 }
 
