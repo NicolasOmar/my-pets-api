@@ -58,6 +58,9 @@ describe('[Relationships]', () => {
     test('pets', async () => {
       const [testPetsRes] = await Relationships.User.pets({ userName: loggedUser.userName })
       checkObjectData(createdPet, testPetsRes)
+
+      const testNoPetsRes = await Relationships.User.pets({})
+      expect(testNoPetsRes).toEqual([])
     })
   })
 

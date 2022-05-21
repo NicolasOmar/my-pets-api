@@ -7,8 +7,8 @@ import Color from '../../db/models/color.model'
 const Relationships = {
   User: {
     pets: async ({ userName }) => {
-      const { _id } = await User.findOne({ userName })
-      return (await Pet.find({ user: _id })) || []
+      const user = userName ? (await User.findOne({ userName }))._id : null
+      return await Pet.find({ user })
     }
   },
   Pet: {
