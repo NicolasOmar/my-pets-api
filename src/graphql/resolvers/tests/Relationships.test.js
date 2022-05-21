@@ -14,12 +14,8 @@ import { testUser, testPet } from '../mocks/Relationships.mocks.json'
 import { encryptPass } from '../../../functions/encrypt'
 import { insertColors, insertPetTypes } from '../../../functions/populate'
 
-const checkObjectData = (mock, response) => {
-  Object.keys(mock).forEach(key => {
-    console.log(key, mock[key], response[key])
-    expect(mock[key]).toStrictEqual(response[key])
-  })
-}
+const checkObjectData = (mock, response) =>
+  Object.keys(mock).forEach(key => expect(mock[key]).toStrictEqual(response[key]))
 
 describe('[Relationships]', () => {
   let loggedUser = null
@@ -72,18 +68,22 @@ describe('[Relationships]', () => {
       checkObjectData(userData, testUserRes)
     })
 
-    test.skip('petType', async () => {
-      const testPetTypeRes = await Relationships.Pet.petType({ petType: selectedPetType.id })
+    test('petType', async () => {
+      const [testPetTypeRes] = await Relationships.Pet.petType({ petTypes: [selectedPetType.id] })
       checkObjectData(selectedPetType, testPetTypeRes)
     })
 
-    test.skip('hairColors', async () => {
-      const testHairColorsRes = await Relationships.Pet.hairColors({ hairColors: selectedColor.id })
+    test('hairColors', async () => {
+      const [testHairColorsRes] = await Relationships.Pet.hairColors({
+        hairColors: [selectedColor.id]
+      })
       checkObjectData(selectedColor, testHairColorsRes)
     })
 
-    test.skip('eyeColors', async () => {
-      const testEyeColorsRes = await Relationships.Pet.eyeColors({ hairColors: selectedColor.id })
+    test('eyeColors', async () => {
+      const [testEyeColorsRes] = await Relationships.Pet.eyeColors({
+        eyeColors: [selectedColor.id]
+      })
       checkObjectData(selectedColor, testEyeColorsRes)
     })
   })

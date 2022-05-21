@@ -13,9 +13,12 @@ const Relationships = {
   },
   Pet: {
     user: async ({ user }) => await User.findById(user),
-    petType: async ({ petType }) => await PetType.findById(petType),
-    hairColors: async ({ hairColors }) => await Color.findById(hairColors),
-    eyeColors: async ({ eyeColors }) => await Color.findById(eyeColors)
+    petType: async ({ petTypes }) =>
+      (await PetType.find().where('_id').in(petTypes)).map(({ _id, name }) => ({ id: _id, name })),
+    hairColors: async ({ hairColors }) =>
+      (await Color.find().where('_id').in(hairColors)).map(({ _id, name }) => ({ id: _id, name })),
+    eyeColors: async ({ eyeColors }) =>
+      (await Color.find().where('_id').in(eyeColors)).map(({ _id, name }) => ({ id: _id, name }))
   }
 }
 
