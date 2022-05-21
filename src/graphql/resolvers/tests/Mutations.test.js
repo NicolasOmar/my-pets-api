@@ -1,5 +1,5 @@
 // MONGOOSE CODE RELATED
-import mongoose from '../../../db/mongoose'
+import _mongoose from '../../../db/mongoose'
 import User from '../../../db/models/user.model'
 // MUTATIONS
 import Mutation from '../Mutations'

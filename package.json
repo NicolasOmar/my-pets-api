@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.1.18",
+  "version": "0.1.19",
   "description": "GraphQL server based on NodeJs to give back-end support a web client based on React",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -67,15 +67,7 @@
     "globalTeardown": "./scripts/close-tests.js",
     "collectCoverageFrom": [
       "src/**/!(*model|*mocks).js"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 70,
-        "functions": 70,
-        "lines": 70,
-        "statements": 70
-      }
-    }
+    ]
   },
   "lint-staged": {
     "src/**/!(*test).js": [
