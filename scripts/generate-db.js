@@ -1,12 +1,13 @@
 // EXPRESS INSTANCE
 import app from '../src/server/app'
-import { dropTables, insertColors, insertPetTypes } from '../src/functions/populate'
 // APOLLO SERVER INSTANCE
 import server from '../src/server/server'
+// FUNCTIONS
+import { clearTables, insertColors, insertPetTypes } from '../src/functions/populate'
 
 const runDbGenerator = async () => {
   const [_, __, closeTime = null] = process.argv
-  const exitIn = (closeTime !== 0 && !!closeTime && +closeTime) || 5
+  const exitIn = (closeTime !== 0 && closeTime > 0 && !!closeTime && +closeTime) || 5
 
   await server.start()
   server.applyMiddleware({ app })
@@ -14,7 +15,7 @@ const runDbGenerator = async () => {
   console.log('Database population process started')
 
   try {
-    await dropTables()
+    await clearTables()
     await insertPetTypes()
     await insertColors()
   } catch (e) {
