@@ -39,7 +39,7 @@ Once you have cloned the repo, it will show you the following folders:
 ## Find out more
 | [Project Status](https://github.com/users/NicolasOmar/projects/1/views/1) | [Storybook site](https://my-pets-storybook.netlify.app/) | [React Repo](https://github.com/NicolasOmar/my-pets) |
 | :--- | :--- | :--- |
-| Trello board for project status tracking | Site dedicated to show and test all the created components | React front-end repository |
+| Project board for project status tracking | Site dedicated to show and test all the created components | React front-end repository |
 
 ## License
 **MIT**

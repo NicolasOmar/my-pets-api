@@ -5,8 +5,6 @@
   "ERROR_MSGS": {
     "ALPHA": "The field needs to contain letters only",
     "EMAIL": "The user needs a valid mail format (@site.com) to be created",
-    "AMOUNT": "The amount of the transaction should be composed by numbers only",
-    "DATE": "The date of the transaction should be in a valid format (DD/MM/YYYY)",
     "UPDATES": "Invalid update data",
     "LOGIN": "Your email and/or password is incorrect. Try again with other credentials",
     "PASSWORD": "The provided password is not the current one. Try again with the correct one",

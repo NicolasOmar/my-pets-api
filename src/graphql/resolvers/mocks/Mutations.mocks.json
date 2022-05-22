@@ -6,6 +6,32 @@
       "userName": "userName",
       "email": "newUser@test.com",
       "password": "newUserEmailPass"
+    },
+    "petInfo": {
+      "name": "test",
+      "petType": 1,
+      "birthday": null,
+      "isAdopted": true,
+      "adoptionDate": null,
+      "height": 10,
+      "length": 10,
+      "weight": 10,
+      "gender": true,
+      "hairColor": 1,
+      "eyeColor": 1,
+      "hasHeterochromia": false
     }
+  },
+  "requiredCases": {
+    "pet": [
+      { "field": "name", "message": "Name" },
+      { "field": "petType", "message": "Pet Type" },
+      { "field": "height", "message": "Height" },
+      { "field": "length", "message": "Length" },
+      { "field": "weight", "message": "Weight" },
+      { "field": "gender", "message": "Gender" },
+      { "field": "hairColor", "message": "Hair Color" },
+      { "field": "eyeColor", "message": "Eye Color" }
+    ]
   }
 }

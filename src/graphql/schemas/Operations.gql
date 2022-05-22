@@ -1,7 +1,7 @@
 type Query {
   getUser: User!
-  getPetTypes: [PetType]!
-  getColors: [Color]!
+  getPetTypes: [AuxiliaryData]!
+  getColors: [AuxiliaryData]!
 }
 
 type Mutation {
@@ -9,6 +9,7 @@ type Mutation {
   createUser(newUser: UserInput): User
   updateUser(name: String!, lastName: String!): User
   updatePass(oldPass: String!, newPass: String!): Boolean
+  createPet(petInfo: PetInput!): Pet
   logout: Boolean!
   # logoutAll: Boolean!
 }

@@ -1,16 +1,13 @@
 import { ApolloError } from 'apollo-server-errors'
-// MODELS
+// DB MODELS
 import User from '../../db/models/user.model'
+import Pet from '../../db/models/pet.model'
 // FUNCTIONS
 import { checkAllowedUpdates, parseError } from '../../functions/parsers'
 import { decryptPass } from '../../functions/encrypt'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '../../constants/errors.json'
-
-const allowedFieldUpdates = {
-  user: ['name', 'lastName'],
-  password: ['oldPass', 'newPass']
-}
+import { ALLOWED_UPDATE } from '../../constants/allowedFields.json'
 
 const Mutations = {
   loginUser: async (_, { email, password }) => {
@@ -43,7 +40,7 @@ const Mutations = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
-    if (!checkAllowedUpdates(args, allowedFieldUpdates.user)) {
+    if (!checkAllowedUpdates(args, ALLOWED_UPDATE.USER)) {
       throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
     }
 
@@ -61,7 +58,7 @@ const Mutations = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
-    if (!checkAllowedUpdates(args, allowedFieldUpdates.password)) {
+    if (!checkAllowedUpdates(args, ALLOWED_UPDATE.PASSWORD)) {
       throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
     }
 
@@ -92,6 +89,26 @@ const Mutations = {
       return true
     } catch (error) {
       throw new ApolloError(parseError(error, 'User'), HTTP_CODES.INTERNAL_ERROR_SERVER)
+    }
+  },
+  createPet: async (_, { petInfo }, { loggedUser }) => {
+    if (!loggedUser) {
+      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+    }
+
+    const { _id } = await User.findOne({ userName: loggedUser.userName })
+
+    try {
+      const parsedNewPet = new Pet({
+        ...petInfo,
+        user: _id
+      })
+
+      await parsedNewPet.save()
+
+      return parsedNewPet.toJSON()
+    } catch (error) {
+      throw new ApolloError(parseError(error, 'Pet'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   }
   // logoutAll: async(_, __, { loggedUser }) => {

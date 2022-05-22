@@ -1,15 +1,15 @@
 // MONGOOSE CODE RELATED
-import mongoose from '../../../db/mongoose'
+import _mongoose from '../../../db/mongoose'
 import User from '../../../db/models/user.model'
 // MUTATIONS
 import Mutation from '../Mutations'
 // MOCKS
-import { context } from '../mocks/Mutations.mocks.json'
+import { context, requiredCases } from '../mocks/Mutations.mocks.json'
 // FUNCTIONS
 import { parseErrorMsg } from '../../../functions/parsers'
 import { encryptPass } from '../../../functions/encrypt'
 // CONSTANTS
-import { ERROR_MSGS } from '../../../constants/errors.json'
+import { ERROR_MSGS, HTTP_CODES } from '../../../constants/errors.json'
 
 const newUser = {
   ...context.newUser,
@@ -18,8 +18,6 @@ const newUser = {
 
 describe('[Mutations]', () => {
   afterEach(async () => await User.deleteMany())
-
-  afterAll(async () => await mongoose.disconnect())
 
   describe('[loginUser]', () => {
     describe('[HAPPY PATH]', () => {
@@ -63,14 +61,14 @@ describe('[Mutations]', () => {
     })
 
     describe('[SAD PATH]', () => {
-      test('Should return an "ALREADY_EXISTS" Error by sending an already created User', async () => {
+      test('Should return an "alreadyExists" Error by sending an already created User', async () => {
         try {
           const userCreationRes = await Mutation.createUser(null, { newUser })
           expect(userCreationRes.token).toBeDefined()
 
           await Mutation.createUser(null, { newUser })
         } catch (error) {
-          expect(error.message).toBe(parseErrorMsg.ALREADY_EXISTS('User'))
+          expect(error.message).toBe(parseErrorMsg.alreadyExists('User'))
         }
       })
 
@@ -192,11 +190,11 @@ describe('[Mutations]', () => {
         }
       })
 
-      test('Should return a "MIN_MAX" Error trying to update with a new pass with less than 6 characters', async () => {
+      test('Should return a "minMaxValue" Error trying to update with a new pass with less than 6 characters', async () => {
         try {
           await Mutation.updatePass(null, args(), { loggedUser })
         } catch (error) {
-          expect(error.message).toBe(parseErrorMsg.MIN_MAX('Password', 6, true))
+          expect(error.message).toBe(parseErrorMsg.minMaxValue('Password', 6, true))
         }
       })
 
@@ -229,6 +227,39 @@ describe('[Mutations]', () => {
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
+      })
+    })
+  })
+
+  describe.skip('[createPet]', () => {
+    describe('[HAPPY PATH]', () => {
+      test('Should create a pet for a logged User', async () => {
+        const { userName } = await Mutation.createUser(null, { newUser })
+        const loggedUser = await User.findOne({ userName })
+
+        const createPetRes = await Mutation.createPet(null, context, { loggedUser })
+
+        Object.keys(context.petInfo).forEach(key =>
+          expect(createPetRes[key]).toBe(context.petInfo[key])
+        )
+      })
+    })
+
+    describe('[SAD PATH]', () => {
+      test('Should return an "missingValue" error for each null required field value', async () => {
+        const { userName } = await Mutation.createUser(null, { newUser })
+        const loggedUser = await User.findOne({ userName })
+
+        requiredCases.pet.forEach(async ({ field, message }) => {
+          try {
+            const petInfo = { ...context.petInfo }
+            delete petInfo[field]
+            await Mutation.createPet(null, { petInfo }, { loggedUser })
+          } catch (e) {
+            expect(e.message).toBe(parseErrorMsg.missingValue(message))
+            expect(e.extensions.code).toBe(HTTP_CODES.INTERNAL_ERROR_SERVER)
+          }
+        })
       })
     })
   })

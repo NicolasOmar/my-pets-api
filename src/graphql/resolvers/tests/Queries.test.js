@@ -1,10 +1,11 @@
+// MONGOOSE IMPORTS
+import _mongoose from '../../../db/mongoose'
+import PetType from '../../../db/models/petType.model'
+import Color from '../../../db/models/color.model'
 // QUERIES
 import Query from '../Queries'
 // MOCKS
 import { context, getPetTypeMocks, getColorMocks } from '../mocks/Queries.mocks.json'
-import _mongoose from '../../../db/mongoose'
-import PetType from '../../../db/models/petType.model'
-import Color from '../../../db/models/color.model'
 
 const insertMocks = [
   {
@@ -25,7 +26,6 @@ const fillTestDb = async i => {
 describe('[Queries]', () => {
   afterAll(async () => {
     await insertMocks.forEach(async ({ model }) => await model.deleteMany())
-    await _mongoose.disconnect()
   })
 
   describe('[getUser]', () => {

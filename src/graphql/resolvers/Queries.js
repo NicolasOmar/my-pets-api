@@ -1,3 +1,4 @@
+// MODELS
 import Color from '../../db/models/color.model'
 import PetType from '../../db/models/petType.model'
 
