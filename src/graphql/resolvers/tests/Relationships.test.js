@@ -72,7 +72,7 @@ describe('[Relationships]', () => {
     })
 
     test('petType', async () => {
-      const [testPetTypeRes] = await Relationships.Pet.petType({ petTypes: [selectedPetType.id] })
+      const testPetTypeRes = await Relationships.Pet.petType({ petType: selectedPetType.id })
       checkObjectData(selectedPetType, testPetTypeRes)
     })
 

@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.1.22",
+  "version": "0.1.23",
   "description": "GraphQL server based on NodeJs to give back-end support a web client based on React",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -55,10 +55,6 @@
     "lint-staged": "^12.3.7",
     "nodemon": "^2.0.7",
     "prettier": "^2.2.1"
-  },
-  "engines": {
-    "node": "16.13.2",
-    "npm": "8.5.3"
   },
   "jest": {
     "verbose": true,
