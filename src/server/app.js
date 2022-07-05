@@ -7,8 +7,8 @@ import mongoose from '../db/mongoose'
 // SET EXPRESS SERVER
 const app = express(mongoose)
 // SETUP PATHS
-const publicPath = path.join(__dirname, '../public')
-const viewsPath = path.join(__dirname, '../templates/views')
+const publicPath = path.join(__dirname, '../../public')
+const viewsPath = path.join(__dirname, '../../templates/views')
 // SETUP HANDLEBARS ENGINE AND VIEWS LOCATION
 app.set('view engine', 'hbs')
 app.set('views', viewsPath)
