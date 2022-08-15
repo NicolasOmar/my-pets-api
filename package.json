@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.1.24",
+  "version": "0.1.25",
   "description": "GraphQL server based on NodeJs to give back-end support a web client based on React",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -12,6 +12,9 @@
   },
   "bugs": {
     "url": "https://github.com/NicolasOmar/my-pets-api/issues"
+  },
+  "engines": {
+    "node": ">=16.13.2"
   },
   "scripts": {
     "start": "npm run env:local -- nodemon --ext js,gql --watch src --exec npm run server",

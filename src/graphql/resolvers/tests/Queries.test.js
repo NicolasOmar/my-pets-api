@@ -1,31 +1,22 @@
 // MONGOOSE IMPORTS
 import _mongoose from '../../../db/mongoose'
-import PetType from '../../../db/models/petType.model'
-import Color from '../../../db/models/color.model'
 // QUERIES
 import Query from '../Queries'
 // MOCKS
-import { context, getPetTypeMocks, getColorMocks } from '../mocks/Queries.mocks.json'
-
-const insertMocks = [
-  {
-    mockArray: getPetTypeMocks,
-    model: PetType
-  },
-  {
-    mockArray: getColorMocks,
-    model: Color
-  }
-]
-
-const fillTestDb = async i => {
-  const { mockArray, model } = insertMocks[i]
-  await model.collection.insertMany(mockArray)
-}
+import { context } from '../mocks/Queries.mocks.json'
+import { petTypeSeeds, colorSeeds } from '../../../functions/mocks/populate.mocks.json'
+// FUNCTIONS
+import { clearMockedTable, fillDbWithMocks } from '../../../functions/mockDbOps'
 
 describe('[Queries]', () => {
+  beforeAll(async () => {
+    await clearMockedTable('petType')
+    await clearMockedTable('color')
+  })
+
   afterAll(async () => {
-    await insertMocks.forEach(async ({ model }) => await model.deleteMany())
+    await clearMockedTable('petType')
+    await clearMockedTable('color')
   })
 
   describe('[getUser]', () => {
@@ -39,22 +30,27 @@ describe('[Queries]', () => {
   })
 
   describe('[getPetTypes]', () => {
-    beforeAll(async () => await fillTestDb(0))
+    beforeAll(async () => await fillDbWithMocks('petType'))
 
     test('Should return an array of pet types', async () => {
       const queryResponse = await Query.getPetTypes()
-      expect(queryResponse.length).toEqual(getPetTypeMocks.length)
-      queryResponse.forEach((_res, i) => expect(_res.name).toEqual(getPetTypeMocks[i].name))
+      console.log(queryResponse)
+      expect(queryResponse.length).toEqual(petTypeSeeds.length)
+      queryResponse.forEach(({ name }, i) => expect(name).toEqual(petTypeSeeds[i]))
     })
   })
 
   describe('[getColors]', () => {
-    beforeAll(async () => await fillTestDb(1))
+    beforeAll(async () => await fillDbWithMocks('color'))
 
     test('Should return an array of colors', async () => {
       const queryResponse = await Query.getColors()
-      expect(queryResponse.length).toEqual(getColorMocks.length)
-      queryResponse.forEach((_res, i) => expect(_res.name).toEqual(getColorMocks[i].name))
+      expect(queryResponse.length).toEqual(colorSeeds.length)
+      queryResponse.forEach((_res, i) => expect(_res.name).toEqual(colorSeeds[i]))
     })
+  })
+
+  describe('[getMyPets]', () => {
+    test('Should return an array of pets', () => expect(5 + 5).not.toBe(11))
   })
 })

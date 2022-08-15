@@ -1,6 +1,7 @@
 // MONGOOSE CODE RELATED
 import _mongoose from '../../../db/mongoose'
 import User from '../../../db/models/user.model'
+import Color from '../../../db/models/color.model'
 // MUTATIONS
 import Mutation from '../Mutations'
 // MOCKS
@@ -8,8 +9,10 @@ import { context, requiredCases } from '../mocks/Mutations.mocks.json'
 // FUNCTIONS
 import { parseErrorMsg } from '../../../functions/parsers'
 import { encryptPass } from '../../../functions/encrypt'
+import { clearMockedTable, fillDbWithMocks } from '../../../functions/mockDbOps'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '../../../constants/errors.json'
+import PetType from '../../../db/models/petType.model'
 
 const newUser = {
   ...context.newUser,
@@ -231,13 +234,31 @@ describe('[Mutations]', () => {
     })
   })
 
-  describe.skip('[createPet]', () => {
+  describe('[createPet]', () => {
+    beforeAll(async () => {
+      await fillDbWithMocks('petType')
+      await fillDbWithMocks('color')
+    })
+
+    // afterAll(async () => {
+    //   await clearMockedTable('petType')
+    //   await clearMockedTable('color')
+    // })
+
     describe('[HAPPY PATH]', () => {
       test('Should create a pet for a logged User', async () => {
         const { userName } = await Mutation.createUser(null, { newUser })
         const loggedUser = await User.findOne({ userName })
+        const [colorId] = (await Color.find()).map(({ _id }) => ({ id: _id }))
+        const [petTypeId] = (await PetType.find()).map(({ _id }) => ({ id: _id }))
 
-        const createPetRes = await Mutation.createPet(null, context, { loggedUser })
+        const petInfo = {
+          ...context.petInfo,
+          petType: petTypeId.id,
+          hairColor: [colorId.id],
+          eyeColor: [colorId.id]
+        }
+        const createPetRes = await Mutation.createPet(null, { petInfo }, { loggedUser })
 
         Object.keys(context.petInfo).forEach(key =>
           expect(createPetRes[key]).toBe(context.petInfo[key])
@@ -249,10 +270,17 @@ describe('[Mutations]', () => {
       test('Should return an "missingValue" error for each null required field value', async () => {
         const { userName } = await Mutation.createUser(null, { newUser })
         const loggedUser = await User.findOne({ userName })
+        const [colorId] = (await Color.find()).map(({ _id }) => ({ id: _id }))
+        const [petTypeId] = (await PetType.find()).map(({ _id }) => ({ id: _id }))
 
         requiredCases.pet.forEach(async ({ field, message }) => {
           try {
-            const petInfo = { ...context.petInfo }
+            const petInfo = {
+              ...context.petInfo,
+              petType: petTypeId.id,
+              hairColor: [colorId.id],
+              eyeColor: [colorId.id]
+            }
             delete petInfo[field]
             await Mutation.createPet(null, { petInfo }, { loggedUser })
           } catch (e) {

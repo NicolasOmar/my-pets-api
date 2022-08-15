@@ -1,0 +1,10 @@
+{
+  "petTypeMocks": [
+    { "name": "Cat" },
+    { "name": "Dog" }
+  ],
+  "colorMocks": [
+    { "name": "Brown" },
+    { "name": "Blue" }
+  ]
+}

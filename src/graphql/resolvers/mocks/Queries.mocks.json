@@ -6,13 +6,5 @@
       "email": "test@test.com"
     },
     "token": "test"
-  },
-  "getPetTypeMocks": [
-    { "name": "Cat" },
-    { "name": "Dog" }
-  ],
-  "getColorMocks": [
-    { "name": "Brown" },
-    { "name": "Blue" }
-  ]
+  }
 }

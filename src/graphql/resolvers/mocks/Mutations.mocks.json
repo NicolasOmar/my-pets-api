@@ -9,7 +9,6 @@
     },
     "petInfo": {
       "name": "test",
-      "petType": 1,
       "birthday": null,
       "isAdopted": true,
       "adoptionDate": null,
@@ -17,8 +16,6 @@
       "length": 10,
       "weight": 10,
       "gender": true,
-      "hairColor": 1,
-      "eyeColor": 1,
       "hasHeterochromia": false
     }
   },

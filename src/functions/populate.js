@@ -24,6 +24,7 @@ export const clearTables = (tables = []) => {
 }
 
 export const insertPetTypes = async () => await insertNewData(petTypeSeeds, PetType)
+
 export const insertColors = async () => await insertNewData(colorSeeds, Color)
 
 export const dropTables = async () => await clearTables([PetType, Color])
