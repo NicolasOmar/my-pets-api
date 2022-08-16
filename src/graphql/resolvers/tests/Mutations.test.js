@@ -9,7 +9,7 @@ import { context, requiredCases } from '../mocks/Mutations.mocks.json'
 // FUNCTIONS
 import { parseErrorMsg } from '../../../functions/parsers'
 import { encryptPass } from '../../../functions/encrypt'
-import { clearMockedTable, fillDbWithMocks } from '../../../functions/mockDbOps'
+import { clearTable, populateTable } from '../../../functions/dbOps'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '../../../constants/errors.json'
 import PetType from '../../../db/models/petType.model'
@@ -236,14 +236,15 @@ describe('[Mutations]', () => {
 
   describe('[createPet]', () => {
     beforeAll(async () => {
-      await fillDbWithMocks('petType')
-      await fillDbWithMocks('color')
+      await populateTable('petType')
+      await populateTable('color')
     })
 
-    // afterAll(async () => {
-    //   await clearMockedTable('petType')
-    //   await clearMockedTable('color')
-    // })
+    afterAll(async () => {
+      await clearTable('petType')
+      await clearTable('color')
+      await clearTable('pet')
+    })
 
     describe('[HAPPY PATH]', () => {
       test('Should create a pet for a logged User', async () => {
@@ -278,8 +279,8 @@ describe('[Mutations]', () => {
             const petInfo = {
               ...context.petInfo,
               petType: petTypeId.id,
-              hairColor: [colorId.id],
-              eyeColor: [colorId.id]
+              hairColors: [colorId.id],
+              eyeColors: [colorId.id]
             }
             delete petInfo[field]
             await Mutation.createPet(null, { petInfo }, { loggedUser })

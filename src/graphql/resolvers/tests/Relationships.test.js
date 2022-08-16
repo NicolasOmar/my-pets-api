@@ -12,7 +12,7 @@ import Relationships from '../Relationships'
 import { testUser, testPet } from '../mocks/Relationships.mocks.json'
 // FUNCTIONS
 import { encryptPass } from '../../../functions/encrypt'
-import { insertColors, insertPetTypes } from '../../../functions/populate'
+import { clearAllTables, populateTable } from '../../../functions/dbOps'
 
 const checkObjectData = (mock, response) =>
   Object.keys(mock).forEach(key => expect(mock[key]).toStrictEqual(response[key]))
@@ -29,8 +29,8 @@ describe('[Relationships]', () => {
       password: encryptPass(testUser.password)
     }
 
-    await insertPetTypes()
-    await insertColors()
+    await populateTable('petType')
+    await populateTable('color')
     loggedUser = await Mutations.createUser(null, { newUser })
     const [petType] = await Queries.getPetTypes()
     const [color] = await Queries.getColors()
@@ -48,10 +48,7 @@ describe('[Relationships]', () => {
   })
 
   afterAll(async () => {
-    await PetType.deleteMany()
-    await Color.deleteMany()
-    await Pet.deleteMany()
-    await User.deleteMany()
+    await clearAllTables()
   })
 
   describe('[User]', () => {
