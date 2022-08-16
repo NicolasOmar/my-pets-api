@@ -5,7 +5,8 @@ import Color from '../../../db/models/color.model'
 // MUTATIONS
 import Mutation from '../Mutations'
 // MOCKS
-import { context, requiredCases } from '../mocks/Mutations.mocks.json'
+import { requiredCases } from '../mocks/Mutations.mocks.json'
+import { testEnv } from '../../../functions/mocks/dbOps.mocks.json'
 // FUNCTIONS
 import { parseErrorMsg } from '../../../functions/parsers'
 import { encryptPass } from '../../../functions/encrypt'
@@ -15,8 +16,8 @@ import { ERROR_MSGS, HTTP_CODES } from '../../../constants/errors.json'
 import PetType from '../../../db/models/petType.model'
 
 const newUser = {
-  ...context.newUser,
-  password: encryptPass(context.newUser.password)
+  ...testEnv.user,
+  password: encryptPass(testEnv.user.password)
 }
 
 describe('[Mutations]', () => {
@@ -46,7 +47,7 @@ describe('[Mutations]', () => {
 
       test('Should return an "LOGIN" Error trying to login a User with a non-encrypted password', async () => {
         try {
-          const { email, password } = context.newUser
+          const { email, password } = testEnv.user
           await Mutation.loginUser(null, { email, password })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.LOGIN)
@@ -77,7 +78,7 @@ describe('[Mutations]', () => {
 
       test('Should return an "LOGIN" Error trying to create an already created User', async () => {
         try {
-          await Mutation.createUser(null, { ...context })
+          await Mutation.createUser(null, { newUser: testEnv.user })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.LOGIN)
         }
@@ -128,7 +129,7 @@ describe('[Mutations]', () => {
         const { token } = await Mutation.createUser(null, { newUser })
         const loggedUser = await User.findOne({ 'tokens.token': token })
         const args = {
-          oldPass: encryptPass(context.newUser.password),
+          oldPass: encryptPass(testEnv.user.password),
           newPass: encryptPass('testing')
         }
         const updateResponse = await Mutation.updatePass(null, args, { loggedUser })
@@ -142,18 +143,18 @@ describe('[Mutations]', () => {
       const args = jest
         .fn()
         .mockReturnValueOnce({
-          oldPass: encryptPass(context.newUser.password),
+          oldPass: encryptPass(testEnv.user.password),
           newPass: encryptPass('testing')
         })
         .mockReturnValueOnce({
-          oldPass: encryptPass(context.newUser.password)
+          oldPass: encryptPass(testEnv.user.password)
         })
         .mockReturnValueOnce({
           oldPass: null,
           newPass: encryptPass('testing')
         })
         .mockReturnValueOnce({
-          oldPass: encryptPass(context.newUser.password),
+          oldPass: encryptPass(testEnv.user.password),
           newPass: encryptPass('test')
         })
         .mockReturnValueOnce({
@@ -254,16 +255,14 @@ describe('[Mutations]', () => {
         const [petTypeId] = (await PetType.find()).map(({ _id }) => ({ id: _id }))
 
         const petInfo = {
-          ...context.petInfo,
+          ...testEnv.pet,
           petType: petTypeId.id,
           hairColor: [colorId.id],
           eyeColor: [colorId.id]
         }
         const createPetRes = await Mutation.createPet(null, { petInfo }, { loggedUser })
 
-        Object.keys(context.petInfo).forEach(key =>
-          expect(createPetRes[key]).toBe(context.petInfo[key])
-        )
+        Object.keys(testEnv.pet).forEach(key => expect(createPetRes[key]).toBe(testEnv.pet[key]))
       })
     })
 
@@ -277,7 +276,7 @@ describe('[Mutations]', () => {
         requiredCases.pet.forEach(async ({ field, message }) => {
           try {
             const petInfo = {
-              ...context.petInfo,
+              ...testEnv.pet,
               petType: petTypeId.id,
               hairColors: [colorId.id],
               eyeColors: [colorId.id]

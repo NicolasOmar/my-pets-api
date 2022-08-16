@@ -14,10 +14,10 @@ const tables = {
 }
 
 export const populateTable = async (_case, env = 'test') => {
-  const _data = baseData[env][_case]
-  Array.isArray(_data)
-    ? await tables[_case].collection.insertMany(_data.map(name => ({ name })))
-    : await tables[_case].collection.insertOne(_data)
+  const data = baseData[`${env}Env`] ? baseData[`${env}Env`][_case] : []
+  Array.isArray(data)
+    ? await tables[_case].collection.insertMany(data.map(name => ({ name })))
+    : await tables[_case].collection.insertOne(data)
 }
 
 export const clearTable = async _case => await tables[_case].collection.deleteMany()

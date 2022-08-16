@@ -1,24 +1,4 @@
 {
-  "context": {
-    "newUser": {
-      "name": "new name",
-      "lastName": "new lastName",
-      "userName": "userName",
-      "email": "newUser@test.com",
-      "password": "newUserEmailPass"
-    },
-    "petInfo": {
-      "name": "test",
-      "birthday": null,
-      "isAdopted": true,
-      "adoptionDate": null,
-      "height": 10,
-      "length": 10,
-      "weight": 10,
-      "gender": true,
-      "hasHeterochromia": false
-    }
-  },
   "requiredCases": {
     "pet": [
       { "field": "name", "message": "Name" },

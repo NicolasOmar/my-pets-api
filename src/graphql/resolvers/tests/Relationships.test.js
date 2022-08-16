@@ -1,15 +1,11 @@
 // MONGOOSE CODE RELATED
 import _mongoose from '../../../db/mongoose'
-import User from '../../../db/models/user.model'
-import PetType from '../../../db/models/petType.model'
-import Color from '../../../db/models/color.model'
-import Pet from '../../../db/models/pet.model'
 // GRAPHQL
 import Mutations from '../Mutations'
 import Queries from '../Queries'
 import Relationships from '../Relationships'
 // MOCKS
-import { testUser, testPet } from '../mocks/Relationships.mocks.json'
+import { testEnv } from '../../../functions/mocks/dbOps.mocks.json'
 // FUNCTIONS
 import { encryptPass } from '../../../functions/encrypt'
 import { clearAllTables, populateTable } from '../../../functions/dbOps'
@@ -25,8 +21,8 @@ describe('[Relationships]', () => {
 
   beforeAll(async () => {
     const newUser = {
-      ...testUser,
-      password: encryptPass(testUser.password)
+      ...testEnv.user,
+      password: encryptPass(testEnv.user.password)
     }
 
     await populateTable('petType')
@@ -36,7 +32,7 @@ describe('[Relationships]', () => {
     const [color] = await Queries.getColors()
 
     const petInfo = {
-      ...testPet,
+      ...testEnv.pet,
       petType: petType.id,
       hairColor: [color.id],
       eyeColor: [color.id]

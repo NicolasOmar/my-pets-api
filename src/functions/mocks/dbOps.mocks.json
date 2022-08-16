@@ -1,5 +1,5 @@
 {
-  "test": {
+  "testEnv": {
     "user": {
       "name": "new name",
       "lastName": "new lastName",
@@ -21,7 +21,7 @@
     "petType": ["Cat", "Dog"],
     "color": ["White", "Black", "Brown", "Beige", "Grey"]
   },
-  "prod": {
+  "prodEnv": {
     "petType": ["Cat", "Dog"],
     "color": ["White", "Black", "Brown", "Beige", "Grey"]
   }
