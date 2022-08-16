@@ -2,6 +2,7 @@ type Query {
   getUser: User!
   getPetTypes: [AuxiliaryData]!
   getColors: [AuxiliaryData]!
+  getMyPets: [Pet]!
 }
 
 type Mutation {

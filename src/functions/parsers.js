@@ -62,5 +62,11 @@ export const parseErrorMsg = {
 
 export const parsedAuxiliaryData = ({ _id: id, name }) => ({ id, name })
 
-export const findIds = async (model, ids) =>
-  (await model.find().where('_id').in(ids)).map(data => parsedAuxiliaryData(data))
+export const findIds = async (model, ids, findOne = false) => {
+  if (findOne) {
+    const modelFinded = await model.findOne({ _id: ids })
+    return parsedAuxiliaryData(modelFinded)
+  }
+
+  return (await model.find().where('_id').in(ids)).map(data => parsedAuxiliaryData(data))
+}

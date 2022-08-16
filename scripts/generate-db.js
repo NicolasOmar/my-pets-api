@@ -3,7 +3,7 @@ import app from '../src/server/app'
 // APOLLO SERVER INSTANCE
 import server from '../src/server/server'
 // FUNCTIONS
-import { clearTables, insertColors, insertPetTypes } from '../src/functions/populate'
+import { clearAllTables, populateTable } from '../src/functions/dbOps'
 
 const runDbGenerator = async () => {
   const [_, __, closeTime = null] = process.argv
@@ -15,9 +15,9 @@ const runDbGenerator = async () => {
   console.log('Database population process started')
 
   try {
-    await clearTables()
-    await insertPetTypes()
-    await insertColors()
+    await clearAllTables()
+    await populateTable('color', 'prod')
+    await populateTable('petType', 'prod')
   } catch (e) {
     throw Error(`Error: ${e}`)
   } finally {
