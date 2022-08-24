@@ -3,6 +3,7 @@ type Query {
   getPetTypes: [AuxiliaryData]!
   getColors: [AuxiliaryData]!
   getMyPets: [Pet]!
+  getPet(name: String!): Pet!
 }
 
 type Mutation {
