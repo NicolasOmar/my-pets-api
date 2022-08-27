@@ -16,6 +16,12 @@ const newUser = {
 }
 
 describe('[Queries]', () => {
+  afterAll(async () => {
+    await clearTable('petType')
+    await clearTable('color')
+    await clearTable('user')
+  })
+
   describe('[getUser]', () => {
     test('Should return a logged user with its token', async () => {
       const queryResponse = await Query.getUser(null, {}, context)
@@ -47,15 +53,7 @@ describe('[Queries]', () => {
   })
 
   describe('[getMyPets]', () => {
-    beforeAll(async () => {
-      await Mutation.createUser(null, { newUser })
-    })
-
-    afterAll(async () => {
-      await clearTable('petType')
-      await clearTable('color')
-      await clearTable('user')
-    })
+    beforeAll(async () => await Mutation.createUser(null, { newUser }))
 
     test('Should return an array of pets', async () => {
       const [colorId] = await Query.getColors()
@@ -72,6 +70,20 @@ describe('[Queries]', () => {
 
       const [getPet] = await Query.getMyPets(null, null, { loggedUser: testEnv.user })
       Object.keys(petInfo).forEach(key => expect(petInfo[key]).toStrictEqual(getPet[key]))
+    })
+  })
+
+  describe('[GetPet]', () => {
+    test('Should return one of my pets', async () => {
+      const getPetInfo = await Query.getPet(
+        null,
+        { name: testEnv.pet.name },
+        { loggedUser: testEnv.user }
+      )
+
+      Object.keys(testEnv.pet).forEach(key =>
+        expect(testEnv.pet[key]).toStrictEqual(getPetInfo[key])
+      )
     })
   })
 })
