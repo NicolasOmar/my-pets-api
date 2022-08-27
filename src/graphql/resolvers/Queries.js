@@ -16,6 +16,10 @@ const Queries = {
   getMyPets: async (_, __, { loggedUser }) => {
     const { _id } = await User.findOne({ userName: loggedUser.userName })
     return await Pet.find({ user: _id })
+  },
+  getPet: async (_, { name }, { loggedUser }) => {
+    const { _id } = await User.findOne({ userName: loggedUser.userName })
+    return await Pet.findOne({ name, user: _id })
   }
 }
 
