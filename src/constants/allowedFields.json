@@ -18,6 +18,20 @@
   },
   "ALLOWED_UPDATE": {
     "USER": ["name", "lastName"],
-    "PASSWORD": ["oldPass", "newPass"]
+    "PASSWORD": ["oldPass", "newPass"],
+    "PET": [
+      "name",
+      "petType",
+      "birthday",
+      "isAdopted",
+      "adoptionDate",
+      "height",
+      "length",
+      "weight",
+      "gender",
+      "hairColor",
+      "eyeColor",
+      "hasHeterochromia"
+    ]
   }
 }

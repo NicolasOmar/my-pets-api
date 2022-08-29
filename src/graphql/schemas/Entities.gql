@@ -10,6 +10,7 @@ type User {
 }
 
 type Pet {
+  id: ID!
   name: String!
   petType: AuxiliaryData!
   birthday: String

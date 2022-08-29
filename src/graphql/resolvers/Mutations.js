@@ -35,17 +35,17 @@ const Mutations = {
       throw new ApolloError(parseError(error, 'User'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
-  updateUser: async (_, args, { loggedUser }) => {
+  updateUser: async (_, updateArgs, { loggedUser }) => {
     if (!loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
-    if (!checkAllowedUpdates(args, ALLOWED_UPDATE.USER)) {
+    if (!checkAllowedUpdates(updateArgs, ALLOWED_UPDATE.USER)) {
       throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
     }
 
     try {
-      Object.keys(args).forEach(update => (loggedUser[update] = args[update]))
+      Object.keys(updateArgs).forEach(key => (loggedUser[key] = updateArgs[key]))
       await loggedUser.save()
 
       return loggedUser.toJSON()
@@ -107,6 +107,26 @@ const Mutations = {
       await parsedNewPet.save()
 
       return parsedNewPet.toJSON()
+    } catch (error) {
+      throw new ApolloError(parseError(error, 'Pet'), HTTP_CODES.INTERNAL_ERROR_SERVER)
+    }
+  },
+  updatePet: async (_, updateArgs, { loggedUser }) => {
+    if (!loggedUser) {
+      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+    }
+
+    if (!checkAllowedUpdates(updateArgs, ALLOWED_UPDATE.PET)) {
+      throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
+    }
+
+    try {
+      const basePet = Pet.findOne({ _id: updateArgs.id })
+
+      Object.keys(updateArgs).forEach(key => (basePet[key] = updateArgs[key]))
+      await basePet.save()
+
+      return basePet.toJSON()
     } catch (error) {
       throw new ApolloError(parseError(error, 'Pet'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
