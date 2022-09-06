@@ -15,7 +15,7 @@
       "height": 10,
       "length": 10,
       "weight": 10,
-      "gender": true,
+      "gender": "masculine",
       "hasHeterochromia": false
     },
     "petType": ["Cat", "Dog"],

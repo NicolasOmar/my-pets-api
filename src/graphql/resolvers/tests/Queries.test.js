@@ -7,21 +7,16 @@ import Mutation from '../Mutations'
 import { context } from '../mocks/Queries.mocks.json'
 import { testEnv } from '../../../functions/mocks/dbOps.mocks.json'
 // FUNCTIONS
-import { clearTable, populateTable } from '../../../functions/dbOps'
+import { populateTable } from '../../../functions/dbOps'
 import { encryptPass } from '../../../functions/encrypt'
 
 const newUser = {
   ...testEnv.user,
   password: encryptPass(testEnv.user.password)
 }
+let petId = null
 
 describe('[Queries]', () => {
-  afterAll(async () => {
-    await clearTable('petType')
-    await clearTable('color')
-    await clearTable('user')
-  })
-
   describe('[getUser]', () => {
     test('Should return a logged user with its token', async () => {
       const queryResponse = await Query.getUser(null, {}, context)
@@ -66,20 +61,18 @@ describe('[Queries]', () => {
         eyeColors: [colorId.id]
       }
 
-      await Mutation.createPet(null, { petInfo }, { loggedUser: testEnv.user })
-
+      const { _id } = await Mutation.createPet(null, { petInfo }, { loggedUser: testEnv.user })
       const [getPet] = await Query.getMyPets(null, null, { loggedUser: testEnv.user })
+
+      petId = _id
+
       Object.keys(petInfo).forEach(key => expect(petInfo[key]).toStrictEqual(getPet[key]))
     })
   })
 
   describe('[GetPet]', () => {
     test('Should return one of my pets', async () => {
-      const getPetInfo = await Query.getPet(
-        null,
-        { name: testEnv.pet.name },
-        { loggedUser: testEnv.user }
-      )
+      const getPetInfo = await Query.getPet(null, { id: petId }, { loggedUser: testEnv.user })
 
       Object.keys(testEnv.pet).forEach(key =>
         expect(testEnv.pet[key]).toStrictEqual(getPetInfo[key])

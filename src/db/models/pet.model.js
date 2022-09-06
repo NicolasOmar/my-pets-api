@@ -47,7 +47,7 @@ const petSchema = new Schema({
     type: Number
   },
   gender: {
-    type: Boolean,
+    type: String,
     required: [true, parseErrorMsg.missingValue('Gender')]
   },
   hairColors: {

@@ -28,7 +28,7 @@ const Queries = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
-    const foundedPet = await Pet.findOne({ id })
+    const foundedPet = await Pet.findOne({ _id: id })
 
     if (!foundedPet) {
       throw new ApolloError(ERROR_MSGS.MISSING_PET_DATA, HTTP_CODES.NOT_FOUND)

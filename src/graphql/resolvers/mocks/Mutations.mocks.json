@@ -7,8 +7,8 @@
       { "field": "length", "message": "Length" },
       { "field": "weight", "message": "Weight" },
       { "field": "gender", "message": "Gender" },
-      { "field": "hairColor", "message": "Hair Color" },
-      { "field": "eyeColor", "message": "Eye Color" }
+      { "field": "hairColors", "message": "Hair Colors" },
+      { "field": "eyeColors", "message": "Eye Colors" }
     ]
   }
 }

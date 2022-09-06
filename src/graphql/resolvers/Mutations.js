@@ -111,22 +111,18 @@ const Mutations = {
       throw new ApolloError(parseError(error, 'Pet'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
-  updatePet: async (_, updateArgs, { loggedUser }) => {
+  updatePet: async (_, { petInfo }, { loggedUser }) => {
     if (!loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
-    if (!checkAllowedUpdates(updateArgs, ALLOWED_UPDATE.PET)) {
+    if (!checkAllowedUpdates(petInfo, ALLOWED_UPDATE.PET)) {
       throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
     }
 
     try {
-      const basePet = Pet.findOne({ _id: updateArgs.id })
-
-      Object.keys(updateArgs).forEach(key => (basePet[key] = updateArgs[key]))
-      await basePet.save()
-
-      return basePet.toJSON()
+      const { id, ...updateInfo } = petInfo
+      return (await Pet.findOneAndUpdate({ _id: id }, { ...updateInfo })) && true
     } catch (error) {
       throw new ApolloError(parseError(error, 'Pet'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
