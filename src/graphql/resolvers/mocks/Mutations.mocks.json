@@ -1,14 +1,18 @@
 {
-  "requiredCases": {
+  "requiredFields": {
     "pet": [
-      { "field": "name", "message": "Name" },
-      { "field": "petType", "message": "Pet Type" },
-      { "field": "height", "message": "Height" },
-      { "field": "length", "message": "Length" },
-      { "field": "weight", "message": "Weight" },
-      { "field": "gender", "message": "Gender" },
-      { "field": "hairColors", "message": "Hair Colors" },
-      { "field": "eyeColors", "message": "Eye Colors" }
+      "name",
+      "petType",
+      "birthday",
+      "isAdopted",
+      "adoptionDate",
+      "height",
+      "length",
+      "weight",
+      "gender",
+      "hairColors",
+      "hasHeterochromia",
+      "eyeColors"
     ]
   }
 }

@@ -3,11 +3,11 @@ import { ApolloError } from 'apollo-server-errors'
 import User from '../../db/models/user.model'
 import Pet from '../../db/models/pet.model'
 // FUNCTIONS
-import { checkAllowedUpdates, parseError } from '../../functions/parsers'
+import { checkAllowedUpdates, parseError, parseErrorMsg } from '../../functions/parsers'
 import { decryptPass } from '../../functions/encrypt'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '../../constants/errors.json'
-import { ALLOWED_UPDATE } from '../../constants/allowedFields.json'
+import { ALLOWED_CREATE, ALLOWED_UPDATE } from '../../constants/allowedFields.json'
 
 const Mutations = {
   loginUser: async (_, { email, password }) => {
@@ -96,6 +96,19 @@ const Mutations = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
+    if (!checkAllowedUpdates(petInfo, ALLOWED_CREATE.PET)) {
+      throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
+    }
+
+    const petAlreadyCreated = await Pet.findOne({ name: petInfo.name, petType: petInfo.petType })
+
+    if (petAlreadyCreated) {
+      throw new ApolloError(
+        parseErrorMsg.alreadyExists('Pet', ' with this name and pet type'),
+        HTTP_CODES.INTERNAL_ERROR_SERVER
+      )
+    }
+
     const { _id } = await User.findOne({ userName: loggedUser.userName })
 
     try {
@@ -118,6 +131,15 @@ const Mutations = {
 
     if (!checkAllowedUpdates(petInfo, ALLOWED_UPDATE.PET)) {
       throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
+    }
+
+    const petAlreadyCreated = await Pet.findOne({ name: petInfo.name, petType: petInfo.petType })
+
+    if (petAlreadyCreated) {
+      throw new ApolloError(
+        parseErrorMsg.alreadyExists('Pet', ' with this name and pet type'),
+        HTTP_CODES.INTERNAL_ERROR_SERVER
+      )
     }
 
     try {

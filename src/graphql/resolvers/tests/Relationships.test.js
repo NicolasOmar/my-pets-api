@@ -34,8 +34,8 @@ describe('[Relationships]', () => {
     const petInfo = {
       ...testEnv.pet,
       petType: petType.id,
-      hairColor: [color.id],
-      eyeColor: [color.id]
+      hairColors: [color.id],
+      eyeColors: [color.id]
     }
 
     selectedPetType = petType
@@ -43,9 +43,7 @@ describe('[Relationships]', () => {
     createdPet = await Mutations.createPet(null, { petInfo }, { loggedUser })
   })
 
-  afterAll(async () => {
-    await clearAllTables()
-  })
+  afterAll(async () => await clearAllTables())
 
   describe('[User]', () => {
     test('pets', async () => {

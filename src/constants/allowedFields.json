@@ -1,5 +1,5 @@
 {
-  "ALLOWED_CREATION": {
+  "ALLOWED_CREATE": {
     "PET": [
       "name",
       "petType",
@@ -12,8 +12,7 @@
       "gender",
       "hairColors",
       "hasHeterochromia",
-      "eyeColors",
-      "user"
+      "eyeColors"
     ]
   },
   "ALLOWED_UPDATE": {

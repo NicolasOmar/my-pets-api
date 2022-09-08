@@ -2,18 +2,19 @@
 import _mongoose from '../../../db/mongoose'
 import User from '../../../db/models/user.model'
 import Color from '../../../db/models/color.model'
+import PetType from '../../../db/models/petType.model'
+import Pet from '../../../db/models/pet.model'
 // MUTATIONS
 import Mutation from '../Mutations'
 // MOCKS
-import { requiredCases } from '../mocks/Mutations.mocks.json'
+import { requiredFields } from '../mocks/Mutations.mocks.json'
 import { testEnv } from '../../../functions/mocks/dbOps.mocks.json'
 // FUNCTIONS
 import { parseErrorMsg } from '../../../functions/parsers'
 import { encryptPass } from '../../../functions/encrypt'
-import { clearTable, populateTable } from '../../../functions/dbOps'
+import { clearAllTables, clearTable, populateTable } from '../../../functions/dbOps'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '../../../constants/errors.json'
-import PetType from '../../../db/models/petType.model'
 
 const newUser = {
   ...testEnv.user,
@@ -21,7 +22,9 @@ const newUser = {
 }
 
 describe('[Mutations]', () => {
-  afterEach(async () => await User.deleteMany())
+  afterEach(async () => await clearTable('user'))
+
+  afterAll(async () => await clearAllTables())
 
   describe('[loginUser]', () => {
     describe('[HAPPY PATH]', () => {
@@ -236,30 +239,30 @@ describe('[Mutations]', () => {
   })
 
   describe('[createPet]', () => {
+    let loggedUser = null
+    let petInfo = null
+
+    beforeEach(
+      async () =>
+        (loggedUser = { userName: (await Mutation.createUser(null, { newUser })).userName })
+    )
+
     beforeAll(async () => {
       await populateTable('petType')
       await populateTable('color')
-    })
 
-    afterAll(async () => {
-      await clearTable('petType')
-      await clearTable('color')
-      await clearTable('pet')
+      const colorId = (await Color.find()).map(({ _id }) => ({ id: _id }))[0]
+      const petTypeId = (await PetType.find()).map(({ _id }) => ({ id: _id }))[0]
+      petInfo = {
+        ...testEnv.pet,
+        petType: petTypeId.id,
+        hairColors: [colorId.id],
+        eyeColors: [colorId.id]
+      }
     })
 
     describe('[HAPPY PATH]', () => {
       test('Should create a pet for a logged User', async () => {
-        const { userName } = await Mutation.createUser(null, { newUser })
-        const loggedUser = await User.findOne({ userName })
-        const [colorId] = (await Color.find()).map(({ _id }) => ({ id: _id }))
-        const [petTypeId] = (await PetType.find()).map(({ _id }) => ({ id: _id }))
-
-        const petInfo = {
-          ...testEnv.pet,
-          petType: petTypeId.id,
-          hairColor: [colorId.id],
-          eyeColor: [colorId.id]
-        }
         const createPetRes = await Mutation.createPet(null, { petInfo }, { loggedUser })
 
         Object.keys(testEnv.pet).forEach(key => expect(createPetRes[key]).toBe(testEnv.pet[key]))
@@ -267,27 +270,37 @@ describe('[Mutations]', () => {
     })
 
     describe('[SAD PATH]', () => {
-      test('Should return an "missingValue" error for each null required field value', async () => {
-        const { userName } = await Mutation.createUser(null, { newUser })
-        const loggedUser = await User.findOne({ userName })
-        const [colorId] = (await Color.find()).map(({ _id }) => ({ id: _id }))
-        const [petTypeId] = (await PetType.find()).map(({ _id }) => ({ id: _id }))
+      beforeAll(async () => await Pet.findOneAndDelete({ name: testEnv.pet.name }))
 
-        requiredCases.pet.forEach(async ({ field, message }) => {
+      test('Should return a "UPDATES" Error trying to create a pet with missing args', async () => {
+        await requiredFields.pet.forEach(async fieldCase => {
           try {
-            const petInfo = {
-              ...testEnv.pet,
-              petType: petTypeId.id,
-              hairColors: [colorId.id],
-              eyeColors: [colorId.id]
-            }
-            delete petInfo[field]
-            await Mutation.createPet(null, { petInfo }, { loggedUser })
+            const modifiedPetInfo = { ...petInfo }
+            delete modifiedPetInfo[fieldCase]
+
+            await Mutation.createPet(null, { petInfo: modifiedPetInfo }, { loggedUser })
           } catch (e) {
-            expect(e.message).toBe(parseErrorMsg.missingValue(message))
-            expect(e.extensions.code).toBe(HTTP_CODES.INTERNAL_ERROR_SERVER)
+            expect(e.message).toBe(ERROR_MSGS.UPDATES)
+            expect(e.extensions.code).toBe(HTTP_CODES.UNPROCESSABLE_ENTITY)
           }
         })
+      })
+
+      test('Should return an "alreadyExists" by having created an existing Pet', async () => {
+        try {
+          await Mutation.createPet(null, { petInfo }, { loggedUser })
+        } catch (e) {
+          expect(e.message).toBe(parseErrorMsg.alreadyExists('Pet', ' with this name and pet type'))
+          expect(e.extensions.code).toBe(HTTP_CODES.INTERNAL_ERROR_SERVER)
+        }
+      })
+    })
+  })
+
+  describe('[updatePet]', () => {
+    describe('[HAPPY PATH]', () => {
+      test('Dummy expect', () => {
+        expect(5 + 1).toBe(6)
       })
     })
   })

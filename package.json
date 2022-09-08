@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.1.32",
+  "version": "0.1.33",
   "description": "GraphQL server based on NodeJs to give back-end support a web client based on React",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -21,10 +21,10 @@
     "server": "babel-node src/index.js",
     "start:ci": "babel ./src/index.js -d ./build ./src --copy-files && node ./build/index.js",
     "test": "env-cmd -f ./env/test.env jest --runInBand",
-    "test:ci": "npm test -- --coverage",
-    "test:clear": "npm test -- --clearCache && npm test",
+    "test:ci": "npm run test:clear && npm test -- --coverage",
+    "test:clear": "npm test -- --clearCache",
     "env:local": "env-cmd -f ./env/local.env",
-    "db": "npm run env:local -- babel-node scripts/generate-db.js",
+    "db:create": "npm run env:local -- babel-node scripts/generate-db.js",
     "lint": "eslint --fix src",
     "prettier": "prettier --write src",
     "update-version": "node ./scripts/update-version.js"
@@ -80,7 +80,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && npm run test:ci && git add .",
+      "pre-commit": "lint-staged && npm run test:ci",
       "pre-push": "npm run update-version"
     }
   }

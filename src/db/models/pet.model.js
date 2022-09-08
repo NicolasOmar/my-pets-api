@@ -17,14 +17,14 @@ import { parseErrorMsg } from '../../functions/parsers'
 const petSchema = new Schema({
   name: {
     type: String,
-    required: [true, parseErrorMsg.missingValue('Name')],
+    required: [true, parseErrorMsg.missingValue('Name', 'Pet')],
     minlength: [2, parseErrorMsg.minMaxValue('Name', 3, true)],
     maxlength: [20, parseErrorMsg.minMaxValue('Name', 25, false)],
     trim: true
   },
   petType: {
     type: Schema.Types.ObjectId,
-    required: [true, parseErrorMsg.missingValue('Pet Type')],
+    required: [true, parseErrorMsg.missingValue('Pet Type', 'Pet')],
     ref: 'PetType'
   },
   birthday: {
@@ -48,16 +48,16 @@ const petSchema = new Schema({
   },
   gender: {
     type: String,
-    required: [true, parseErrorMsg.missingValue('Gender')]
+    required: [true, parseErrorMsg.missingValue('Gender', 'Pet')]
   },
   hairColors: {
     type: [Schema.Types.ObjectId],
-    required: [true, parseErrorMsg.missingValue('Hair Color')],
+    required: [true, parseErrorMsg.missingValue('Hair Colors', 'Pet')],
     ref: 'Color'
   },
   eyeColors: {
     type: [Schema.Types.ObjectId],
-    required: [true, parseErrorMsg.missingValue('Eye Color')],
+    required: [true, parseErrorMsg.missingValue('Eye Colors', 'Pet')],
     ref: 'Color'
   },
   hasHeterochromia: {
