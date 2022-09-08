@@ -252,12 +252,11 @@ describe('[Mutations]', () => {
     })
   })
 
-  describe.skip('[createPet]', () => {
+  describe('[createPet]', () => {
     let loggedUser = null
     let petInfo = null
 
     beforeAll(async () => {
-      await clearTable('user')
       const colorId = (await Color.find()).map(({ _id }) => ({ id: _id }))[0]
       const petTypeId = (await PetType.find()).map(({ _id }) => ({ id: _id }))[0]
       petInfo = {
@@ -266,10 +265,14 @@ describe('[Mutations]', () => {
         hairColors: [colorId.id],
         eyeColors: [colorId.id]
       }
+
       loggedUser = { userName: (await Mutations.createUser(null, { newUser })).userName }
     })
 
-    afterAll(async () => await clearTable('pet'))
+    afterAll(async () => {
+      await clearTable('pet')
+      await clearTable('user')
+    })
 
     describe('[HAPPY PATH]', () => {
       test('Should create a pet for a logged User', async () => {
