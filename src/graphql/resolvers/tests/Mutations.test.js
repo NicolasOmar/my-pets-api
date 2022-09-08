@@ -310,6 +310,7 @@ describe('[Mutations]', () => {
       test('Should return an "alreadyExists" by having created an existing Pet', async () => {
         try {
           await Mutations.createPet(null, { petInfo }, { loggedUser })
+          await Mutations.createPet(null, { petInfo }, { loggedUser })
         } catch (e) {
           expect(e.message).toBe(parseErrorMsg.alreadyExists('Pet', ' with this name and pet type'))
           expect(e.extensions.code).toBe(HTTP_CODES.INTERNAL_ERROR_SERVER)
@@ -409,7 +410,7 @@ describe('[Mutations]', () => {
             id: secondPet._id
           }
 
-          await Mutations.updatePet(null, { petInfo }, { loggedUser })
+          await Mutations.updatePet(null, { petInfo: updatedSecondPet }, { loggedUser })
         } catch (error) {
           expect(error.message).toBe(
             parseErrorMsg.alreadyExists('Pet', ' with this name and pet type')
