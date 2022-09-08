@@ -5,9 +5,10 @@ import Color from '../../../db/models/color.model'
 import PetType from '../../../db/models/petType.model'
 import Pet from '../../../db/models/pet.model'
 // MUTATIONS
-import Mutation from '../Mutations'
+import Mutations from '../Mutations'
+import Queries from '../Queries'
 // MOCKS
-import { requiredFields } from '../mocks/Mutations.mocks.json'
+import { requiredFields, updateFields } from '../mocks/Mutations.mocks.json'
 import { testEnv } from '../../../functions/mocks/dbOps.mocks.json'
 // FUNCTIONS
 import { parseErrorMsg } from '../../../functions/parsers'
@@ -22,17 +23,22 @@ const newUser = {
 }
 
 describe('[Mutations]', () => {
-  afterEach(async () => await clearTable('user'))
+  beforeAll(async () => {
+    await populateTable('petType')
+    await populateTable('color')
+  })
 
   afterAll(async () => await clearAllTables())
 
   describe('[loginUser]', () => {
+    afterEach(async () => await clearTable('user'))
+
     describe('[HAPPY PATH]', () => {
       test('Should login a created User', async () => {
-        await Mutation.createUser(null, { newUser })
+        await Mutations.createUser(null, { newUser })
 
         const { email, password } = newUser
-        const loginRes = await Mutation.loginUser(null, { email, password })
+        const loginRes = await Mutations.loginUser(null, { email, password })
 
         expect(loginRes.token).toBeDefined()
       })
@@ -42,7 +48,7 @@ describe('[Mutations]', () => {
       test('Should return an "LOGIN" Error trying to login a non-created User', async () => {
         try {
           const { email, password } = newUser
-          await Mutation.loginUser(null, { email, password })
+          await Mutations.loginUser(null, { email, password })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.LOGIN)
         }
@@ -51,7 +57,7 @@ describe('[Mutations]', () => {
       test('Should return an "LOGIN" Error trying to login a User with a non-encrypted password', async () => {
         try {
           const { email, password } = testEnv.user
-          await Mutation.loginUser(null, { email, password })
+          await Mutations.loginUser(null, { email, password })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.LOGIN)
         }
@@ -60,9 +66,11 @@ describe('[Mutations]', () => {
   })
 
   describe('[createUser]', () => {
+    afterEach(async () => await clearTable('user'))
+
     describe('[HAPPY PATH]', () => {
       test('Should create a new User', async () => {
-        const creationRes = await Mutation.createUser(null, { newUser })
+        const creationRes = await Mutations.createUser(null, { newUser })
         expect(creationRes.token).toBeDefined()
       })
     })
@@ -70,10 +78,10 @@ describe('[Mutations]', () => {
     describe('[SAD PATH]', () => {
       test('Should return an "alreadyExists" Error by sending an already created User', async () => {
         try {
-          const userCreationRes = await Mutation.createUser(null, { newUser })
+          const userCreationRes = await Mutations.createUser(null, { newUser })
           expect(userCreationRes.token).toBeDefined()
 
-          await Mutation.createUser(null, { newUser })
+          await Mutations.createUser(null, { newUser })
         } catch (error) {
           expect(error.message).toBe(parseErrorMsg.alreadyExists('User'))
         }
@@ -81,7 +89,7 @@ describe('[Mutations]', () => {
 
       test('Should return an "LOGIN" Error trying to create an already created User', async () => {
         try {
-          await Mutation.createUser(null, { newUser: testEnv.user })
+          await Mutations.createUser(null, { newUser: testEnv.user })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.LOGIN)
         }
@@ -90,13 +98,15 @@ describe('[Mutations]', () => {
   })
 
   describe('[updateUser]', () => {
+    afterEach(async () => await clearTable('user'))
+
     describe('[HAPPY PATH]', () => {
       test('Should update a created User', async () => {
-        const { token } = await Mutation.createUser(null, { newUser })
+        const { token } = await Mutations.createUser(null, { newUser })
         const loggedUser = await User.findOne({ 'tokens.token': token })
         const updatedData = { name: 'UPDATED', lastName: 'USER' }
 
-        const { name, lastName } = await Mutation.updateUser(null, updatedData, { loggedUser })
+        const { name, lastName } = await Mutations.updateUser(null, updatedData, { loggedUser })
         expect(name).toBe(updatedData.name)
         expect(lastName).toBe(updatedData.lastName)
       })
@@ -107,7 +117,7 @@ describe('[Mutations]', () => {
         try {
           const loggedUser = await User.findOne({ email: newUser.email })
           const updatedData = { name: 'UPDATED', lastName: 'USER' }
-          await Mutation.updateUser(null, updatedData, { loggedUser })
+          await Mutations.updateUser(null, updatedData, { loggedUser })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
@@ -115,10 +125,10 @@ describe('[Mutations]', () => {
 
       test('Should return a "MISSING_USER_DATA" Error trying to update with missing args', async () => {
         try {
-          const { token } = await Mutation.createUser(null, { newUser })
+          const { token } = await Mutations.createUser(null, { newUser })
           const loggedUser = await User.findOne({ 'tokens.token': token })
           const updatedData = { name: 'UPDATED' }
-          await Mutation.updateUser(null, updatedData, { loggedUser })
+          await Mutations.updateUser(null, updatedData, { loggedUser })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.UPDATES)
         }
@@ -127,15 +137,17 @@ describe('[Mutations]', () => {
   })
 
   describe('[updatePass]', () => {
+    afterEach(async () => await clearTable('user'))
+
     describe('[HAPPY PATH]', () => {
       test('Should update the password of a created User', async () => {
-        const { token } = await Mutation.createUser(null, { newUser })
+        const { token } = await Mutations.createUser(null, { newUser })
         const loggedUser = await User.findOne({ 'tokens.token': token })
         const args = {
           oldPass: encryptPass(testEnv.user.password),
           newPass: encryptPass('testing')
         }
-        const updateResponse = await Mutation.updatePass(null, args, { loggedUser })
+        const updateResponse = await Mutations.updatePass(null, args, { loggedUser })
         expect(updateResponse).toBeTruthy()
       })
     })
@@ -166,7 +178,7 @@ describe('[Mutations]', () => {
         })
 
       beforeEach(async () => {
-        token = (await Mutation.createUser(null, { newUser })).token
+        token = (await Mutations.createUser(null, { newUser })).token
         loggedUser = await User.findOne({ 'tokens.token': token })
       })
 
@@ -175,7 +187,7 @@ describe('[Mutations]', () => {
       test('Should return a "MISSING_USER_DATA" Error trying to update the pass of a not created user', async () => {
         try {
           const loggedUserWithEmail = await User.findOne({ email: newUser.email })
-          await Mutation.updatePass(null, args(), { loggedUserWithEmail })
+          await Mutations.updatePass(null, args(), { loggedUserWithEmail })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
@@ -183,7 +195,7 @@ describe('[Mutations]', () => {
 
       test('Should return a "UPDATES" Error trying to update with missing args', async () => {
         try {
-          await Mutation.updatePass(null, args(), { loggedUser })
+          await Mutations.updatePass(null, args(), { loggedUser })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.UPDATES)
         }
@@ -191,7 +203,7 @@ describe('[Mutations]', () => {
 
       test('Should return a "PASSWORD" Error trying to update a without the old pass', async () => {
         try {
-          await Mutation.updatePass(null, args(), { loggedUser })
+          await Mutations.updatePass(null, args(), { loggedUser })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.PASSWORD)
         }
@@ -199,7 +211,7 @@ describe('[Mutations]', () => {
 
       test('Should return a "minMaxValue" Error trying to update with a new pass with less than 6 characters', async () => {
         try {
-          await Mutation.updatePass(null, args(), { loggedUser })
+          await Mutations.updatePass(null, args(), { loggedUser })
         } catch (error) {
           expect(error.message).toBe(parseErrorMsg.minMaxValue('Password', 6, true))
         }
@@ -207,7 +219,7 @@ describe('[Mutations]', () => {
 
       test('Should return a "PASSWORD" Error trying to update with worng current/old password', async () => {
         try {
-          await Mutation.updatePass(null, args(), { loggedUser })
+          await Mutations.updatePass(null, args(), { loggedUser })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.PASSWORD)
         }
@@ -216,11 +228,13 @@ describe('[Mutations]', () => {
   })
 
   describe('[logout]', () => {
+    afterEach(async () => await clearTable('user'))
+
     describe('[HAPPY PATH]', () => {
       test('Should logout created User', async () => {
-        const { token } = await Mutation.createUser(null, { newUser })
+        const { token } = await Mutations.createUser(null, { newUser })
         const loggedUser = await User.findOne({ 'tokens.token': token })
-        const logOutRes = await Mutation.logout(null, null, { loggedUser, token })
+        const logOutRes = await Mutations.logout(null, null, { loggedUser, token })
 
         expect(logOutRes).toBeTruthy()
       })
@@ -230,7 +244,7 @@ describe('[Mutations]', () => {
       test('Should return a "MISSING_USER_DATA" Error trying to logout without a logged token', async () => {
         try {
           const loggedUser = await User.findOne({ email: newUser.email })
-          await Mutation.logout(null, null, { loggedUser })
+          await Mutations.logout(null, null, { loggedUser })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
@@ -238,19 +252,12 @@ describe('[Mutations]', () => {
     })
   })
 
-  describe('[createPet]', () => {
+  describe.skip('[createPet]', () => {
     let loggedUser = null
     let petInfo = null
 
-    beforeEach(
-      async () =>
-        (loggedUser = { userName: (await Mutation.createUser(null, { newUser })).userName })
-    )
-
     beforeAll(async () => {
-      await populateTable('petType')
-      await populateTable('color')
-
+      await clearTable('user')
       const colorId = (await Color.find()).map(({ _id }) => ({ id: _id }))[0]
       const petTypeId = (await PetType.find()).map(({ _id }) => ({ id: _id }))[0]
       petInfo = {
@@ -259,11 +266,14 @@ describe('[Mutations]', () => {
         hairColors: [colorId.id],
         eyeColors: [colorId.id]
       }
+      loggedUser = { userName: (await Mutations.createUser(null, { newUser })).userName }
     })
+
+    afterAll(async () => await clearTable('pet'))
 
     describe('[HAPPY PATH]', () => {
       test('Should create a pet for a logged User', async () => {
-        const createPetRes = await Mutation.createPet(null, { petInfo }, { loggedUser })
+        const createPetRes = await Mutations.createPet(null, { petInfo }, { loggedUser })
 
         Object.keys(testEnv.pet).forEach(key => expect(createPetRes[key]).toBe(testEnv.pet[key]))
       })
@@ -272,13 +282,21 @@ describe('[Mutations]', () => {
     describe('[SAD PATH]', () => {
       beforeAll(async () => await Pet.findOneAndDelete({ name: testEnv.pet.name }))
 
+      test('Should return a "MISSING_USER_DATA" Error trying to update a not logged User', async () => {
+        try {
+          await Mutations.createPet(null, { petInfo }, {})
+        } catch (error) {
+          expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
+        }
+      })
+
       test('Should return a "UPDATES" Error trying to create a pet with missing args', async () => {
         await requiredFields.pet.forEach(async fieldCase => {
           try {
-            const modifiedPetInfo = { ...petInfo }
-            delete modifiedPetInfo[fieldCase]
+            const modifiedPet = { ...petInfo }
+            delete modifiedPet[fieldCase]
 
-            await Mutation.createPet(null, { petInfo: modifiedPetInfo }, { loggedUser })
+            await Mutations.createPet(null, { petInfo: modifiedPet }, { loggedUser })
           } catch (e) {
             expect(e.message).toBe(ERROR_MSGS.UPDATES)
             expect(e.extensions.code).toBe(HTTP_CODES.UNPROCESSABLE_ENTITY)
@@ -288,7 +306,7 @@ describe('[Mutations]', () => {
 
       test('Should return an "alreadyExists" by having created an existing Pet', async () => {
         try {
-          await Mutation.createPet(null, { petInfo }, { loggedUser })
+          await Mutations.createPet(null, { petInfo }, { loggedUser })
         } catch (e) {
           expect(e.message).toBe(parseErrorMsg.alreadyExists('Pet', ' with this name and pet type'))
           expect(e.extensions.code).toBe(HTTP_CODES.INTERNAL_ERROR_SERVER)
@@ -298,9 +316,103 @@ describe('[Mutations]', () => {
   })
 
   describe('[updatePet]', () => {
+    let loggedUser = null
+    let colorList = null
+    let petTypeList = null
+    let petInfo = null
+
+    beforeAll(async () => {
+      colorList = (await Color.find()).map(({ _id }) => ({ id: _id }))
+      petTypeList = (await PetType.find()).map(({ _id }) => ({ id: _id }))
+
+      loggedUser = { userName: (await Mutations.createUser(null, { newUser })).userName }
+
+      petInfo = {
+        ...testEnv.pet,
+        petType: petTypeList[0].id,
+        hairColors: [colorList[0].id],
+        eyeColors: [petTypeList[0].id]
+      }
+
+      await Mutations.createPet(null, { petInfo }, { loggedUser })
+      const [createdPet] = await Queries.getMyPets(null, null, { loggedUser })
+
+      petInfo = {
+        ...petInfo,
+        id: createdPet._id
+      }
+    })
+
     describe('[HAPPY PATH]', () => {
-      test('Dummy expect', () => {
-        expect(5 + 1).toBe(6)
+      test('Should update a logged Users pet data', async () => {
+        const nameToUpdate = 'modifiedTest'
+        const modifiedPet = {
+          ...petInfo,
+          name: nameToUpdate
+        }
+
+        await Mutations.updatePet(null, { petInfo: modifiedPet }, { loggedUser })
+
+        const updatedPets = await Queries.getMyPets(null, null, { loggedUser })
+        expect(updatedPets.length).toBe(1)
+        expect(updatedPets[0].name).toBe(nameToUpdate)
+      })
+    })
+
+    describe('[SAD PATH]', () => {
+      test('Should return a "MISSING_USER_DATA" Error trying to update a not logged User', async () => {
+        try {
+          const nameToUpdate = 'modifiedTest'
+          const modifiedPet = {
+            ...petInfo,
+            name: nameToUpdate
+          }
+
+          await Mutations.updatePet(null, { petInfo: modifiedPet }, {})
+        } catch (error) {
+          expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
+        }
+      })
+
+      test('Should return a "UPDATES" Error trying to update a pet with missing args', async () => {
+        await updateFields.pet.forEach(async ({ field, value }) => {
+          try {
+            const modifiedPet = {
+              ...petInfo,
+              [field]: value
+            }
+            delete modifiedPet[field]
+
+            await Mutations.updatePet(null, { petInfo: modifiedPet }, { loggedUser })
+          } catch (e) {
+            expect(e.message).toBe(ERROR_MSGS.UPDATES)
+            expect(e.extensions.code).toBe(HTTP_CODES.UNPROCESSABLE_ENTITY)
+          }
+        })
+      })
+
+      test('Should return an "alreadyExists" by trying to update the Pet with a name and petType already used', async () => {
+        try {
+          const { id, ...originalPet } = petInfo
+
+          await Mutations.createPet(null, { petInfo: originalPet }, { loggedUser })
+          const [_, secondPet] = await Queries.getMyPets(null, null, { loggedUser })
+
+          const { _id, __v, user, ...updatedSecondPet } = {
+            ...secondPet.toJSON(),
+            ...updateFields.pet
+              .map(({ field, value }) => ({ [field]: value }))
+              .reduce((finalObj, currentProp) => ({ ...finalObj, ...currentProp }), {}),
+            id: secondPet._id
+          }
+
+          await Mutations.updatePet(null, { petInfo }, { loggedUser })
+        } catch (error) {
+          expect(error.message).toBe(
+            parseErrorMsg.alreadyExists('Pet', ' with this name and pet type')
+          )
+          expect(error.extensions.code).toBe(HTTP_CODES.INTERNAL_ERROR_SERVER)
+        }
       })
     })
   })

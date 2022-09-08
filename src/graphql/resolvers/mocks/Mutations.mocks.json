@@ -14,5 +14,18 @@
       "hasHeterochromia",
       "eyeColors"
     ]
+  },
+  "updateFields": {
+    "pet": [
+      { "field": "name", "value": "test" },
+      { "field": "birthday", "value": "10/10/2021" },
+      { "field": "isAdopted", "value": true },
+      { "field": "adoptionDate", "value": "10/10/2021" },
+      { "field": "height", "value": 150 },
+      { "field": "length", "value": 150 },
+      { "field": "weight", "value": 150 },
+      { "field": "gender", "value": "masculine" },
+      { "field": "hasHeterochromia", "value": true }
+    ]
   }
 }
