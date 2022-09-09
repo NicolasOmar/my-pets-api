@@ -80,7 +80,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && npm run test:ci",
+      "pre-commit": "lint-staged && npm run test:ci && git add .",
       "pre-push": "npm run update-version"
     }
   }

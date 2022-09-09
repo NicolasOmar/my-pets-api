@@ -257,8 +257,8 @@ describe('[Mutations]', () => {
     let petInfo = null
 
     beforeAll(async () => {
-      const colorId = (await Color.find()).map(({ _id }) => ({ id: _id }))[0]
-      const petTypeId = (await PetType.find()).map(({ _id }) => ({ id: _id }))[0]
+      const colorId = (await Queries.getColors()).map(({ id }) => ({ id }))[0]
+      const petTypeId = (await Queries.getPetTypes()).map(({ id }) => ({ id }))[0]
       petInfo = {
         ...testEnv.pet,
         petType: petTypeId.id,
@@ -326,8 +326,8 @@ describe('[Mutations]', () => {
     let petInfo = null
 
     beforeAll(async () => {
-      colorList = (await Color.find()).map(({ _id }) => ({ id: _id }))
-      petTypeList = (await PetType.find()).map(({ _id }) => ({ id: _id }))
+      colorList = (await Queries.getColors()).map(({ id }) => ({ id }))
+      petTypeList = (await Queries.getPetTypes()).map(({ id }) => ({ id }))
 
       loggedUser = { userName: (await Mutations.createUser(null, { newUser })).userName }
 
