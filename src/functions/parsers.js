@@ -51,9 +51,10 @@ export const checkAllowedUpdates = (obj, allowedFields) => {
 
 export const parseErrorMsg = {
   minMaxValue: (control, value, isMinValue) =>
-    `The ${control} needs to have ${isMinValue ? 'more' : 'less'} than ${value} characters`,
+    `The field ${control} needs to have ${isMinValue ? 'more' : 'less'} than ${value} characters`,
   missingValue: (value, entity = 'User') => `The ${entity} needs a valid ${value} to be created`,
-  alreadyExists: (entity = 'Entity') => `There is an already created ${entity}`,
+  alreadyExists: (entity = 'Entity', additionalText = '') =>
+    `There is an already created ${entity}${additionalText}`,
   invalidDateFormat: (field = 'date') =>
     `The provided ${field} should be in a valid format (DD/MM/YYYY)`,
   invalidDateBefore: (field = 'date', date) => `The provided ${field} should be after ${date}`,

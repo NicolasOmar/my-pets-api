@@ -10,6 +10,7 @@ type User {
 }
 
 type Pet {
+  id: ID!
   name: String!
   petType: AuxiliaryData!
   birthday: String
@@ -18,7 +19,7 @@ type Pet {
   height: Float
   length: Float
   weight: Float
-  gender: Boolean!
+  gender: String!
   hairColors: [AuxiliaryData]
   hasHeterochromia: Boolean
   eyeColors: [AuxiliaryData]

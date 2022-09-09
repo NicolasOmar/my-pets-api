@@ -10,7 +10,8 @@
     "PASSWORD": "The provided password is not the current one. Try again with the correct one",
     "NON_ENCRYPTED_DATA": "Malformed UTF-8 data",
     "AUTHENTICATE": "Please authenticate to keep using the app",
-    "MISSING_USER_DATA": "Missing user data"
+    "MISSING_USER_DATA": "Missing user data",
+    "MISSING_PET_DATA": "There is no such Pet with the name provided"
   },
   "HTTP_CODES": {
     "UNAUTHORIZED": 401,
