@@ -63,6 +63,9 @@ const petSchema = new Schema({
   hasHeterochromia: {
     type: Boolean
   },
+  passedAway: {
+    type: Boolean
+  },
   user: {
     type: Schema.Types.ObjectId,
     required: true,

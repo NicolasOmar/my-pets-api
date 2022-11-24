@@ -23,6 +23,7 @@ type Pet {
   hairColors: [AuxiliaryData]
   hasHeterochromia: Boolean
   eyeColors: [AuxiliaryData]
+  passedAway: Boolean!
   user: User
 }
 

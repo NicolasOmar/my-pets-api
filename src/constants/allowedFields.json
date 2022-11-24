@@ -12,7 +12,8 @@
       "gender",
       "hairColors",
       "hasHeterochromia",
-      "eyeColors"
+      "eyeColors",
+      "passedAway"
     ]
   },
   "ALLOWED_UPDATE": {
@@ -31,7 +32,8 @@
       "gender",
       "hairColors",
       "hasHeterochromia",
-      "eyeColors"
+      "eyeColors",
+      "passedAway"
     ]
   }
 }
