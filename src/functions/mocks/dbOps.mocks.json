@@ -16,7 +16,8 @@
       "length": 10,
       "weight": 10,
       "gender": "masculine",
-      "hasHeterochromia": false
+      "hasHeterochromia": false,
+      "passedAway": false
     },
     "petType": ["Cat", "Dog"],
     "color": ["White", "Black", "Brown", "Beige", "Grey"]

@@ -12,7 +12,8 @@
       "gender",
       "hairColors",
       "hasHeterochromia",
-      "eyeColors"
+      "eyeColors",
+      "passedAway"
     ]
   },
   "updateFields": {
@@ -25,7 +26,8 @@
       { "field": "length", "value": 150 },
       { "field": "weight", "value": 150 },
       { "field": "gender", "value": "masculine" },
-      { "field": "hasHeterochromia", "value": true }
+      { "field": "hasHeterochromia", "value": true },
+      { "field": "passedAway", "value": false }
     ]
   }
 }

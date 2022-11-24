@@ -20,4 +20,5 @@ input PetInput {
   hairColors: [ID]
   hasHeterochromia: Boolean
   eyeColors: [ID]
+  passedAway: Boolean
 }
