@@ -86,7 +86,7 @@ describe('[Queries]', () => {
     })
   })
 
-  describe('[GetPet]', () => {
+  describe('[getPet]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should return one of my pets', async () => {
         const getPetInfo = await Query.getPet(null, { id: petId }, { loggedUser: testEnv.user })
@@ -111,6 +111,32 @@ describe('[Queries]', () => {
           await Query.getPet(null, { id: null }, { loggedUser: testEnv.user })
         } catch (error) {
           expect(error.message).toBe(ERROR_MSGS.MISSING_PET_DATA)
+        }
+      })
+    })
+  })
+
+  describe('[getMyPetsPopulation]', () => {
+    describe('[HAPPY PATH]', () => {
+      test('Should return my pets population', async () => {
+        const getPopulationInfo = await Query.getMyPetsPopulation(null, null, {
+          loggedUser: testEnv.user
+        })
+        const [petType] = await Query.getPetTypes()
+
+        expect(getPopulationInfo).toStrictEqual([
+          { name: 'All', quantity: 1 },
+          { name: petType.name, quantity: 1 }
+        ])
+      })
+    })
+
+    describe('[SAD PATH]', () => {
+      test('Should return a USER_MISSING_DATA error by not passing the loggedUser', async () => {
+        try {
+          await Query.getMyPetsPopulation(null, null, {})
+        } catch (error) {
+          expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
       })
     })
