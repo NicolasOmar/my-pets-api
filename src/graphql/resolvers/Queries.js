@@ -5,6 +5,7 @@ import Pet from '../../db/models/pet.model'
 import User from '../../db/models/user.model'
 import { ApolloError } from 'apollo-server-errors'
 import { ERROR_MSGS, HTTP_CODES } from '../../constants/errors.json'
+import { findIds, parseUniqueArray } from '../../functions/parsers'
 
 const Queries = {
   getUser: async (_, __, { loggedUser, token }) => ({
@@ -35,6 +36,29 @@ const Queries = {
     }
 
     return foundedPet
+  },
+  getMyPetsPopulation: async (_, __, { loggedUser }) => {
+    if (!loggedUser) {
+      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+    }
+
+    const { _id } = await User.findOne({ userName: loggedUser.userName })
+    const petPopulation = await Pet.find({ user: _id })
+
+    if (petPopulation.length === 0) {
+      return [{ name: 'All', quantity: 0 }]
+    }
+
+    const petTypeInfo = Promise.allSettled(
+      petPopulation.map(pet => new Promise(resolve => resolve(findIds(PetType, pet.petType))))
+    )
+    const petTypeList = (await petTypeInfo).map(data => data.value[0].name)
+    const parsedPetTypeList = parseUniqueArray(petTypeList, info => ({
+      name: info,
+      quantity: petTypeList.filter(_info => _info === info).length
+    }))
+
+    return [{ name: 'All', quantity: petPopulation.length }, ...parsedPetTypeList]
   }
 }
 

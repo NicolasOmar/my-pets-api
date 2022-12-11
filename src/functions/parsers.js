@@ -71,3 +71,8 @@ export const findIds = async (model, ids, findOne = false) => {
 
   return (await model.find().where('_id').in(ids)).map(data => parsedAuxiliaryData(data))
 }
+
+export const parseUniqueArray = (list, callback) =>
+  Array.isArray(list)
+    ? Array.from(new Set(list)).map((item, i) => (callback ? callback(item, i) : item))
+    : []
