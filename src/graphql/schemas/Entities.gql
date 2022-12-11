@@ -31,3 +31,8 @@ type AuxiliaryData {
   id: ID!
   name: String!
 }
+
+type AmountData {
+  name: String!
+  quantity: Int!
+}

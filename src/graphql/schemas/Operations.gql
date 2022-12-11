@@ -4,6 +4,7 @@ type Query {
   getColors: [AuxiliaryData]!
   getMyPets: [Pet]!
   getPet(id: ID!): Pet
+  getMyPetsQuantity: [AmountData]
 }
 
 type Mutation {
