@@ -1,23 +1,32 @@
-name: Deploy coverage
+name: Check tests coverage
 
-on: [push]
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
 jobs:
   run:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
-
-    - name: Set up environment
-      uses: actions/setup-node@v1
+    - name: 1/3 | Checkout repo
+      uses: actions/checkout@v3
       with:
-        node-version: 12
+        # Disabling shallow clone is recommended for improving relevancy of reporting
+        fetch-depth: 0
 
-    - name: Run Codecov coverage colector
-      uses: codecov/codecov-action@v1.0.15
+    - name: 2/3 | Setup Node environment
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+
+    - name: 3/3 | Run Codecov Uploader
+      uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: ./coverage/coverage-final.json
         flags: unittests
+        fail_ci_if_error: true
+        verbose: true
