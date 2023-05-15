@@ -1,6 +1,6 @@
-const { default: mongoose } = require("mongoose")
+import mongoose from "mongoose"
 
-module.exports = async () => {
+export default async () => {
   await mongoose.connection.dropDatabase()
   process.exit(0)
 }
