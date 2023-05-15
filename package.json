@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "GraphQL server based on NodeJs to give back-end support a web client based on React",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -24,8 +24,7 @@
     "db:create": "npm run env:local -- babel-node scripts/generate-db.js",
     "lint": "eslint --fix src",
     "prettier": "prettier --write src",
-    "lint-staged": "lint-staged -v",
-    "update-version": "node ./scripts/update-version.js"
+    "lint-staged": "lint-staged -v"
   },
   "dependencies": {
     "@babel/cli": "^7.21.5",
