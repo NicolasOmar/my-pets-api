@@ -20,6 +20,7 @@ GraphQL server based on NodeJs to give back-end support a web client based on [R
 [![Maintainability Rating][badge-soundcloud-maintanibility]][link-soundcloud-status]
 [![Security Rating][badge-soundcloud-security]][link-soundcloud-status]
 [![Technical Debt][badge-soundcloud-tech-debt]][link-soundcloud-status]
+[![Known Vulnerabilities][badge-snyk-status]][link-snyk-status]
 
 [badge-repo-version]: https://img.shields.io/github/package-json/v/nicolasomar/my-pets-api?label=version&logo=npm&color=success
 [badge-code-coverage]: https://img.shields.io/codecov/c/github/nicolasomar/my-pets-api?label=coverage&logo=codecov
@@ -30,6 +31,7 @@ GraphQL server based on NodeJs to give back-end support a web client based on [R
 [badge-soundcloud-tech-debt]: https://sonarcloud.io/api/project_badges/measure?project=NicolasOmar_my-pets-api&metric=sqale_index
 [link-soundcloud-status]: https://sonarcloud.io/summary/new_code?id=NicolasOmar_my-pets-api
 [badge-snyk-status]: https://img.shields.io/snyk/vulnerabilities/github/nicolasomar/my-pets-api?logo=snyk
+[link-snyk-status]: https://snyk.io/test/github/nicolasomar/my-pets-api
 
 ## Dependencies
 TBD

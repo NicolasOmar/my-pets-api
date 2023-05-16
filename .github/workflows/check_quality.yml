@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 jobs:
-  run:
+  codecovAndSonarcloud:
     runs-on: ubuntu-latest
     
     steps:
