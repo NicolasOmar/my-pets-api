@@ -1,8 +1,38 @@
-# My Pets API ![My Pets API version][badge-repo-version] ![My Pets API Coverage][badge-repo-coverage]
+# My Pets API
 GraphQL server based on NodeJs to give back-end support a web client based on [React](https://my-pets-prod.netlify.app/).
 
-[badge-repo-version]: https://img.shields.io/github/package-json/v/nicolasomar/my-pets-api?label=version&logo=npm&color=success&style=flat-square
-[badge-repo-coverage]: https://img.shields.io/codecov/c/github/nicolasomar/my-pets-api?label=coverage&logo=codecov&style=flat-square
+## Table of contents
+
+- [Status](#status)
+- [Dependencies](#dependencies)
+- [What do I need?](#what-do-i-need)
+- [Setup](#setup)
+- [How to run it](#how-to-run-it)
+- [Folder structure](#folder-structure)
+- [Find out more](#find-out-more)
+- [License](#license)
+
+## Status
+
+![Project version][badge-repo-version]
+[![Code Coverage][badge-code-coverage]][link-code-coverage]
+[![Quality Gate Status][badge-soundcloud-quality]][link-soundcloud-status]
+[![Maintainability Rating][badge-soundcloud-maintanibility]][link-soundcloud-status]
+[![Security Rating][badge-soundcloud-security]][link-soundcloud-status]
+[![Technical Debt][badge-soundcloud-tech-debt]][link-soundcloud-status]
+
+[badge-repo-version]: https://img.shields.io/github/package-json/v/nicolasomar/my-pets-api?label=version&logo=npm&color=success
+[badge-code-coverage]: https://img.shields.io/codecov/c/github/nicolasomar/my-pets-api?label=coverage&logo=codecov
+[link-code-coverage]: https://app.codecov.io/gh/NicolasOmar/my-pets-api
+[badge-soundcloud-quality]: https://sonarcloud.io/api/project_badges/measure?project=NicolasOmar_my-pets-api&metric=alert_status
+[badge-soundcloud-maintanibility]: https://sonarcloud.io/api/project_badges/measure?project=NicolasOmar_my-pets-api&metric=sqale_rating
+[badge-soundcloud-security]: https://sonarcloud.io/api/project_badges/measure?project=NicolasOmar_my-pets-api&metric=security_rating
+[badge-soundcloud-tech-debt]: https://sonarcloud.io/api/project_badges/measure?project=NicolasOmar_my-pets-api&metric=sqale_index
+[link-soundcloud-status]: https://sonarcloud.io/summary/new_code?id=NicolasOmar_my-pets-api
+[badge-snyk-status]: https://img.shields.io/snyk/vulnerabilities/github/nicolasomar/my-pets-api?logo=snyk
+
+## Dependencies
+TBD
 
 ## What do I need?
 Before cloning this repo, I recommend installing the following software:
