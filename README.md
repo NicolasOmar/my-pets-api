@@ -21,6 +21,9 @@ GraphQL server based on NodeJs to give back-end support a web client based on [R
 [![Security Rating][badge-soundcloud-security]][link-soundcloud-status]
 [![Technical Debt][badge-soundcloud-tech-debt]][link-soundcloud-status]
 [![Known Vulnerabilities][badge-snyk-status]][link-snyk-status]
+![GitHub Repo stars][badge-github-repo-stars]
+![GitHub commit activity][badge-github-commits]
+![GitHub last commit][badge-github-last-commit]
 
 [badge-repo-version]: https://img.shields.io/github/package-json/v/nicolasomar/my-pets-api?label=version&logo=npm&color=success
 [badge-code-coverage]: https://img.shields.io/codecov/c/github/nicolasomar/my-pets-api?label=coverage&logo=codecov
@@ -32,9 +35,34 @@ GraphQL server based on NodeJs to give back-end support a web client based on [R
 [link-soundcloud-status]: https://sonarcloud.io/summary/new_code?id=NicolasOmar_my-pets-api
 [badge-snyk-status]: https://img.shields.io/snyk/vulnerabilities/github/nicolasomar/my-pets-api?logo=snyk
 [link-snyk-status]: https://snyk.io/test/github/nicolasomar/my-pets-api
+[badge-github-repo-stars]: https://img.shields.io/github/stars/nicolasomar/my-pets-api?label=stars&logo=github&labelColor=535353&style=flat
+[badge-github-commits]: https://img.shields.io/github/commit-activity/m/nicolasomar/my-pets-api?logo=github
+[badge-github-last-commit]: https://img.shields.io/github/last-commit/nicolasomar/my-pets-api?logo=github
 
 ## Dependencies
-TBD
+![express dependency][badge-dependency-express]
+![graphql dependency][badge-dependency-graphql]
+![apollo-server dependency][badge-dependency-apollo-server]
+![mongoose dependency][badge-dependency-mongoose]
+![bcryptjs dependency][badge-dependency-bcryptjs]
+![crypto-js dependency][badge-dependency-crypto-js]
+![babel-node dependency][badge-dependency-babel-node]
+![jest dependency][badge-dependency-jest]
+![eslint dependency][badge-dependency-eslint]
+![prettier dependency][badge-dependency-prettier]
+![nodemon dependency][badge-dependency-nodemon]
+
+[badge-dependency-express]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/express/main?logo=express
+[badge-dependency-graphql]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/graphql/main?logo=graphql
+[badge-dependency-apollo-server]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/apollo-server-express/main?logo=apollographql
+[badge-dependency-mongoose]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/mongoose/main?logo=mongoose
+[badge-dependency-bcryptjs]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/bcryptjs/main
+[badge-dependency-crypto-js]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/crypto-js/main
+[badge-dependency-babel-node]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/@babel/node/main?logo=babel
+[badge-dependency-jest]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/jest/main?logo=jest
+[badge-dependency-eslint]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/eslint/main?logo=eslint
+[badge-dependency-prettier]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/prettier/main?logo=prettier
+[badge-dependency-nodemon]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/nodemon/main?logo=nodemon
 
 ## What do I need?
 Before cloning this repo, I recommend installing the following software:
@@ -74,7 +102,7 @@ Once you have cloned the repo, it will show you the following folders:
 ## Find out more
 | [Project Status](https://github.com/users/NicolasOmar/projects/1/views/1) | [Storybook site](https://my-pets-storybook.netlify.app/) | [React Repo](https://github.com/NicolasOmar/my-pets) |
 | :--- | :--- | :--- |
-| Project board for project status tracking | Site dedicated to show and test all the created components | React front-end repository |
+| Project board for project status tracking | Site dedicated to show and test all the created front-end components | React front-end repository |
 
 ## License
 **MIT**
