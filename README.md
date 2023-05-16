@@ -1,5 +1,8 @@
-# My Pets API ![My Pets API version](https://img.shields.io/github/package-json/v/nicolasomar/my-pets-api?color=success&label=%20&style=flat-square) ![My Pets API Coverage](https://img.shields.io/codecov/c/github/nicolasomar/my-pets-api?label=%20&logo=codecov&style=flat-square)
+# My Pets API ![My Pets API version][badge-repo-version] ![My Pets API Coverage][badge-repo-coverage]
 GraphQL server based on NodeJs to give back-end support a web client based on [React](https://my-pets-prod.netlify.app/).
+
+[badge-repo-version]: https://img.shields.io/github/package-json/v/nicolasomar/my-pets-api?label=version&logo=npm&color=success&style=flat-square
+[badge-repo-coverage]: https://img.shields.io/codecov/c/github/nicolasomar/my-pets-api?label=coverage&logo=codecov&style=flat-square
 
 ## What do I need?
 Before cloning this repo, I recommend installing the following software:

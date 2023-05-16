@@ -1,4 +1,4 @@
-name: Check tests coverage
+name: Check code quality
 
 on:
   push:
@@ -16,13 +16,7 @@ jobs:
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
-
-    - name: 2/3 | Setup Node environment
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18.x
-
-    - name: 3/3 | Run Codecov Uploader
+    - name: 2/3 | Run Codecov Uploader
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -30,3 +24,8 @@ jobs:
         flags: unittests
         fail_ci_if_error: true
         verbose: true
+    - name: 3/3 | Run SonarCloud Scanner
+      uses: sonarsource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
