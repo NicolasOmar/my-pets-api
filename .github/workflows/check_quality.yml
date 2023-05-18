@@ -11,12 +11,30 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: 1/3 | Checkout repo
+    - name: 1/7 | Checkout repo
       uses: actions/checkout@v3
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
-    - name: 2/3 | Run Codecov Uploader
+    - name: 2/7 | Setup Node environment
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+    - name: 3/7 | Setup MongoDB test instance
+      uses: supercharge/mongodb-github-action@1.8.0
+      with:
+        mongodb-version: '6.0'
+    - name: 4/7 | Install depedencies
+      run: npm ci
+    - name: 5/7 | Run unit tests suite
+      run: npm run test:ci
+      env:
+        PORT: ${{ vars.ACTION_PORT }}
+        CONNECTION_URL: ${{ vars.ACTION_CONNECTION_URL }}
+        JWT_SECRET: ${{ vars.ACTION_JWT_SECRET }}
+        CRYPT_SECRET: ${{ vars.ACTION_CRYPT_SECRET }}
+        CRYPT_METH: ${{ vars.ACTION_CRYPT_METH }}
+    - name: 6/7 | Run Codecov Uploader
       uses: codecov/codecov-action@v3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
@@ -24,7 +42,7 @@ jobs:
         flags: unittests
         fail_ci_if_error: true
         verbose: true
-    - name: 3/3 | Run SonarCloud Scanner
+    - name: 7/7 | Run SonarCloud Scanner
       uses: sonarsource/sonarcloud-github-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
