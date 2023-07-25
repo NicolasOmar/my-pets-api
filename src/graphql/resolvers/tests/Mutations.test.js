@@ -1,8 +1,6 @@
 // MONGOOSE CODE RELATED
 import _mongoose from '../../../db/mongoose'
 import User from '../../../db/models/user.model'
-import Color from '../../../db/models/color.model'
-import PetType from '../../../db/models/petType.model'
 import Pet from '../../../db/models/pet.model'
 // MUTATIONS
 import Mutations from '../Mutations'
