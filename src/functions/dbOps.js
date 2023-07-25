@@ -23,4 +23,4 @@ export const populateTable = async (_case, env = 'test') => {
 export const clearTable = async _case => await tables[_case].collection.deleteMany()
 
 export const clearAllTables = async () =>
-  await Object.keys(tables).forEach(async table => await clearTable(table))
+  await Promise.allSettled(Object.keys(tables).map(async table => await clearTable(table)))
