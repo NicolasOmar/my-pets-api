@@ -44,7 +44,7 @@
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.1",
-    "validator": "^13.9.0"
+    "validator": "^13.11.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.22.9",
