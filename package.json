@@ -43,7 +43,7 @@
     "graphql": "^16.7.1",
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.1",
-    "mongoose": "^7.4.1",
+    "mongoose": "^7.5.0",
     "validator": "^13.9.0"
   },
   "devDependencies": {
