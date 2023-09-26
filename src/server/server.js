@@ -1,5 +1,6 @@
+import { ApolloServer, ApolloError } from 'apollo-server-express'
 import jwt from 'jsonwebtoken'
-import { ApolloError, ApolloServer } from 'apollo-server-express'
+import depthLimit from 'graphql-depth-limit'
 // SCHEMAS SPLITED BY CONCERNS
 import EntityTypes from '../graphql/schemas/Entities.gql'
 import InputTypes from '../graphql/schemas/Inputs.gql'
@@ -31,7 +32,8 @@ const server = new ApolloServer({
     }
 
     return { loggedUser, token }
-  }
+  },
+  validationRules: [depthLimit(2)]
 })
 
 export default server
