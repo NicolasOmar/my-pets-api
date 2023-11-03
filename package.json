@@ -30,10 +30,10 @@
   },
   "dependencies": {
     "@babel/cli": "^7.23.0",
-    "@babel/core": "^7.23.0",
+    "@babel/core": "^7.23.2",
     "@babel/node": "^7.22.19",
-    "@babel/plugin-transform-runtime": "^7.22.15",
-    "@babel/preset-env": "^7.22.20",
+    "@babel/plugin-transform-runtime": "^7.23.2",
+    "@babel/preset-env": "^7.23.2",
     "apollo-server-errors": "^3.3.1",
     "apollo-server-express": "^3.12.1",
     "babel-plugin-import-graphql": "^2.8.1",
