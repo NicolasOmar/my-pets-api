@@ -2,7 +2,7 @@ type Query {
   getUser: User!
   getPetTypes: [AuxiliaryData]!
   getColors: [AuxiliaryData]!
-  getMyPets: [Pet]!
+  getMyPets(search: String): [Pet]!
   getPet(id: ID!): Pet
   getMyPetsPopulation: [AmountData]
 }

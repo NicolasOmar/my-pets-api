@@ -73,6 +73,27 @@ describe('[Queries]', () => {
 
         Object.keys(petInfo).forEach(key => expect(petInfo[key]).toStrictEqual(getPet[key]))
       })
+
+      test('Should return an array of pets if I search for a part of the name', async () => {
+        const petsResult = await Query.getMyPets(
+          null,
+          { search: 'te' },
+          { loggedUser: testEnv.user }
+        )
+
+        expect(petsResult.length).toBe(1)
+        expect(petsResult[0].name).toBe(testEnv.pet.name)
+      })
+
+      test('Should return an empty array of pets if I search for wrong names', async () => {
+        const emptyResult = await Query.getMyPets(
+          null,
+          { search: 'pet' },
+          { loggedUser: testEnv.user }
+        )
+
+        expect(emptyResult.length).toBe(0)
+      })
     })
 
     describe('[SAD PATH]', () => {

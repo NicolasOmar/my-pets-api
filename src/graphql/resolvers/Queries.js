@@ -16,13 +16,17 @@ const Queries = {
   }),
   getPetTypes: async () => (await PetType.find()).map(({ _id, name }) => ({ id: _id, name })),
   getColors: async () => (await Color.find()).map(({ _id, name }) => ({ id: _id, name })),
-  getMyPets: async (_, __, { loggedUser }) => {
+  getMyPets: async (_, query, { loggedUser }) => {
     if (!loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
     const { _id } = await User.findOne({ userName: loggedUser.userName })
-    return await Pet.find({ user: _id })
+    const petFindQuery = query?.search
+      ? { user: _id, name: new RegExp(query?.search) }
+      : { user: _id }
+
+    return await Pet.find(petFindQuery)
   },
   getPet: async (_, { id }, { loggedUser }) => {
     if (!loggedUser) {
