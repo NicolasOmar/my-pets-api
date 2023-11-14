@@ -3,4 +3,3 @@
 
 npm run lint-staged
 npm run test:clean:ci
-git add .
