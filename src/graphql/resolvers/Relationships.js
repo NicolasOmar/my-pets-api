@@ -3,8 +3,11 @@ import Pet from '../../db/models/pet.model'
 import User from '../../db/models/user.model'
 import PetType from '../../db/models/petType.model'
 import Color from '../../db/models/color.model'
+import Event from '../../db/models/event.model'
+// CONSTANTS
+import { ALLOWED_CREATE } from '../../constants/allowedFields.json'
 // FUNCTIONS
-import { findIds } from '../../functions/parsers'
+import { findByIds } from '../../functions/parsers'
 
 const Relationships = {
   User: {
@@ -15,13 +18,36 @@ const Relationships = {
   },
   Pet: {
     user: async ({ user }) => await User.findById(user),
-    petType: async ({ petType }) => await findIds(PetType, petType, true),
-    hairColors: async ({ hairColors }) => await findIds(Color, hairColors),
-    eyeColors: async ({ eyeColors }) => await findIds(Color, eyeColors),
-    events: async () => await []
+    petType: async ({ petType }) =>
+      await findByIds({
+        model: PetType,
+        ids: petType,
+        findOne: true
+      }),
+    hairColors: async ({ hairColors }) =>
+      await findByIds({
+        model: Color,
+        ids: hairColors
+      }),
+    eyeColors: async ({ eyeColors }) =>
+      await findByIds({
+        model: Color,
+        ids: eyeColors
+      }),
+    events: async ({ events }) =>
+      await findByIds({
+        model: Event,
+        ids: events,
+        parser: `_id ${ALLOWED_CREATE.EVENT.join(' ')}`
+      })
   },
   Event: {
-    associatedPets: async () => await []
+    associatedPets: async ({ associatedPets }) =>
+      await findByIds({
+        model: Pet,
+        ids: associatedPets,
+        parser: `_id ${ALLOWED_CREATE.PET.join(' ')}`
+      })
   }
 }
 

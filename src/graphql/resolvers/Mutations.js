@@ -2,6 +2,7 @@ import { ApolloError } from 'apollo-server-errors'
 // DB MODELS
 import User from '../../db/models/user.model'
 import Pet from '../../db/models/pet.model'
+import Event from '../../db/models/event.model'
 // FUNCTIONS
 import { checkAllowedUpdates, parseError, parseErrorMsg } from '../../functions/parsers'
 import { decryptPass } from '../../functions/encrypt'
@@ -149,19 +150,26 @@ const Mutations = {
       throw new ApolloError(parseError(error, 'Pet'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
-  createEvent: async () => {
-    // if (!loggedUser) {
-    //   throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
-    // }
+  createEvent: async (_, { eventInfo }, { loggedUser }) => {
+    if (!loggedUser) {
+      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+    }
 
-    // if (!checkAllowedUpdates(eventInfo, ALLOWED_CREATE.EVENT)) {
-    //   throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
-    // }
+    if (!checkAllowedUpdates(eventInfo, ALLOWED_CREATE.EVENT)) {
+      throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
+    }
 
-    return {
-      id: '3',
-      description: '3',
-      associatedPets: ['3']
+    try {
+      const parsedNewEvent = new Event(eventInfo)
+      await parsedNewEvent.save()
+      await Pet.findOneAndUpdate(
+        { _id: eventInfo.associatedPets[0] },
+        { events: [parsedNewEvent._id] }
+      )
+
+      return parsedNewEvent.toJSON()
+    } catch (error) {
+      throw new ApolloError(parseError(error, 'Event'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   }
 }
