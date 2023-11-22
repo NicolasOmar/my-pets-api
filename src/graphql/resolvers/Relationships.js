@@ -17,7 +17,11 @@ const Relationships = {
     user: async ({ user }) => await User.findById(user),
     petType: async ({ petType }) => await findIds(PetType, petType, true),
     hairColors: async ({ hairColors }) => await findIds(Color, hairColors),
-    eyeColors: async ({ eyeColors }) => await findIds(Color, eyeColors)
+    eyeColors: async ({ eyeColors }) => await findIds(Color, eyeColors),
+    events: async () => await []
+  },
+  Event: {
+    associatedPets: async () => await []
   }
 }
 

@@ -5,7 +5,7 @@
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
   "private": false,
-  "homepage": "https://github.com/NicolasOmar/my-pets-api#readme",
+  "homepage": "https://my-pets-api.up.railway.app",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/NicolasOmar/my-pets-api.git"

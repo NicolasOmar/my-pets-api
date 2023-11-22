@@ -148,17 +148,22 @@ const Mutations = {
     } catch (error) {
       throw new ApolloError(parseError(error, 'Pet'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
+  },
+  createEvent: async () => {
+    // if (!loggedUser) {
+    //   throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+    // }
+
+    // if (!checkAllowedUpdates(eventInfo, ALLOWED_CREATE.EVENT)) {
+    //   throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
+    // }
+
+    return {
+      id: '3',
+      description: '3',
+      associatedPets: ['3']
+    }
   }
-  // logoutAll: async(_, __, { loggedUser }) => {
-  //   try {
-  //     loggedUser.tokens = []
-  //     await loggedUser.save()
-  //     return true
-  //   } catch (error) {
-  //     // response.status(500).send(error)
-  //     return error
-  //   }
-  // }
 }
 
 export default Mutations

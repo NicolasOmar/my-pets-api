@@ -22,3 +22,9 @@ input PetInput {
   eyeColors: [ID]
   passedAway: Boolean
 }
+
+input CreatePetInput {
+  description: String!
+  date: String!
+  associatedPets: [ID]!
+}

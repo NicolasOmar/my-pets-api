@@ -22,9 +22,10 @@ const Queries = {
     }
 
     const { _id } = await User.findOne({ userName: loggedUser.userName })
-    const petFindQuery = query?.search
-      ? { user: _id, name: new RegExp(query?.search) }
-      : { user: _id }
+    const petFindQuery =
+      query?.search && query?.search !== ''
+        ? { user: _id, name: new RegExp(query?.search) }
+        : { user: _id }
 
     return await Pet.find(petFindQuery)
   },
