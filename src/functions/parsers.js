@@ -61,10 +61,24 @@ export const parseErrorMsg = {
   noIdeaCode: code => `No idea dude, the code ${code} has not been mapped so far`
 }
 
-export const findByIds = async ({ model, ids, findOne = false, parser = '_id name' }) => {
-  return findOne
+export const findByIds = async ({
+  model,
+  ids,
+  findOne = false,
+  parser = '_id name',
+  parseId = false
+}) => {
+  const findedData = findOne
     ? await model.findOne({ _id: ids }, parser)
     : await model.find().where('_id').in(ids).select(parser)
+
+  if (parseId) {
+    return findOne
+      ? { id: findedData._id, name: findedData.name }
+      : findedData.map(({ _id, name }) => ({ id: _id, name }))
+  } else {
+    return findedData
+  }
 }
 
 export const parseUniqueArray = (list, callback) =>

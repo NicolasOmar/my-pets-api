@@ -22,17 +22,20 @@ const Relationships = {
       await findByIds({
         model: PetType,
         ids: petType,
-        findOne: true
+        findOne: true,
+        parseId: true
       }),
     hairColors: async ({ hairColors }) =>
       await findByIds({
         model: Color,
-        ids: hairColors
+        ids: hairColors,
+        parseId: true
       }),
     eyeColors: async ({ eyeColors }) =>
       await findByIds({
         model: Color,
-        ids: eyeColors
+        ids: eyeColors,
+        parseId: true
       }),
     events: async ({ events }) =>
       await findByIds({

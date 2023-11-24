@@ -162,9 +162,10 @@ const Mutations = {
     try {
       const parsedNewEvent = new Event(eventInfo)
       await parsedNewEvent.save()
+      const { events } = await Pet.findById(eventInfo.associatedPets[0])
       await Pet.findOneAndUpdate(
         { _id: eventInfo.associatedPets[0] },
-        { events: [parsedNewEvent._id] }
+        { events: [...events, parsedNewEvent._id] }
       )
 
       return parsedNewEvent.toJSON()

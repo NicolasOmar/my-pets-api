@@ -55,7 +55,12 @@ const Queries = {
     }
 
     const petTypeInfo = Promise.allSettled(
-      petPopulation.map(pet => new Promise(resolve => resolve(findByIds(PetType, pet.petType))))
+      petPopulation.map(
+        pet =>
+          new Promise(resolve =>
+            resolve(findByIds({ model: PetType, ids: pet.petType, parseId: true }))
+          )
+      )
     )
     const petTypeList = (await petTypeInfo).map(data => data.value[0].name)
     const parsedPetTypeList = parseUniqueArray(petTypeList, info => ({

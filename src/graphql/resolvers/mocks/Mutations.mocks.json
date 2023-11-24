@@ -27,7 +27,8 @@
       { "field": "weight", "value": 150 },
       { "field": "gender", "value": "masculine" },
       { "field": "hasHeterochromia", "value": true },
-      { "field": "passedAway", "value": false }
+      { "field": "passedAway", "value": false },
+      { "field": "events", "value": [] }
     ]
   }
 }

@@ -350,7 +350,8 @@ describe('[Mutations]', () => {
         const nameToUpdate = 'modifiedTest'
         const modifiedPet = {
           ...petInfo,
-          name: nameToUpdate
+          name: nameToUpdate,
+          events: []
         }
 
         await Mutations.updatePet(null, { petInfo: modifiedPet }, { loggedUser })
@@ -405,7 +406,8 @@ describe('[Mutations]', () => {
             ...updateFields.pet
               .map(({ field, value }) => ({ [field]: value }))
               .reduce((finalObj, currentProp) => ({ ...finalObj, ...currentProp }), {}),
-            id: secondPet._id
+            id: secondPet._id,
+            events: []
           }
 
           await Mutations.updatePet(null, { petInfo: updatedSecondPet }, { loggedUser })

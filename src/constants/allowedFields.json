@@ -38,7 +38,8 @@
       "hairColors",
       "hasHeterochromia",
       "eyeColors",
-      "passedAway"
+      "passedAway",
+      "events"
     ]
   }
 }

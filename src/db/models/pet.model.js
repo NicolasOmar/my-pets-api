@@ -73,7 +73,6 @@ const petSchema = new Schema({
   },
   events: {
     type: [Schema.Types.ObjectId],
-    required: true,
     ref: 'Event'
   }
 })
