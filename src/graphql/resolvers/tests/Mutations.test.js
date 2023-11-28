@@ -6,7 +6,7 @@ import Pet from '../../../db/models/pet.model'
 import Mutations from '../Mutations'
 import Queries from '../Queries'
 // MOCKS
-import { requiredFields, updateFields } from '../mocks/Mutations.mocks.json'
+import { requiredFields, updateFields, createEvent } from '../mocks/Mutations.mocks.json'
 import { testEnv } from '../../../functions/mocks/dbOps.mocks.json'
 // FUNCTIONS
 import { parseErrorMsg } from '../../../functions/parsers'
@@ -345,6 +345,11 @@ describe('[Mutations]', () => {
       }
     })
 
+    afterAll(async () => {
+      await clearTable('user')
+      await clearTable('pet')
+    })
+
     describe('[HAPPY PATH]', () => {
       test('Should update a logged Users pet data', async () => {
         const nameToUpdate = 'modifiedTest'
@@ -417,6 +422,86 @@ describe('[Mutations]', () => {
           )
           expect(error.extensions.code).toBe(HTTP_CODES.INTERNAL_ERROR_SERVER)
         }
+      })
+    })
+  })
+
+  describe('createEvent', () => {
+    let loggedUser = null
+    let colorList = null
+    let petTypeList = null
+    let petInfo = null
+    let eventToCreate = null
+
+    beforeAll(async () => {
+      colorList = (await Queries.getColors()).map(({ id }) => ({ id }))
+      petTypeList = (await Queries.getPetTypes()).map(({ id }) => ({ id }))
+
+      loggedUser = { userName: (await Mutations.createUser(null, { newUser })).userName }
+
+      petInfo = {
+        ...testEnv.pet,
+        petType: petTypeList[0].id,
+        hairColors: [colorList[0].id],
+        eyeColors: [petTypeList[0].id]
+      }
+
+      await Mutations.createPet(null, { petInfo }, { loggedUser })
+      const [createdPet] = await Queries.getMyPets(null, null, { loggedUser })
+
+      petInfo = {
+        ...petInfo,
+        id: createdPet._id,
+        assignatedPets: [petInfo.id]
+      }
+
+      eventToCreate = {
+        ...createEvent.events[0],
+        date: new Date(),
+        associatedPets: [petInfo.id]
+      }
+    })
+
+    describe('[HAPPY PATH]', () => {
+      test('Should create the event related to the created pet', async () => {
+        await Mutations.createEvent(null, { eventInfo: eventToCreate }, { loggedUser })
+        const petOfTheEvent = await Queries.getPet(null, { id: petInfo.id }, { loggedUser })
+
+        expect(petOfTheEvent.events.length).toBe(1)
+      })
+
+      test('Should create a second event related to the created pet', async () => {
+        const secondEventToCreate = {
+          ...eventToCreate,
+          ...createEvent.events[1]
+        }
+
+        await Mutations.createEvent(null, { eventInfo: secondEventToCreate }, { loggedUser })
+        const petOfTheEvent = await Queries.getPet(null, { id: petInfo.id }, { loggedUser })
+
+        expect(petOfTheEvent.events.length).toBe(2)
+      })
+    })
+
+    describe('[SAD PATH]', () => {
+      test('Should return a "MISSING_USER_DATA" Error trying to update a not logged User', async () => {
+        try {
+          await Mutations.createEvent(null, { eventInfo: eventToCreate }, {})
+        } catch (error) {
+          expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
+        }
+      })
+
+      test('Should return a "UPDATES" Error trying to update a pet with missing args', async () => {
+        Object.keys(eventToCreate).forEach(async eventKey => {
+          try {
+            delete eventToCreate[eventKey]
+            await Mutations.createEvent(null, { eventInfo: eventToCreate }, { loggedUser })
+          } catch (e) {
+            expect(e.message).toBe(ERROR_MSGS.UPDATES)
+            expect(e.extensions.code).toBe(HTTP_CODES.UNPROCESSABLE_ENTITY)
+          }
+        })
       })
     })
   })

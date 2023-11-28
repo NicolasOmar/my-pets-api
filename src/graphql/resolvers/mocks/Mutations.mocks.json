@@ -30,5 +30,11 @@
       { "field": "passedAway", "value": false },
       { "field": "events", "value": [] }
     ]
+  },
+  "createEvent": {
+    "events": [
+      { "description": "First description" },
+      { "description": "Second description" }
+    ]
   }
 }
