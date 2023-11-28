@@ -18,6 +18,7 @@ describe('[Relationships]', () => {
   let createdPet = null
   let selectedPetType = null
   let selectedColor = null
+  let createdEvent = null
 
   beforeAll(async () => {
     const newUser = {
@@ -27,6 +28,7 @@ describe('[Relationships]', () => {
 
     await populateTable('petType')
     await populateTable('color')
+
     loggedUser = await Mutations.createUser(null, { newUser })
     const [petType] = await Queries.getPetTypes()
     const [color] = await Queries.getColors()
@@ -41,6 +43,18 @@ describe('[Relationships]', () => {
     selectedPetType = petType
     selectedColor = color
     createdPet = await Mutations.createPet(null, { petInfo }, { loggedUser })
+
+    const eventInfo = {
+      ...testEnv.event,
+      date: new Date(),
+      associatedPets: [createdPet._id]
+    }
+
+    createdEvent = await Mutations.createEvent(null, { eventInfo }, { loggedUser })
+    createdPet = {
+      ...createdPet,
+      events: [createdEvent._id]
+    }
   })
 
   afterAll(async () => await clearAllTables())
@@ -79,6 +93,23 @@ describe('[Relationships]', () => {
         eyeColors: [selectedColor.id]
       })
       checkObjectData(selectedColor, testEyeColorsRes)
+    })
+
+    test('events', async () => {
+      const [testEventsRes] = await Relationships.Pet.events({
+        events: [createdEvent._id]
+      })
+      checkObjectData({ ...createdEvent, __v: undefined }, testEventsRes)
+    })
+  })
+
+  describe('[Event]', () => {
+    test('associatedPets', async () => {
+      const parsedMockPet = { ...createdPet, __v: undefined, user: undefined, events: undefined }
+      const [testPetsRes] = await Relationships.Event.associatedPets({
+        associatedPets: [createdPet._id]
+      })
+      checkObjectData(parsedMockPet, testPetsRes)
     })
   })
 })
