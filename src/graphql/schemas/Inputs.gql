@@ -23,7 +23,7 @@ input PetInput {
   passedAway: Boolean
 }
 
-input CreatePetInput {
+input CreateEventInput {
   description: String!
   date: String!
   associatedPets: [ID]!

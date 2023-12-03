@@ -14,7 +14,7 @@ type Mutation {
   updatePass(oldPass: String!, newPass: String!): Boolean
   createPet(petInfo: PetInput!): Pet
   updatePet(petInfo: PetInput!): Boolean!
-  createEvent(eventInfo: CreatePetInput!): Event
+  createEvent(eventInfo: CreateEventInput!): Event
   logout: Boolean!
   # logoutAll: Boolean!
 }
