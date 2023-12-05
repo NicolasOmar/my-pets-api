@@ -20,7 +20,10 @@
       "passedAway": false
     },
     "petType": ["Cat", "Dog"],
-    "color": ["White", "Black", "Brown", "Beige", "Grey"]
+    "color": ["White", "Black", "Brown", "Beige", "Grey"],
+    "event": {
+      "description": "Created event for test pet"
+    }
   },
   "prodEnv": {
     "petType": ["Cat", "Dog"],

@@ -5,7 +5,7 @@ import Pet from '../../db/models/pet.model'
 import User from '../../db/models/user.model'
 import { ApolloError } from 'apollo-server-errors'
 import { ERROR_MSGS, HTTP_CODES } from '../../constants/errors.json'
-import { findIds, parseUniqueArray } from '../../functions/parsers'
+import { findByIds, parseUniqueArray } from '../../functions/parsers'
 
 const Queries = {
   getUser: async (_, __, { loggedUser, token }) => ({
@@ -22,9 +22,10 @@ const Queries = {
     }
 
     const { _id } = await User.findOne({ userName: loggedUser.userName })
-    const petFindQuery = query?.search
-      ? { user: _id, name: new RegExp(query?.search) }
-      : { user: _id }
+    const petFindQuery =
+      query?.search && query?.search !== ''
+        ? { user: _id, name: new RegExp(query?.search) }
+        : { user: _id }
 
     return await Pet.find(petFindQuery)
   },
@@ -54,7 +55,12 @@ const Queries = {
     }
 
     const petTypeInfo = Promise.allSettled(
-      petPopulation.map(pet => new Promise(resolve => resolve(findIds(PetType, pet.petType))))
+      petPopulation.map(
+        pet =>
+          new Promise(resolve =>
+            resolve(findByIds({ model: PetType, ids: pet.petType, parseId: true }))
+          )
+      )
     )
     const petTypeList = (await petTypeInfo).map(data => data.value[0].name)
     const parsedPetTypeList = parseUniqueArray(petTypeList, info => ({

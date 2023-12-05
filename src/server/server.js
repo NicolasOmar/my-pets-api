@@ -33,7 +33,7 @@ const server = new ApolloServer({
 
     return { loggedUser, token }
   },
-  validationRules: [depthLimit(2)]
+  validationRules: [depthLimit(3)]
 })
 
 export default server

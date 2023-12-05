@@ -2,6 +2,7 @@ import { ApolloError } from 'apollo-server-errors'
 // DB MODELS
 import User from '../../db/models/user.model'
 import Pet from '../../db/models/pet.model'
+import Event from '../../db/models/event.model'
 // FUNCTIONS
 import { checkAllowedUpdates, parseError, parseErrorMsg } from '../../functions/parsers'
 import { decryptPass } from '../../functions/encrypt'
@@ -148,17 +149,30 @@ const Mutations = {
     } catch (error) {
       throw new ApolloError(parseError(error, 'Pet'), HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
+  },
+  createEvent: async (_, { eventInfo }, { loggedUser }) => {
+    if (!loggedUser) {
+      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+    }
+
+    if (!checkAllowedUpdates(eventInfo, ALLOWED_CREATE.EVENT)) {
+      throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
+    }
+
+    try {
+      const parsedNewEvent = new Event(eventInfo)
+      await parsedNewEvent.save()
+      const { events } = await Pet.findById(eventInfo.associatedPets[0])
+      await Pet.findOneAndUpdate(
+        { _id: eventInfo.associatedPets[0] },
+        { events: [...events, parsedNewEvent._id] }
+      )
+
+      return parsedNewEvent.toJSON()
+    } catch (error) {
+      throw new ApolloError(parseError(error, 'Event'), HTTP_CODES.INTERNAL_ERROR_SERVER)
+    }
   }
-  // logoutAll: async(_, __, { loggedUser }) => {
-  //   try {
-  //     loggedUser.tokens = []
-  //     await loggedUser.save()
-  //     return true
-  //   } catch (error) {
-  //     // response.status(500).send(error)
-  //     return error
-  //   }
-  // }
 }
 
 export default Mutations

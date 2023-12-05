@@ -25,6 +25,7 @@ type Pet {
   eyeColors: [AuxiliaryData]
   passedAway: Boolean!
   user: User
+  events: [Event]
 }
 
 type AuxiliaryData {
@@ -35,4 +36,11 @@ type AuxiliaryData {
 type AmountData {
   name: String!
   quantity: Int!
+}
+
+type Event {
+  id: ID!
+  description: String!
+  date: String!
+  associatedPets: [Pet]!
 }
