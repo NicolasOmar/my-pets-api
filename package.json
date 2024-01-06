@@ -54,7 +54,7 @@
     "@babel/eslint-parser": "^7.23.3",
     "@babel/register": "^7.22.15",
     "env-cmd": "^10.1.0",
-    "eslint": "^8.55.0",
+    "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.0",
     "eslint-plugin-node": "^11.1.0",
     "graphql-depth-limit": "^1.1.0",
