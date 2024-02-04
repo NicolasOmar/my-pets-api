@@ -33,11 +33,11 @@
     "update:doctor": "npm run test:clean:dev && npm run build"
   },
   "dependencies": {
-    "@babel/cli": "^7.23.4",
-    "@babel/core": "^7.23.7",
-    "@babel/node": "^7.22.19",
-    "@babel/plugin-transform-runtime": "^7.23.7",
-    "@babel/preset-env": "^7.23.8",
+    "@babel/cli": "^7.23.9",
+    "@babel/core": "^7.23.9",
+    "@babel/node": "^7.23.9",
+    "@babel/plugin-transform-runtime": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
     "apollo-server-errors": "^3.3.1",
     "apollo-server-express": "^3.13.0",
     "babel-plugin-import-graphql": "^2.8.1",
@@ -47,22 +47,22 @@
     "graphql": "^16.8.1",
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.1.0",
+    "mongoose": "^8.1.1",
     "validator": "^13.11.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.23.3",
+    "@babel/eslint-parser": "^7.23.10",
     "@babel/register": "^7.23.7",
     "env-cmd": "^10.1.0",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-node": "^11.1.0",
     "graphql-depth-limit": "^1.1.0",
-    "husky": "^8.0.3",
+    "husky": "^9.0.10",
     "jest": "^29.7.0",
-    "lint-staged": "^15.2.0",
+    "lint-staged": "^15.2.1",
     "nodemon": "^3.0.3",
-    "prettier": "^3.2.4"
+    "prettier": "^3.2.5"
   },
   "engines": {
     "node": ">=12.9.0"
