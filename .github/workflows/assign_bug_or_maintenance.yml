@@ -1,8 +1,9 @@
-name: Assign new bug
+name: Assign new bug or updater
 
 on:
   issues:
-    types: [opened, edited]
+    types:
+      - opened
 
 jobs:
   add-bug-to-project:
