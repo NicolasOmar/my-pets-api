@@ -1,5 +1,5 @@
 // MONGOOSE CODE RELATED
-import _mongoose from '../../../db/mongoose'
+import '../../../db/mongoose'
 // GRAPHQL
 import Mutations from '../Mutations'
 import Queries from '../Queries'
