@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.2.12",
+  "version": "0.2.13",
   "description": "GraphQL server based on NodeJs to give back-end support a web client based on React",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -34,11 +34,11 @@
     "update:doctor": "npm run prettier && npm run build && npm run lint && npm run test:clean:dev"
   },
   "dependencies": {
-    "@babel/cli": "^7.24.5",
-    "@babel/core": "^7.24.5",
-    "@babel/node": "^7.23.9",
-    "@babel/plugin-transform-runtime": "^7.24.3",
-    "@babel/preset-env": "^7.24.5",
+    "@babel/cli": "^7.24.6",
+    "@babel/core": "^7.24.6",
+    "@babel/node": "^7.24.6",
+    "@babel/plugin-transform-runtime": "^7.24.6",
+    "@babel/preset-env": "^7.24.6",
     "apollo-server-errors": "^3.3.1",
     "apollo-server-express": "^3.13.0",
     "babel-plugin-import-graphql": "^2.8.1",
@@ -52,17 +52,19 @@
     "validator": "^13.12.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.24.5",
-    "@babel/register": "^7.23.7",
+    "@babel/eslint-parser": "^7.24.6",
+    "@babel/register": "^7.24.6",
+    "@eslint/compat": "^1.0.1",
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.3.0",
     "env-cmd": "^10.1.0",
-    "eslint": "^8.57.0",
-    "eslint-plugin-import": "^2.29.1",
+    "eslint": "^9.3.0",
     "eslint-plugin-node": "^11.1.0",
     "graphql-depth-limit": "^1.1.0",
     "husky": "^9.0.11",
     "jest": "^29.7.0",
-    "lint-staged": "^15.2.2",
-    "nodemon": "^3.1.0",
+    "lint-staged": "^15.2.5",
+    "nodemon": "^3.1.1",
     "prettier": "^3.2.5"
   },
   "engines": {
