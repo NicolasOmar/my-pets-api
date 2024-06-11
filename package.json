@@ -25,12 +25,14 @@
     "test:clean:ci": "npm run test:clear:cache && npm run test:ci",
     "env:local": "env-cmd -f ./env/local.env",
     "db:create": "npm run env:local -- babel-node scripts/generate-db.js",
+    "setup": "npm i && npm i -g npm-check-updates && husky install",
     "lint": "eslint src --max-warnings 0",
-    "prettier": "prettier src/**/*.js --write",
+    "prettier": "prettier src/**/*.js --check",
+    "prettier:fix": "prettier src/**/*.js --write",
     "lint-staged": "lint-staged -v",
     "update": "npm run update:deps && npm run update:doctor",
     "update:deps": "ncu -i --format group",
-    "update:doctor": "npm run test:clean:dev && npm run build"
+    "update:doctor": "npm run prettier && npm run lint && npm run build && npm run test:clean:ci"
   },
   "dependencies": {
     "@babel/cli": "^7.23.4",
