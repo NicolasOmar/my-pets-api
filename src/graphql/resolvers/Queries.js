@@ -78,13 +78,7 @@ const Queries = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     }
 
-    const { events } = await Pet.findById(petId, 'events')
-
-    const eventsInfo = Promise.allSettled(
-      events.map(eventId => new Promise(resolve => resolve(Event.findById(eventId))))
-    )
-
-    return (await eventsInfo).map(({ value }) => value)
+    return await Event.find({ associatedPets: petId })
   }
 }
 
