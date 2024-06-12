@@ -1,5 +1,5 @@
 // MONGOOSE IMPORTS
-import _mongoose from '../../../db/mongoose'
+import '../../../db/mongoose'
 // QUERIES
 import Query from '../Queries'
 import Mutation from '../Mutations'

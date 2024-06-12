@@ -1,5 +1,5 @@
 // MONGOOSE CODE RELATED
-import _mongoose from '../../../db/mongoose'
+import '../../../db/mongoose'
 import User from '../../../db/models/user.model'
 import Pet from '../../../db/models/pet.model'
 // MUTATIONS

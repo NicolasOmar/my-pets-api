@@ -21,7 +21,7 @@ jobs:
       with:
         node-version: 18.x
     - name: 3/7 | Setup MongoDB test instance
-      uses: supercharge/mongodb-github-action@1.9.0
+      uses: supercharge/mongodb-github-action@1.10.0
       with:
         mongodb-version: '6.0'
     - name: 4/7 | Install depedencies
@@ -35,7 +35,7 @@ jobs:
         CRYPT_SECRET: ${{ vars.ACTION_CRYPT_SECRET }}
         CRYPT_METH: ${{ vars.ACTION_CRYPT_METH }}
     - name: 6/7 | Run Codecov Uploader
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: ./coverage/coverage-final.json

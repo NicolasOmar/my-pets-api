@@ -4,6 +4,9 @@
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
+  "ignorePatterns": [
+    "**/*.test.js"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:node/recommended"
