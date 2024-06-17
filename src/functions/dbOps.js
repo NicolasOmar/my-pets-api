@@ -3,6 +3,7 @@ import Color from '../db/models/color.model'
 import Pet from '../db/models/pet.model'
 import PetType from '../db/models/petType.model'
 import User from '../db/models/user.model'
+import Event from '../db/models/event.model'
 // MOCKS
 import baseData from './mocks/dbOps.mocks.json'
 
@@ -10,7 +11,8 @@ const tables = {
   user: User,
   pet: Pet,
   petType: PetType,
-  color: Color
+  color: Color,
+  event: Event
 }
 
 export const populateTable = async (_case, env = 'test') => {
