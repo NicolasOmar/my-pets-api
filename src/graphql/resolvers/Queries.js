@@ -1,10 +1,13 @@
+import { ApolloError } from 'apollo-server-errors'
 // MODELS
 import Color from '../../db/models/color.model'
 import PetType from '../../db/models/petType.model'
 import Pet from '../../db/models/pet.model'
 import User from '../../db/models/user.model'
-import { ApolloError } from 'apollo-server-errors'
+import Event from '../../db/models/event.model'
+// CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '../../constants/errors.json'
+// FUNCTIONS
 import { findByIds, parseUniqueArray } from '../../functions/parsers'
 
 const Queries = {
@@ -69,6 +72,13 @@ const Queries = {
     }))
 
     return [{ name: 'All', quantity: petPopulation.length }, ...parsedPetTypeList]
+  },
+  getMyPetEvents: async (_, { petId }, { loggedUser }) => {
+    if (!loggedUser) {
+      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+    }
+
+    return await Event.find({ associatedPets: petId })
   }
 }
 

@@ -5,6 +5,7 @@ type Query {
   getMyPets(search: String): [Pet]!
   getPet(id: ID!): Pet
   getMyPetsPopulation: [AmountData]
+  getMyPetEvents(petId: ID!): [Event]
 }
 
 type Mutation {

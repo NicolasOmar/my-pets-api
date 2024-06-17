@@ -21,7 +21,7 @@ jobs:
       with:
         node-version: 18.x
     - name: 3/7 | Setup MongoDB test instance
-      uses: supercharge/mongodb-github-action@1.10.0
+      uses: supercharge/mongodb-github-action@1.11.0
       with:
         mongodb-version: '6.0'
     - name: 4/7 | Install depedencies
