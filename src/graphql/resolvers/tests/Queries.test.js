@@ -33,14 +33,14 @@ describe('[Queries]', () => {
       hairColors: [colorId.id],
       eyeColors: [colorId.id]
     }
-    
+
     const petResponse = await Mutation.createPet(null, { petInfo }, { loggedUser: testEnv.user })
-    
+
     petInfo = {
       ...petInfo,
       _id: petResponse._id
     }
-    
+
     const eventInfo = {
       ...testEnv.event,
       date: new Date(),
@@ -121,7 +121,11 @@ describe('[Queries]', () => {
   describe('[getPet]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should return one of my pets', async () => {
-        const getPetInfo = await Query.getPet(null, { id: petInfo._id }, { loggedUser: testEnv.user })
+        const getPetInfo = await Query.getPet(
+          null,
+          { id: petInfo._id },
+          { loggedUser: testEnv.user }
+        )
 
         Object.keys(testEnv.pet).forEach(key =>
           expect(testEnv.pet[key]).toStrictEqual(getPetInfo[key])
@@ -177,7 +181,11 @@ describe('[Queries]', () => {
   describe('[getMyPetEvents]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should return the list of events', async () => {
-        const getEventsInfo = await Query.getMyPetEvents(null, { petId: petInfo._id }, { loggedUser: testEnv.user })
+        const getEventsInfo = await Query.getMyPetEvents(
+          null,
+          { petId: petInfo._id },
+          { loggedUser: testEnv.user }
+        )
         expect(testEnv.event.description).toStrictEqual(getEventsInfo[0].description)
       })
     })
