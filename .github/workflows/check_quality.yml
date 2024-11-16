@@ -35,7 +35,7 @@ jobs:
         CRYPT_SECRET: ${{ vars.ACTION_CRYPT_SECRET }}
         CRYPT_METH: ${{ vars.ACTION_CRYPT_METH }}
     - name: 6/7 | Run Codecov Uploader
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: ./coverage/coverage-final.json
