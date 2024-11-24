@@ -22,6 +22,6 @@ const eventSchema = new Schema({
   }
 })
 
-const EventEntity = model<EventDocument>('Event', eventSchema)
+const Event = model<EventDocument>('Event', eventSchema)
 
-export default EventEntity
+export default Event

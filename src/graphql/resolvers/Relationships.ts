@@ -1,9 +1,9 @@
 // DB MODELS
-import PetEntity from '@models/pet.model'
-import UserEntity from '@models/user.model'
-import PetTypeEntity from '@models/petType.model'
-import ColorEntity from '@models/color.model'
-import EventEntity from '@models/event.model'
+import Pet from '@models/pet.model'
+import User from '@models/user.model'
+import PetType from '@models/petType.model'
+import Color from '@models/color.model'
+import Event from '@models/event.model'
 // CONSTANTS
 import { ALLOWED_CREATE } from '@constants/allowedFields.json'
 // FUNCTIONS
@@ -14,56 +14,56 @@ import { UserDocument } from '@interfaces/user'
 import { EventDocument } from '@interfaces/event'
 
 interface RelationshipsInterface {
-  UserEntity: {
+  User: {
     pets: TypedRelationship<{ userName: string }, PetDocument[]>
   }
-  PetEntity: {
+  Pet: {
     user: TypedRelationship<{ user: string }, UserDocument | null>,
     petType: TypedRelationship<{ petType: string }, SecondaryData | SecondaryData[]>
     hairColors: TypedRelationship<{ hairColors: string }, SecondaryData | SecondaryData[]>
     eyeColors: TypedRelationship<{ eyeColors: string }, SecondaryData | SecondaryData[]>
     // events: TypedRelationship<{ events: string[] }, SecondaryData | SecondaryData[]>
   }
-  // EventEntity: {
+  // Event: {
   //   associatedPets: TypedRelationship<{ associatedPets: string[] }, PetDocument | PetDocument[]>
   // }
 }
 
 const Relationships: RelationshipsInterface = {
-  UserEntity: {
+  User: {
     pets: async ({ userName }) => {
-      const user = userName ? (await UserEntity.findOne({ userName }))?._id : null
-      return await PetEntity.find({ user })
+      const user = userName ? (await User.findOne({ userName }))?._id : null
+      return await Pet.find({ user })
     }
   },
-  PetEntity: {
-    user: async ({ user }) => await UserEntity.findById(user),
+  Pet: {
+    user: async ({ user }) => await User.findById(user),
     petType: async ({ petType }) =>
       await findByIds({
-        model: PetTypeEntity,
+        model: PetType,
         ids: petType
       }),
     hairColors: async ({ hairColors }) =>
       await findByIds({
-        model: ColorEntity,
+        model: Color,
         ids: hairColors
       }),
     eyeColors: async ({ eyeColors }) =>
       await findByIds({
-        model: ColorEntity,
+        model: Color,
         ids: eyeColors
       }),
     // events: async ({ events }) =>
     //   await findByIds({
-    //     model: EventEntity,
+    //     model: Event,
     //     ids: events,
     //     parser: `_id ${ALLOWED_CREATE.EVENT.join(' ')}`
     //   })
   },
-  // EventEntity: {
+  // Event: {
   //   associatedPets: async ({ associatedPets }) =>
   //     await findByIds({
-  //       model: PetEntity,
+  //       model: Pet,
   //       ids: associatedPets,
   //       parser: `_id ${ALLOWED_CREATE.PET.join(' ')}`
   //     })

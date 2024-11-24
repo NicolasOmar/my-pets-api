@@ -91,7 +91,7 @@ userSchema.virtual(
 )
 
 userSchema.statics.findByCredentials = async (email, password) => {
-  const finded = await UserEntity.findOne({ email })
+  const finded = await User.findOne({ email })
 
   if (!finded) {
     throw { message: ERROR_MSGS.LOGIN }
@@ -141,6 +141,6 @@ userSchema.methods.toJSON = function () {
   return userObj
 }
 
-const UserEntity = model<UserInterface, UserModel>('User', userSchema)
+const User = model<UserInterface, UserModel>('User', userSchema)
 
-export default UserEntity
+export default User

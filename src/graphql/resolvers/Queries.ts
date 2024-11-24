@@ -1,11 +1,11 @@
 import { Document } from 'mongoose'
 import { ApolloError } from 'apollo-server-errors'
 // MODELS
-import ColorEntity from '@models/color.model'
-import PetTypeEntity from '@models/petType.model'
-import PetEntity from '@models/pet.model'
-import UserEntity from '@models/user.model'
-import EventEntity from '@models/event.model'
+import Color from '@models/color.model'
+import PetType from '@models/petType.model'
+import Pet from '@models/pet.model'
+import User from '@models/user.model'
+import Event from '@models/event.model'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
 // INTERFACES
@@ -23,7 +23,7 @@ interface QueriesInterface {
   getMyPets: TypedQuery<QueryParams, UserAndToken, PetDocument[]>
   getPet: TypedQuery<QueryParams, UserAndToken, PetDocument>
   getMyPetsPopulation: TypedQuery<QueryParams, UserAndToken, Quantity[]>
-  getMyPetEvents: TypedQuery<QueryParams, UserAndToken, typeof EventEntity[]>
+  getMyPetEvents: TypedQuery<QueryParams, UserAndToken, typeof Event[]>
 }
 
 const Queries: QueriesInterface = {
@@ -33,13 +33,13 @@ const Queries: QueriesInterface = {
     email: loggedUser.email,
     token
   }),
-  getPetTypes: async () => (await PetTypeEntity.find()).map(
+  getPetTypes: async () => (await PetType.find()).map(
     ({ _id, name }: SelectableDataDocument) => ({
       id: _id as string,
       name: name as string
     })
   ),
-  getColors: async () => (await ColorEntity.find()).map(
+  getColors: async () => (await Color.find()).map(
     ({ _id, name }: SelectableDataDocument) => ({
       id: _id as string,
       name: name as string
@@ -50,20 +50,20 @@ const Queries: QueriesInterface = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     }
 
-    const userResponse = await UserEntity.findOne({ userName: loggedUser.userName })
+    const userResponse = await User.findOne({ userName: loggedUser.userName })
     const petFindQuery =
       query?.search && query?.search !== ''
         ? { user: userResponse?._id, name: new RegExp(query?.search as string) }
         : { user: userResponse?._id }
 
-    return await PetEntity.find(petFindQuery)
+    return await Pet.find(petFindQuery)
   },
   getPet: async (_, { id }, { loggedUser }) => {
     if (!loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     }
 
-    const foundedPet = await PetEntity.findOne({ _id: id })
+    const foundedPet = await Pet.findOne({ _id: id })
 
     if (!foundedPet) {
       throw new ApolloError(ERROR_MSGS.MISSING_PET_DATA, HTTP_CODES.NOT_FOUND.toString())
@@ -76,8 +76,8 @@ const Queries: QueriesInterface = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     }
 
-    const foundedUser = await UserEntity.findOne({ userName: loggedUser.userName })
-    const petPopulation = await PetEntity.find({ user: foundedUser?.id })
+    const foundedUser = await User.findOne({ userName: loggedUser.userName })
+    const petPopulation = await Pet.find({ user: foundedUser?.id })
 
     if (petPopulation.length === 0) {
       return [{ name: 'All', quantity: 0 }]
@@ -87,7 +87,7 @@ const Queries: QueriesInterface = {
       petPopulation.map(
         pet =>
           new Promise<SecondaryData | SecondaryData[]>(resolve =>
-            resolve(findByIds({ model: PetTypeEntity, ids: pet.petType }))
+            resolve(findByIds({ model: PetType, ids: pet.petType }))
           )
       )
     )
@@ -107,7 +107,7 @@ const Queries: QueriesInterface = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     }
 
-    return await EventEntity.find({ associatedPets: petId })
+    return await Event.find({ associatedPets: petId })
   }
 }
 

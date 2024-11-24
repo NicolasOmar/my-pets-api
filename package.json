@@ -33,7 +33,10 @@
     "update": "npm run update:deps && npm run update:doctor",
     "update:deps": "ncu -i --format group",
     "update:doctor": "npm run prettier && npm run lint && npm run build && npm run test:clean:ci",
-    "build:ts": "tsc src/index.ts"
+    "move:gql": "copyfiles -u 1 src/**/*.gql dist/",
+    "compile:gql": "graphql-codegen --config codegen.ts",
+    "compile:ts": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "build:ts": "npm run compile:ts && npm run move:gql && npm run compile:gql && npm run env:local -- node dist/index.js"
   },
   "dependencies": {
     "@babel/cli": "^7.25.9",
@@ -59,12 +62,16 @@
     "@eslint/compat": "^1.2.3",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.15.0",
+    "@graphql-codegen/cli": "^5.0.3",
+    "@graphql-codegen/typescript": "^4.1.2",
+    "@graphql-codegen/typescript-resolvers": "^4.4.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/crypto-js": "^4.2.2",
     "@types/graphql-depth-limit": "^1.1.6",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/mongoose": "^5.11.96",
     "@types/validator": "^13.12.2",
+    "copyfiles": "^2.4.1",
     "env-cmd": "^10.1.0",
     "eslint": "^9.15.0",
     "eslint-plugin-node": "^11.1.0",
@@ -74,6 +81,7 @@
     "lint-staged": "^15.2.10",
     "nodemon": "^3.1.7",
     "prettier": "^3.3.3",
+    "tsc-alias": "^1.8.10",
     "typescript": "^5.6.3"
   },
   "engines": {

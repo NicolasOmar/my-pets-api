@@ -1,9 +1,9 @@
 import mongoose, { Error } from 'mongoose'
 import { ApolloError } from 'apollo-server-errors'
 // DB MODELS
-import UserEntity from '@models/user.model'
-import PetEntity from '@models/pet.model'
-import EventEntity from '@models/event.model'
+import User from '@models/user.model'
+import Pet from '@models/pet.model'
+import Event from '@models/event.model'
 // FUNCTIONS
 import { checkAllowedUpdates, parseErrorMsg } from '@functions/parsers'
 import { decryptPass } from '@functions/encrypt'
@@ -30,7 +30,7 @@ interface MutationsInterface {
 const Mutations: MutationsInterface = {
   loginUser: async (_, { email, password }) => {
     try {
-      const userLogged = await UserEntity.findByCredentials(email, decryptPass(password))
+      const userLogged = await User.findByCredentials(email, decryptPass(password))
       const token = await userLogged.generateAuthToken()
 
       return { loggedUser: userLogged.toJSON() as UserDocument, token }
@@ -40,7 +40,7 @@ const Mutations: MutationsInterface = {
   },
   createUser: async (_, { newUser }) => {
     try {
-      const parsedNewUser = new UserEntity({
+      const parsedNewUser = new User({
         ...newUser,
         password: decryptPass(newUser.password as string)
       })
@@ -99,7 +99,7 @@ const Mutations: MutationsInterface = {
     }
 
     try {
-      await UserEntity.findByCredentials(loggedUser.email, decryptPass(args.oldPass))
+      await User.findByCredentials(loggedUser.email, decryptPass(args.oldPass))
       loggedUser.password = decryptPass(args.newPass)
 
       await loggedUser.save()
@@ -133,19 +133,19 @@ const Mutations: MutationsInterface = {
       throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
     }
 
-    const petAlreadyCreated = await PetEntity.findOne({ name: petInfo.name, petType: petInfo.petType })
+    const petAlreadyCreated = await Pet.findOne({ name: petInfo.name, petType: petInfo.petType })
 
     if (petAlreadyCreated) {
       throw new ApolloError(
-        parseErrorMsg.alreadyExists('PetEntity', ' with this name and pet type'),
+        parseErrorMsg.alreadyExists('Pet', ' with this name and pet type'),
         HTTP_CODES.INTERNAL_ERROR_SERVER
       )
     }
 
-    const findedUser = await UserEntity.findOne({ userName: loggedUser.userName })
+    const findedUser = await User.findOne({ userName: loggedUser.userName })
 
     try {
-      const parsedNewPet = new PetEntity({
+      const parsedNewPet = new Pet({
         ...petInfo,
         user: findedUser?._id
       })
@@ -166,18 +166,18 @@ const Mutations: MutationsInterface = {
       throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
     }
 
-    const petAlreadyCreated = await PetEntity.findOne({ name: petInfo.name, petType: petInfo.petType })
+    const petAlreadyCreated = await Pet.findOne({ name: petInfo.name, petType: petInfo.petType })
 
     if (petAlreadyCreated) {
       throw new ApolloError(
-        parseErrorMsg.alreadyExists('PetEntity', ' with this name and pet type'),
+        parseErrorMsg.alreadyExists('Pet', ' with this name and pet type'),
         HTTP_CODES.INTERNAL_ERROR_SERVER
       )
     }
 
     try {
       const { id, ...updateInfo } = petInfo
-      const response = await PetEntity.findOneAndUpdate({ _id: id }, { ...updateInfo })
+      const response = await Pet.findOneAndUpdate({ _id: id }, { ...updateInfo })
       return response ? true : false
     } catch (error) {
       throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
@@ -193,10 +193,10 @@ const Mutations: MutationsInterface = {
     }
 
     try {
-      const parsedNewEvent = new EventEntity(eventInfo)
+      const parsedNewEvent = new Event(eventInfo)
       await parsedNewEvent.save()
-      const findedPet = await PetEntity.findById(eventInfo.associatedPets[0])
-      await PetEntity.findOneAndUpdate(
+      const findedPet = await Pet.findById(eventInfo.associatedPets[0])
+      await Pet.findOneAndUpdate(
         { _id: eventInfo.associatedPets[0] },
         { events: [...(findedPet?.events ?? []), parsedNewEvent._id] }
       )

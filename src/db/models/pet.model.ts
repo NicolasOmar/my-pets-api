@@ -79,6 +79,6 @@ const petSchema = new Schema<PetDocument>({
   }
 })
 
-const PetEntity = model<PetDocument>('Pet', petSchema)
+const Pet = model<PetDocument>('Pet', petSchema)
 
-export default PetEntity
+export default Pet
