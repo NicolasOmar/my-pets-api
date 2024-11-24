@@ -1,6 +1,8 @@
 import { Schema, model } from 'mongoose'
+// INTERFACES
+import { EventDocument } from '@interfaces/event'
 // FUNCTIONS
-import { parseErrorMsg } from '../../functions/parsers'
+import { parseErrorMsg } from '@functions/parsers'
 
 const eventSchema = new Schema({
   description: {
@@ -20,6 +22,6 @@ const eventSchema = new Schema({
   }
 })
 
-const Event = model('Event', eventSchema)
+const EventEntity = model<EventDocument>('Event', eventSchema)
 
-export default Event
+export default EventEntity

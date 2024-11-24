@@ -32,7 +32,8 @@
     "lint-staged": "lint-staged -v",
     "update": "npm run update:deps && npm run update:doctor",
     "update:deps": "ncu -i --format group",
-    "update:doctor": "npm run prettier && npm run lint && npm run build && npm run test:clean:ci"
+    "update:doctor": "npm run prettier && npm run lint && npm run build && npm run test:clean:ci",
+    "build:ts": "tsc src/index.ts"
   },
   "dependencies": {
     "@babel/cli": "^7.25.9",
@@ -58,6 +59,12 @@
     "@eslint/compat": "^1.2.3",
     "@eslint/eslintrc": "^3.2.0",
     "@eslint/js": "^9.15.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/crypto-js": "^4.2.2",
+    "@types/graphql-depth-limit": "^1.1.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/mongoose": "^5.11.96",
+    "@types/validator": "^13.12.2",
     "env-cmd": "^10.1.0",
     "eslint": "^9.15.0",
     "eslint-plugin-node": "^11.1.0",
@@ -66,7 +73,8 @@
     "jest": "^29.7.0",
     "lint-staged": "^15.2.10",
     "nodemon": "^3.1.7",
-    "prettier": "^3.3.3"
+    "prettier": "^3.3.3",
+    "typescript": "^5.6.3"
   },
   "engines": {
     "node": ">=12.9.0"

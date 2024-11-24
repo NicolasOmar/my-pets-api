@@ -1,13 +1,15 @@
-import mongoose from 'mongoose'
+import { Schema, model } from 'mongoose'
 import validator from 'validator'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+// INTERFACES
+import { UserInterface, UserModel } from '@interfaces/user'
 // CONSTANTS
-import { ERROR_MSGS } from '../../constants/errors.json'
+import { ERROR_MSGS } from '@constants/errors'
 // FUNCTIONS
-import { parseErrorMsg } from '../../functions/parsers'
+import { parseErrorMsg } from '@functions/parsers'
 
-const userSchema = new mongoose.Schema(
+const userSchema = new Schema(
   {
     name: {
       type: String,
@@ -35,12 +37,12 @@ const userSchema = new mongoose.Schema(
     },
     userName: {
       type: String,
-      unique: [true, parseErrorMsg.alreadyExists('User')],
+      unique: true,
       required: [true, parseErrorMsg.missingValue('Username')],
       minlength: [4, parseErrorMsg.minMaxValue('Username', 4, true)],
       maxlength: [10, parseErrorMsg.minMaxValue('Username', 10, false)],
       trim: true,
-      validate: value => {
+      validate: (value: string) => {
         if (!validator.isAlpha(value)) {
           throw { message: ERROR_MSGS.ALPHA }
         }
@@ -52,7 +54,7 @@ const userSchema = new mongoose.Schema(
       required: [true, parseErrorMsg.missingValue('Email')], // CANNOT AVOID INCLUDING THIS FIELD WHEN INSERT A NEW DOCUMENT
       trim: true, // REMOVE EMPTY SPACES BEFORE AND AFTER STRING
       lowercase: true, // CHANGE ENTIRE STRING INTO LOWERCASE
-      validate: value => {
+      validate: (value: string) => {
         if (!validator.isEmail(value)) {
           throw { message: ERROR_MSGS.EMAIL }
         }
@@ -89,7 +91,7 @@ userSchema.virtual(
 )
 
 userSchema.statics.findByCredentials = async (email, password) => {
-  const finded = await User.findOne({ email })
+  const finded = await UserEntity.findOne({ email })
 
   if (!finded) {
     throw { message: ERROR_MSGS.LOGIN }
@@ -107,7 +109,7 @@ userSchema.statics.findByCredentials = async (email, password) => {
 // ACCESIBLE TO INSTANCE
 userSchema.methods.generateAuthToken = async function () {
   const user = this
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET)
+  const token = jwt.sign({ _id: user._id.toString() }, (process.env.JWT_SECRET ?? ''))
 
   user.tokens = user.tokens.concat({ token })
   await user.save()
@@ -139,6 +141,6 @@ userSchema.methods.toJSON = function () {
   return userObj
 }
 
-const User = mongoose.model('User', userSchema)
+const UserEntity = model<UserInterface, UserModel>('User', userSchema)
 
-export default User
+export default UserEntity
