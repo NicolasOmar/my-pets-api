@@ -25,10 +25,10 @@
     "test:clean:ci": "npm run test:clear:cache && npm run test:ci",
     "env:local": "env-cmd -f ./env/local.env",
     "db:create": "npm run env:local -- babel-node scripts/generate-db.js",
-    "setup": "npm i && npm i -g npm-check-updates && husky install",
+    "setup": "npm ci && husky install",
     "lint": "eslint src --max-warnings 0",
-    "prettier": "prettier src/**/*.js --check",
-    "prettier:fix": "prettier src/**/*.js --write",
+    "prettier": "prettier src/**/*.{js,ts} --check",
+    "prettier:fix": "prettier src/**/*.{js,ts} --write",
     "lint-staged": "lint-staged -v",
     "update": "npm run update:deps && npm run update:doctor",
     "update:deps": "ncu -i --format group",
@@ -46,14 +46,13 @@
     "@babel/preset-env": "^7.26.0",
     "apollo-server-errors": "^3.3.1",
     "apollo-server-express": "^3.13.0",
-    "babel-plugin-import-graphql": "^2.8.1",
     "bcryptjs": "^2.4.3",
     "crypto-js": "^4.2.0",
     "express": "^4.21.1",
     "graphql": "^16.9.0",
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.8.1",
+    "mongoose": "^8.8.2",
     "validator": "^13.12.0"
   },
   "devDependencies": {
@@ -68,9 +67,11 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/crypto-js": "^4.2.2",
     "@types/graphql-depth-limit": "^1.1.6",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/mongoose": "^5.11.96",
+    "@types/mongoose": "^5.11.97",
     "@types/validator": "^13.12.2",
+    "babel-plugin-import-graphql": "^2.8.1",
     "copyfiles": "^2.4.1",
     "env-cmd": "^10.1.0",
     "eslint": "^9.15.0",
@@ -80,21 +81,15 @@
     "jest": "^29.7.0",
     "lint-staged": "^15.2.10",
     "nodemon": "^3.1.7",
+    "npm-check-updates": "^17.1.11",
     "prettier": "^3.3.3",
+    "ts-jest": "^29.2.5",
     "tsc-alias": "^1.8.10",
-    "typescript": "^5.6.3"
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.2"
   },
   "engines": {
     "node": ">=12.9.0"
-  },
-  "jest": {
-    "verbose": true,
-    "testEnvironment": "node",
-    "globalSetup": "./scripts/init-tests.js",
-    "globalTeardown": "./scripts/close-tests.js",
-    "collectCoverageFrom": [
-      "src/**/!(*model|*mocks).js"
-    ]
   },
   "lint-staged": {
     "src/**/*.js": [

@@ -1,4 +1,4 @@
-import { Document, Model } from "mongoose"
+import { Document, Model } from 'mongoose'
 
 interface Token {
   token: string

@@ -1,4 +1,4 @@
-import mongoose, { Document, Types } from "mongoose"
+import mongoose, { Document, Types } from 'mongoose'
 
 export interface PetDocument extends Document {
   name: string

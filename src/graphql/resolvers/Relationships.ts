@@ -18,7 +18,7 @@ interface RelationshipsInterface {
     pets: TypedRelationship<{ userName: string }, PetDocument[]>
   }
   Pet: {
-    user: TypedRelationship<{ user: string }, UserDocument | null>,
+    user: TypedRelationship<{ user: string }, UserDocument | null>
     petType: TypedRelationship<{ petType: string }, SecondaryData | SecondaryData[]>
     hairColors: TypedRelationship<{ hairColors: string }, SecondaryData | SecondaryData[]>
     eyeColors: TypedRelationship<{ eyeColors: string }, SecondaryData | SecondaryData[]>
@@ -52,14 +52,14 @@ const Relationships: RelationshipsInterface = {
       await findByIds({
         model: Color,
         ids: eyeColors
-      }),
+      })
     // events: async ({ events }) =>
     //   await findByIds({
     //     model: Event,
     //     ids: events,
     //     parser: `_id ${ALLOWED_CREATE.EVENT.join(' ')}`
     //   })
-  },
+  }
   // Event: {
   //   associatedPets: async ({ associatedPets }) =>
   //     await findByIds({

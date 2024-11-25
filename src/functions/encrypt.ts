@@ -8,7 +8,7 @@ enum CryptoMethods {
   RC4Drop = 'RC4Drop',
   Rabbit = 'Rabbit',
   RabbitLegacy = 'RabbitLegacy',
-  Blowfish = 'Blowfish',
+  Blowfish = 'Blowfish'
 }
 
 const encryptParser: (
@@ -16,13 +16,8 @@ const encryptParser: (
   pass: string,
   cryptSecret: string,
   isEncrypting?: boolean
-) => string = (
-  method,
-  pass,
-  cryptSecret,
-  isEncrypting = true
-) => {
-  switch(method) {
+) => string = (method, pass, cryptSecret, isEncrypting = true) => {
+  switch (method) {
     case CryptoMethods.AES:
       return isEncrypting
         ? cryptoJs.AES.encrypt(pass, cryptSecret).toString()

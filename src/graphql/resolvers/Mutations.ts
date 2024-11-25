@@ -17,14 +17,14 @@ import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
 import { ALLOWED_CREATE, ALLOWED_UPDATE } from '@constants/allowedFields.json'
 
 interface MutationsInterface {
-  loginUser: TypedMutation<{ email: string, password: string}, LoggedUser, UserAndToken>
+  loginUser: TypedMutation<{ email: string; password: string }, LoggedUser, UserAndToken>
   createUser: TypedMutation<{ newUser: BaseUser }, LoggedUser, UserAndToken>
   updateUser: TypedMutation<UserDocument, UserAndToken, UserDocument>
-  updatePass: TypedMutation<{ oldPass: string, newPass: string}, UserAndToken, boolean>
+  updatePass: TypedMutation<{ oldPass: string; newPass: string }, UserAndToken, boolean>
   logout: TypedMutation<null, UserAndToken, boolean>
   createPet: TypedMutation<{ petInfo: PetDocument }, UserAndToken, PetDocument>
   updatePet: TypedMutation<{ petInfo: PetDocument }, UserAndToken, boolean>
-  createEvent: TypedMutation<{ eventInfo: EventDocument}, UserAndToken, EventDocument>
+  createEvent: TypedMutation<{ eventInfo: EventDocument }, UserAndToken, EventDocument>
 }
 
 const Mutations: MutationsInterface = {
@@ -63,21 +63,19 @@ const Mutations: MutationsInterface = {
     }
 
     try {
-      const updatedDocument = Object.keys(loggedUser).reduce(
-        (_totalObj, key) => {
-          const findedKey = updateArgs[key as keyof UserDocument] !== undefined
+      const updatedDocument = Object.keys(loggedUser).reduce((_totalObj, key) => {
+        const findedKey = updateArgs[key as keyof UserDocument] !== undefined
 
-          if (findedKey) {
-            return {
-              ..._totalObj,
-              key: updateArgs[key as keyof UserDocument]
-            }
-          } else {
-            return _totalObj
+        if (findedKey) {
+          return {
+            ..._totalObj,
+            key: updateArgs[key as keyof UserDocument]
           }
-        }, {}
-      )
-      
+        } else {
+          return _totalObj
+        }
+      }, {})
+
       await (updatedDocument as UserDocument).save()
 
       return loggedUser.toJSON() as UserDocument
@@ -107,7 +105,8 @@ const Mutations: MutationsInterface = {
       return true
     } catch (error) {
       const parsedError = error as Error
-      const errorMsg = parsedError.message === ERROR_MSGS.LOGIN ? ERROR_MSGS.PASSWORD : parsedError.message
+      const errorMsg =
+        parsedError.message === ERROR_MSGS.LOGIN ? ERROR_MSGS.PASSWORD : parsedError.message
       throw new ApolloError(errorMsg, HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },

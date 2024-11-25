@@ -23,7 +23,7 @@ interface QueriesInterface {
   getMyPets: TypedQuery<QueryParams, UserAndToken, PetDocument[]>
   getPet: TypedQuery<QueryParams, UserAndToken, PetDocument>
   getMyPetsPopulation: TypedQuery<QueryParams, UserAndToken, Quantity[]>
-  getMyPetEvents: TypedQuery<QueryParams, UserAndToken, typeof Event[]>
+  getMyPetEvents: TypedQuery<QueryParams, UserAndToken, (typeof Event)[]>
 }
 
 const Queries: QueriesInterface = {
@@ -33,18 +33,16 @@ const Queries: QueriesInterface = {
     email: loggedUser.email,
     token
   }),
-  getPetTypes: async () => (await PetType.find()).map(
-    ({ _id, name }: SelectableDataDocument) => ({
+  getPetTypes: async () =>
+    (await PetType.find()).map(({ _id, name }: SelectableDataDocument) => ({
       id: _id as string,
       name: name as string
-    })
-  ),
-  getColors: async () => (await Color.find()).map(
-    ({ _id, name }: SelectableDataDocument) => ({
+    })),
+  getColors: async () =>
+    (await Color.find()).map(({ _id, name }: SelectableDataDocument) => ({
       id: _id as string,
       name: name as string
-    })
-  ),
+    })),
   getMyPets: async (_, query, { loggedUser }) => {
     if (!loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
@@ -69,7 +67,7 @@ const Queries: QueriesInterface = {
       throw new ApolloError(ERROR_MSGS.MISSING_PET_DATA, HTTP_CODES.NOT_FOUND.toString())
     }
 
-    return (foundedPet as PetDocument)
+    return foundedPet as PetDocument
   },
   getMyPetsPopulation: async (_, __, { loggedUser }) => {
     if (!loggedUser) {
@@ -91,7 +89,9 @@ const Queries: QueriesInterface = {
           )
       )
     )
-    const petTypeList = (await petTypeInfo).filter(({ status }) => status === 'fulfilled').map(_petType => (_petType as PromiseFulfilledResult<SecondaryData>).value)
+    const petTypeList = (await petTypeInfo)
+      .filter(({ status }) => status === 'fulfilled')
+      .map(_petType => (_petType as PromiseFulfilledResult<SecondaryData>).value)
     const parsedPetTypeList = parseUniqueArray({
       list: petTypeList,
       callback: info => ({

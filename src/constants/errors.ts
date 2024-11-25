@@ -3,15 +3,15 @@ export enum MONGO_CODES {
 }
 
 export enum ERROR_MSGS {
-  ALPHA = "The field needs to contain letters only",
-  EMAIL = "The user needs a valid mail format (@site.com) to be created",
-  UPDATES = "Invalid update data",
-  LOGIN = "Your email and/or password is incorrect. Try again with other credentials",
-  PASSWORD = "The provided password is not the current one. Try again with the correct one",
-  NON_ENCRYPTED_DATA = "Malformed UTF-8 data",
-  AUTHENTICATE = "Please authenticate to keep using the app",
-  MISSING_USER_DATA = "Missing user data",
-  MISSING_PET_DATA = "There is no such Pet with the name provided"
+  ALPHA = 'The field needs to contain letters only',
+  EMAIL = 'The user needs a valid mail format (@site.com) to be created',
+  UPDATES = 'Invalid update data',
+  LOGIN = 'Your email and/or password is incorrect. Try again with other credentials',
+  PASSWORD = 'The provided password is not the current one. Try again with the correct one',
+  NON_ENCRYPTED_DATA = 'Malformed UTF-8 data',
+  AUTHENTICATE = 'Please authenticate to keep using the app',
+  MISSING_USER_DATA = 'Missing user data',
+  MISSING_PET_DATA = 'There is no such Pet with the name provided'
 }
 
 export enum HTTP_CODES {

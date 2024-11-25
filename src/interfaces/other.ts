@@ -1,4 +1,4 @@
-import { Types } from "mongoose"
+import { Types } from 'mongoose'
 
 export type MongooseString = string | Types.ObjectId
 
@@ -16,7 +16,11 @@ export interface QueryParams {
   [queryKey: string]: string | number | null
 }
 
-export type TypedQuery<Params, Req, Res> = (noIdea: null, params: Params, requestedData: Req) => Promise<Res>
+export type TypedQuery<Params, Req, Res> = (
+  noIdea: null,
+  params: Params,
+  requestedData: Req
+) => Promise<Res>
 
 export type TypedMutation<Params, Req, Res> = TypedQuery<Params, Req, Res>
 
