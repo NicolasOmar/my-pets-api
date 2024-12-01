@@ -17,19 +17,19 @@
     ]
   },
   "updateFields": {
-    "pet": [
-      { "field": "name", "value": "test" },
-      { "field": "birthday", "value": "10/10/2021" },
-      { "field": "isAdopted", "value": true },
-      { "field": "adoptionDate", "value": "10/10/2021" },
-      { "field": "height", "value": 150 },
-      { "field": "length", "value": 150 },
-      { "field": "weight", "value": 150 },
-      { "field": "gender", "value": "masculine" },
-      { "field": "hasHeterochromia", "value": true },
-      { "field": "passedAway", "value": false },
-      { "field": "events", "value": [] }
-    ]
+    "pet": {
+      "name": "test",
+      "birthday": "10/10/2021",
+      "isAdopted": true,
+      "adoptionDate": "10/10/2021",
+      "height": 150,
+      "length": 150,
+      "weight": 150,
+      "gender": "masculine",
+      "hasHeterochromia": true,
+      "passedAway": false,
+      "events": []
+    }
   },
   "createEvent": {
     "events": [

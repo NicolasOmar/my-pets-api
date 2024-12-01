@@ -4,50 +4,59 @@ import '../../../db/mongoose'
 import Query from '../Queries'
 import Mutation from '../Mutations'
 // MOCKS
-import { context } from '../mocks/Queries.mocks.json'
-import { testEnv } from '../../../functions/mocks/dbOps.mocks.json'
+// import { context } from '../mocks/Queries.mocks.json'
+import mocks from '@functions/mocks/dbOps.mocks'
+// INTERFACES
+import { tableCases } from '@interfaces/functions'
+import { PetDocument, PetObjectCreate } from '@interfaces/pet'
+import { UserAndToken, UserDocument } from '@interfaces/user'
 // FUNCTIONS
-import { clearAllTables, populateTable } from '../../../functions/dbOps'
-import { encryptPass } from '../../../functions/encrypt'
+import { clearAllTables, populateTable } from '@functions/dbOps'
+import { encryptPass } from '@functions/encrypt'
+import { generateMongooseDate } from '@functions/parsers'
 // CONSTANTS
-import { ERROR_MSGS } from '../../../constants/errors.json'
+import { ERROR_MSGS } from '@constants/errors'
 
 const newUser = {
-  ...testEnv.user,
-  password: encryptPass(testEnv.user.password)
+  ...mocks.testEnv.user,
+  password: encryptPass(mocks.testEnv.user.password)
 }
-let petInfo = null
+let petInfo: PetObjectCreate
+let createdPet: PetDocument
+let loggedUser: UserDocument
+let context: UserAndToken
 
 describe('[Queries]', () => {
   beforeAll(async () => {
-    await populateTable('petType')
-    await populateTable('color')
-    await Mutation.createUser(null, { newUser })
+    await populateTable(tableCases.petType)
+    await populateTable(tableCases.color)
+    const newUserResponse = await Mutation.createUser(null, { newUser })
+    loggedUser = newUserResponse.loggedUser
 
     const [colorId] = await Query.getColors()
     const [petTypeId] = await Query.getPetTypes()
 
     petInfo = {
-      ...testEnv.pet,
+      ...mocks.testEnv.pet,
       petType: petTypeId.id,
       hairColors: [colorId.id],
       eyeColors: [colorId.id]
     }
 
-    const petResponse = await Mutation.createPet(null, { petInfo }, { loggedUser: testEnv.user })
-
-    petInfo = {
-      ...petInfo,
-      _id: petResponse._id
-    }
+    createdPet = await Mutation.createPet(null, { petInfo }, { loggedUser })
 
     const eventInfo = {
-      ...testEnv.event,
-      date: new Date(),
-      associatedPets: [petInfo._id]
+      ...mocks.testEnv.event,
+      date: generateMongooseDate(),
+      associatedPets: [createdPet.id]
     }
 
-    await Mutation.createEvent(null, { eventInfo }, { loggedUser: testEnv.user })
+    await Mutation.createEvent(null, { eventInfo }, { loggedUser })
+
+    context = {
+      loggedUser,
+      token: newUserResponse.token
+    }
   })
 
   afterAll(async () => await clearAllTables())
@@ -65,43 +74,36 @@ describe('[Queries]', () => {
   describe('[getPetTypes]', () => {
     test('Should return an array of pet types', async () => {
       const queryResponse = await Query.getPetTypes()
-      expect(queryResponse.length).toEqual(testEnv.petType.length)
-      queryResponse.forEach(({ name }, i) => expect(name).toEqual(testEnv.petType[i]))
+      expect(queryResponse.length).toEqual(mocks.testEnv.petType.length)
+      queryResponse.forEach(({ name }, i) => expect(name).toEqual(mocks.testEnv.petType[i]))
     })
   })
 
   describe('[getColors]', () => {
     test('Should return an array of colors', async () => {
       const queryResponse = await Query.getColors()
-      expect(queryResponse.length).toEqual(testEnv.color.length)
-      queryResponse.forEach(({ name }, i) => expect(name).toEqual(testEnv.color[i]))
+      expect(queryResponse.length).toEqual(mocks.testEnv.color.length)
+      queryResponse.forEach(({ name }, i) => expect(name).toEqual(mocks.testEnv.color[i]))
     })
   })
 
   describe('[getMyPets]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should return an array of pets', async () => {
-        const [getPet] = await Query.getMyPets(null, null, { loggedUser: testEnv.user })
-        Object.keys(petInfo).forEach(key => expect(petInfo[key]).toStrictEqual(getPet[key]))
+        const [getPet] = await Query.getMyPets(null, {}, { loggedUser })
+        const petKeys = Object.keys(petInfo) as Array<keyof PetObjectCreate>
+        petKeys.forEach(key => expect(petInfo[key]).toStrictEqual(getPet[key]))
       })
 
       test('Should return an array of pets if I search for a part of the name', async () => {
-        const petsResult = await Query.getMyPets(
-          null,
-          { search: 'te' },
-          { loggedUser: testEnv.user }
-        )
+        const petsResult = await Query.getMyPets(null, { search: 'te' }, { loggedUser })
 
         expect(petsResult.length).toBe(1)
-        expect(petsResult[0].name).toBe(testEnv.pet.name)
+        expect(petsResult[0].name).toBe(mocks.testEnv.pet.name)
       })
 
       test('Should return an empty array of pets if I search for wrong names', async () => {
-        const emptyResult = await Query.getMyPets(
-          null,
-          { search: 'pet' },
-          { loggedUser: testEnv.user }
-        )
+        const emptyResult = await Query.getMyPets(null, { search: 'pet' }, { loggedUser })
 
         expect(emptyResult.length).toBe(0)
       })
@@ -110,9 +112,9 @@ describe('[Queries]', () => {
     describe('[SAD PATH]', () => {
       test('Should return a USER_MISSING_DATA error by not passing the loggedUser', async () => {
         try {
-          await Query.getMyPets(null, null, {})
+          await Query.getMyPets(null, {})
         } catch (error) {
-          expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
+          expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
       })
     })
@@ -121,32 +123,28 @@ describe('[Queries]', () => {
   describe('[getPet]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should return one of my pets', async () => {
-        const getPetInfo = await Query.getPet(
-          null,
-          { id: petInfo._id },
-          { loggedUser: testEnv.user }
-        )
+        const getPetInfo = await Query.getPet(null, { id: createdPet.id }, { loggedUser })
 
-        Object.keys(testEnv.pet).forEach(key =>
-          expect(testEnv.pet[key]).toStrictEqual(getPetInfo[key])
-        )
+        const petKeys = Object.keys(petInfo) as Array<keyof PetObjectCreate>
+
+        petKeys.forEach(key => expect(petInfo[key]).toStrictEqual(getPetInfo[key]))
       })
     })
 
     describe('[SAD PATH]', () => {
       test('Should return a USER_MISSING_DATA error by not passing the loggedUser', async () => {
         try {
-          await Query.getPet(null, { id: petInfo._id }, {})
+          await Query.getPet(null, { id: createdPet.id })
         } catch (error) {
-          expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
+          expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
       })
 
       test('Should return a MISSING_PET_DATA error by not passing the Pet ID', async () => {
         try {
-          await Query.getPet(null, { id: null }, { loggedUser: testEnv.user })
+          await Query.getPet(null, { id: null }, { loggedUser })
         } catch (error) {
-          expect(error.message).toBe(ERROR_MSGS.MISSING_PET_DATA)
+          expect((error as Error).message).toBe(ERROR_MSGS.MISSING_PET_DATA)
         }
       })
     })
@@ -155,9 +153,13 @@ describe('[Queries]', () => {
   describe('[getMyPetsPopulation]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should return my pets population', async () => {
-        const getPopulationInfo = await Query.getMyPetsPopulation(null, null, {
-          loggedUser: testEnv.user
-        })
+        const getPopulationInfo = await Query.getMyPetsPopulation(
+          null,
+          {},
+          {
+            loggedUser
+          }
+        )
         const [petType] = await Query.getPetTypes()
 
         expect(getPopulationInfo).toStrictEqual([
@@ -170,9 +172,9 @@ describe('[Queries]', () => {
     describe('[SAD PATH]', () => {
       test('Should return a USER_MISSING_DATA error by not passing the loggedUser', async () => {
         try {
-          await Query.getMyPetsPopulation(null, null, {})
+          await Query.getMyPetsPopulation(null, {})
         } catch (error) {
-          expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
+          expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
       })
     })
@@ -183,27 +185,27 @@ describe('[Queries]', () => {
       test('Should return the list of events', async () => {
         const getEventsInfo = await Query.getMyPetEvents(
           null,
-          { petId: petInfo._id },
-          { loggedUser: testEnv.user }
+          { petId: createdPet.id },
+          { loggedUser }
         )
-        expect(testEnv.event.description).toStrictEqual(getEventsInfo[0].description)
+        expect(mocks.testEnv.event.description).toStrictEqual(getEventsInfo[0].description)
       })
     })
 
     describe('[SAD PATH]', () => {
       test('Should return a USER_MISSING_DATA error by not passing the loggedUser', async () => {
         try {
-          await Query.getMyPetEvents(null, { petId: petInfo._id }, {})
+          await Query.getMyPetEvents(null, { petId: createdPet.id })
         } catch (error) {
-          expect(error.message).toBe(ERROR_MSGS.MISSING_USER_DATA)
+          expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
       })
 
       test('Should return a MISSING_PET_DATA error by not passing the Pet ID', async () => {
         try {
-          await Query.getMyPetEvents(null, { petId: null }, { loggedUser: testEnv.user })
+          await Query.getMyPetEvents(null, { petId: null }, { loggedUser })
         } catch (error) {
-          expect(error.message).toBe(ERROR_MSGS.MISSING_PET_DATA)
+          expect((error as Error).message).toBe(ERROR_MSGS.MISSING_PET_DATA)
         }
       })
     })

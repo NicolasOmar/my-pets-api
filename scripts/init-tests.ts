@@ -1,7 +1,8 @@
+import 'tsconfig-paths/register'
 import '@babel/register'
 // APP AND SERVER IMPORTS
-const server = require('../src/server/server').default
-const app = require('../src/server/app').default
+import server from '../src/server/server'
+import app from '../src/server/app'
 // ENVIRONMENTS VARIABLES
 const { PORT } = process.env
 
