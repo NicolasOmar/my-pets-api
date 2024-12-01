@@ -8,7 +8,7 @@ import Event from '@models/event.model'
 import { ALLOWED_CREATE } from '@constants/allowedFields.json'
 // FUNCTIONS
 import { findByIds } from '@functions/parsers'
-import { SecondaryData, TypedRelationship } from '@interfaces/other'
+import { SecondaryData, TypedRelationship } from '@interfaces/shared'
 import { PetDocument } from '@interfaces/pet'
 import { UserDocument } from '@interfaces/user'
 import { EventDocument } from '@interfaces/event'

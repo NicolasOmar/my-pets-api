@@ -12,7 +12,7 @@ const eventSchema = new Schema({
     maxlength: [200, parseErrorMsg.minMaxValue('Name', 200, false)]
   },
   date: {
-    type: String,
+    type: Date,
     required: [true, parseErrorMsg.missingValue('Date', 'Event')]
   },
   associatedPets: {

@@ -53,18 +53,18 @@ const encryptParser: (
   }
 }
 
-export const encryptPass = (pass: string) => {
+export const encryptPass = (pass: string | null) => {
   return encryptParser(
-    process.env.CRYPT_SECRET as CryptoMethods,
-    pass,
+    process.env.CRYPT_METH as CryptoMethods,
+    pass ?? '',
     process.env.CRYPT_SECRET as string
   )
 }
 
-export const decryptPass = (pass: string) => {
+export const decryptPass = (pass: string | null) => {
   return encryptParser(
-    process.env.CRYPT_SECRET as CryptoMethods,
-    pass,
+    process.env.CRYPT_METH as CryptoMethods,
+    pass ?? '',
     process.env.CRYPT_SECRET as string,
     false
   )

@@ -14,10 +14,13 @@
     "url": "https://github.com/NicolasOmar/my-pets-api/issues"
   },
   "scripts": {
-    "start": "npm run env:local -- nodemon --ext js,gql --watch src --exec npm run server",
-    "server": "babel-node src/index.js",
-    "build": "babel ./src/index.js -d ./build ./src --copy-files",
-    "start:ci": "npm run build && node ./build/index.js",
+    "start": "npm run env:local -- nodemon --ext js,ts,gql --watch src --exec npm run server",
+    "server": "node dist/index.js",
+    "build": "npm run compile:ts && npm run move:gql:files && npm run compile:gql",
+    "start:ci": "npm run build && npm run server",
+    "compile:ts": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
+    "move:gql:files": "copyfiles -u 1 src/**/*.gql dist/",
+    "compile:gql": "graphql-codegen --config codegen.ts",
     "test": "env-cmd -f ./env/test.env jest --runInBand",
     "test:ci": "npm test -- --coverage",
     "test:clear:cache": "npm test -- --clearCache",
@@ -32,11 +35,7 @@
     "lint-staged": "lint-staged -v",
     "update": "npm run update:deps && npm run update:doctor",
     "update:deps": "ncu -i --format group",
-    "update:doctor": "npm run prettier && npm run lint && npm run build && npm run test:clean:ci",
-    "move:gql": "copyfiles -u 1 src/**/*.gql dist/",
-    "compile:gql": "graphql-codegen --config codegen.ts",
-    "compile:ts": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
-    "build:ts": "npm run compile:ts && npm run move:gql && npm run compile:gql && npm run env:local -- node dist/index.js"
+    "update:doctor": "npm run prettier && npm run lint && npm run build && npm run test:clean:ci"
   },
   "dependencies": {
     "@babel/cli": "^7.25.9",
@@ -88,11 +87,8 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.2"
   },
-  "engines": {
-    "node": ">=12.9.0"
-  },
   "lint-staged": {
-    "src/**/*.js": [
+    "src/**/*.(ts|js)": [
       "prettier --write",
       "eslint"
     ]

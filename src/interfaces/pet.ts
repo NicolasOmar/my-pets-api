@@ -1,19 +1,24 @@
-import mongoose, { Document, Types } from 'mongoose'
+import { Document } from 'mongoose'
+import { MongooseDate, MongooseId } from './shared'
 
-export interface PetDocument extends Document {
+export interface PetObject {
   name: string
-  petType: Types.ObjectId
-  birthday: mongoose.Schema.Types.Date
+  petType: MongooseId
+  birthday: MongooseDate | null
   isAdopted: boolean
-  adoptionDate: mongoose.Schema.Types.Date
+  adoptionDate: MongooseDate | null
   height: number
   length: number
   weight: number
   gender: string
-  hairColors: Types.ObjectId[]
-  eyeColors: Types.ObjectId[]
+  hairColors: MongooseId[]
+  eyeColors: MongooseId[]
   hasHeterochromia: boolean
   passedAway: boolean
-  user: Types.ObjectId
-  events: Types.ObjectId[]
+  user: MongooseId
+  events: MongooseId[]
 }
+
+export interface PetDocument extends PetObject, Document {}
+
+export interface PetObjectCreate extends Omit<PetObject, 'user' | 'events'> {}

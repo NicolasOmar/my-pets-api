@@ -32,7 +32,7 @@ export interface BaseUser {
 
 export interface UserAndToken {
   loggedUser: UserDocument
-  token: string
+  token?: string
 }
 
 export interface LoggedUser extends BaseUser {

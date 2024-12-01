@@ -1,7 +1,6 @@
-// CONSTANTS
+// INTERFACES
 import { Model } from 'mongoose'
-import { MONGO_CODES, ERROR_MSGS } from '../constants/errors'
-import { MongooseString, SecondaryData } from '@interfaces/other'
+import { MongooseDate, MongooseId, MongooseString, SecondaryData } from '@interfaces/shared'
 import { SelectableDataDocument } from '@interfaces/documents'
 
 interface FindByTsIdsParams {
@@ -48,10 +47,12 @@ export const findByIds: (
 
   if (findByManyIds) {
     const findedList = await model.find().where('_id').in(ids).select(parser)
-    return findedList ? findedList.map(({ _id, name }) => ({ id: _id as string, name: name })) : []
+    return findedList
+      ? findedList.map(({ _id, name }) => ({ id: _id as MongooseId, name: name }))
+      : []
   } else {
     const findedUnit = (await model.findOne({ _id: ids }, parser)) as SelectableDataDocument
-    return { id: findedUnit._id as string, name: findedUnit.name } as SecondaryData
+    return { id: findedUnit.id as MongooseId, name: findedUnit.name } as SecondaryData
   }
 }
 
@@ -70,4 +71,9 @@ export const parseUniqueArray: <ListType, CallbackType>({
   } else {
     return []
   }
+}
+
+export const generateMongooseDate = () => {
+  const date = new Date().toJSON().split('T')[0]
+  return date as unknown as MongooseDate
 }

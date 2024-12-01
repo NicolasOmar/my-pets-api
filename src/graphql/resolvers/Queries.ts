@@ -12,52 +12,63 @@ import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
 import { UserAndToken, LoggedUser } from '@interfaces/user'
 import { PetDocument } from '@interfaces/pet'
 import { SelectableDataDocument } from '@interfaces/documents'
-import { Quantity, TypedQuery, SecondaryData, QueryParams } from '@interfaces/other'
+import {
+  Quantity,
+  TypedQuery,
+  SecondaryData,
+  QueryDef,
+  SimpleTypedQuery,
+  MongooseId
+} from '@interfaces/shared'
 // FUNCTIONS
 import { findByIds, parseUniqueArray } from '@functions/parsers'
+import { EventDocument } from '@interfaces/event'
 
 interface QueriesInterface {
-  getUser: TypedQuery<QueryParams, UserAndToken, LoggedUser>
-  getPetTypes: TypedQuery<QueryParams, UserAndToken, SecondaryData[]>
-  getColors: TypedQuery<QueryParams, UserAndToken, SecondaryData[]>
-  getMyPets: TypedQuery<QueryParams, UserAndToken, PetDocument[]>
-  getPet: TypedQuery<QueryParams, UserAndToken, PetDocument>
-  getMyPetsPopulation: TypedQuery<QueryParams, UserAndToken, Quantity[]>
-  getMyPetEvents: TypedQuery<QueryParams, UserAndToken, (typeof Event)[]>
+  getUser: TypedQuery<QueryDef, UserAndToken, LoggedUser>
+  getPetTypes: SimpleTypedQuery<SecondaryData[]>
+  getColors: SimpleTypedQuery<SecondaryData[]>
+  getMyPets: TypedQuery<QueryDef, UserAndToken, PetDocument[]>
+  getPet: TypedQuery<QueryDef, UserAndToken, PetDocument>
+  getMyPetsPopulation: TypedQuery<QueryDef, UserAndToken, Quantity[]>
+  getMyPetEvents: TypedQuery<QueryDef, UserAndToken, EventDocument[]>
 }
 
 const Queries: QueriesInterface = {
-  getUser: async (_, __, { loggedUser, token }) => ({
-    name: loggedUser.name,
-    lastName: loggedUser.lastName,
-    email: loggedUser.email,
-    token
-  }),
+  getUser: async (_, __, context) => {
+    const { loggedUser, token } = context as UserAndToken
+    return {
+      name: loggedUser.name,
+      lastName: loggedUser.lastName,
+      email: loggedUser.email,
+      token: token as string
+    }
+  },
   getPetTypes: async () =>
     (await PetType.find()).map(({ _id, name }: SelectableDataDocument) => ({
-      id: _id as string,
+      id: _id as MongooseId,
       name: name as string
     })),
   getColors: async () =>
     (await Color.find()).map(({ _id, name }: SelectableDataDocument) => ({
-      id: _id as string,
+      id: _id as MongooseId,
       name: name as string
     })),
-  getMyPets: async (_, query, { loggedUser }) => {
-    if (!loggedUser) {
+  getMyPets: async (_, query, context) => {
+    if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
+    } else {
+      const userResponse = await User.findOne({ userName: context.loggedUser.userName })
+      const petFindQuery =
+        query?.search && query?.search !== ''
+          ? { user: userResponse?._id, name: new RegExp(query?.search as string) }
+          : { user: userResponse?._id }
+
+      return await Pet.find(petFindQuery)
     }
-
-    const userResponse = await User.findOne({ userName: loggedUser.userName })
-    const petFindQuery =
-      query?.search && query?.search !== ''
-        ? { user: userResponse?._id, name: new RegExp(query?.search as string) }
-        : { user: userResponse?._id }
-
-    return await Pet.find(petFindQuery)
   },
-  getPet: async (_, { id }, { loggedUser }) => {
-    if (!loggedUser) {
+  getPet: async (_, { id }, context) => {
+    if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     }
 
@@ -69,41 +80,41 @@ const Queries: QueriesInterface = {
 
     return foundedPet as PetDocument
   },
-  getMyPetsPopulation: async (_, __, { loggedUser }) => {
-    if (!loggedUser) {
+  getMyPetsPopulation: async (_, __, context) => {
+    if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
-    }
+    } else {
+      const foundedUser = await User.findOne({ userName: context.loggedUser.userName })
+      const petPopulation = await Pet.find({ user: foundedUser?.id })
 
-    const foundedUser = await User.findOne({ userName: loggedUser.userName })
-    const petPopulation = await Pet.find({ user: foundedUser?.id })
+      if (petPopulation.length === 0) {
+        return [{ name: 'All', quantity: 0 }]
+      }
 
-    if (petPopulation.length === 0) {
-      return [{ name: 'All', quantity: 0 }]
-    }
-
-    const petTypeInfo = Promise.allSettled(
-      petPopulation.map(
-        pet =>
-          new Promise<SecondaryData | SecondaryData[]>(resolve =>
-            resolve(findByIds({ model: PetType, ids: pet.petType }))
-          )
+      const petTypeInfo = Promise.allSettled(
+        petPopulation.map(
+          pet =>
+            new Promise<SecondaryData | SecondaryData[]>(resolve =>
+              resolve(findByIds({ model: PetType, ids: pet.petType }))
+            )
+        )
       )
-    )
-    const petTypeList = (await petTypeInfo)
-      .filter(({ status }) => status === 'fulfilled')
-      .map(_petType => (_petType as PromiseFulfilledResult<SecondaryData>).value)
-    const parsedPetTypeList = parseUniqueArray({
-      list: petTypeList,
-      callback: info => ({
-        name: info.name,
-        quantity: petTypeList.filter(_info => _info === info).length
-      })
-    }) as Quantity[]
+      const petTypeList = (await petTypeInfo)
+        .filter(({ status }) => status === 'fulfilled')
+        .map(_petType => (_petType as PromiseFulfilledResult<SecondaryData>).value)
+      const parsedPetTypeList = parseUniqueArray({
+        list: petTypeList,
+        callback: info => ({
+          name: info.name,
+          quantity: petTypeList.filter(_info => _info === info).length
+        })
+      }) as Quantity[]
 
-    return [{ name: 'All', quantity: petPopulation.length }, ...parsedPetTypeList]
+      return [{ name: 'All', quantity: petPopulation.length }, ...parsedPetTypeList]
+    }
   },
-  getMyPetEvents: async (_, { petId }, { loggedUser }) => {
-    if (!loggedUser) {
+  getMyPetEvents: async (_, { petId }, context) => {
+    if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     }
 

@@ -6,7 +6,7 @@
     },
     {
       "title": "Should return a null value",
-      "value": null
+      "value": ""
     }
   ]
 }

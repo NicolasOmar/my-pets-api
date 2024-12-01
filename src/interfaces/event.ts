@@ -1,7 +1,10 @@
-import mongoose, { Types } from 'mongoose'
+import { Document } from 'mongoose'
+import { MongooseDate, MongooseId } from './shared'
 
-export interface EventDocument {
+export interface EventObject {
   description: string
-  date: mongoose.Schema.Types.Date
-  associatedPets: Types.ObjectId[]
+  date: MongooseDate
+  associatedPets: MongooseId[]
 }
+
+export interface EventDocument extends EventObject, Document {}
