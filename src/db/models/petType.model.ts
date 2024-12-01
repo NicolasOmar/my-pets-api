@@ -1,8 +1,8 @@
+import { EntityDocument } from '@interfaces/shared'
 import { model, Schema } from 'mongoose'
-import { SelectableDataDocument } from '@interfaces/documents'
 // import { parseAuxiliaryData } from '@functions/parsers'
 
-const petTypeSchema = new Schema<SelectableDataDocument>({
+const petTypeSchema = new Schema({
   name: {
     type: String,
     trim: true
@@ -13,6 +13,6 @@ const petTypeSchema = new Schema<SelectableDataDocument>({
 //   return parseAuxiliaryData(this)
 // }
 
-const PetType = model('PetType', petTypeSchema)
+const PetType = model<EntityDocument>('PetType', petTypeSchema)
 
 export default PetType

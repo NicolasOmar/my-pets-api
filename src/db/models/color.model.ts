@@ -1,8 +1,8 @@
 import { model, Schema } from 'mongoose'
-import { SelectableDataDocument } from '@interfaces/documents'
+import { EntityDocument } from '@interfaces/shared'
 // import { parseAuxiliaryData } from '@functions/parsers'
 
-const colorSchema = new Schema<SelectableDataDocument>({
+const colorSchema = new Schema({
   name: {
     type: String,
     trim: true
@@ -13,6 +13,6 @@ const colorSchema = new Schema<SelectableDataDocument>({
 //   return parseAuxiliaryData(this)
 // }
 
-const Color = model('Color', colorSchema)
+const Color = model<EntityDocument>('Color', colorSchema)
 
 export default Color

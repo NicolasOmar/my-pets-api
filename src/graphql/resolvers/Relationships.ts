@@ -4,14 +4,15 @@ import User from '@models/user.model'
 import PetType from '@models/petType.model'
 import Color from '@models/color.model'
 import Event from '@models/event.model'
+// INTERFACES
+import { EntityObject, TypedRelationship } from '@interfaces/shared'
+import { PetDocument } from '@interfaces/pet'
+import { UserDocument } from '@interfaces/user'
+import { EventDocument } from '@interfaces/event'
 // CONSTANTS
 import { ALLOWED_CREATE } from '@constants/allowedFields.json'
 // FUNCTIONS
 import { findByIds } from '@functions/parsers'
-import { SecondaryData, TypedRelationship } from '@interfaces/shared'
-import { PetDocument } from '@interfaces/pet'
-import { UserDocument } from '@interfaces/user'
-import { EventDocument } from '@interfaces/event'
 
 interface RelationshipsInterface {
   User: {
@@ -19,10 +20,10 @@ interface RelationshipsInterface {
   }
   Pet: {
     user: TypedRelationship<{ user: string }, UserDocument | null>
-    petType: TypedRelationship<{ petType: string }, SecondaryData | SecondaryData[]>
-    hairColors: TypedRelationship<{ hairColors: string }, SecondaryData | SecondaryData[]>
-    eyeColors: TypedRelationship<{ eyeColors: string }, SecondaryData | SecondaryData[]>
-    // events: TypedRelationship<{ events: string[] }, SecondaryData | SecondaryData[]>
+    petType: TypedRelationship<{ petType: string }, EntityObject | EntityObject[]>
+    hairColors: TypedRelationship<{ hairColors: string }, EntityObject | EntityObject[]>
+    eyeColors: TypedRelationship<{ eyeColors: string }, EntityObject | EntityObject[]>
+    // events: TypedRelationship<{ events: string[] }, EntityObject | EntityObject[]>
   }
   // Event: {
   //   associatedPets: TypedRelationship<{ associatedPets: string[] }, PetDocument | PetDocument[]>

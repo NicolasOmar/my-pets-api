@@ -26,7 +26,10 @@ const server = new ApolloServer({
     if (!token) return
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET ?? '')
-    const loggedUser = await User.findOne({ _id: (decodedToken as jwt.JwtPayload)._id, 'tokens.token': token })
+    const loggedUser = await User.findOne({
+      _id: (decodedToken as jwt.JwtPayload)._id,
+      'tokens.token': token
+    })
 
     if (!loggedUser || !token) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())

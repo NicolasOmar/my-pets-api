@@ -9,7 +9,7 @@ import { tableCases } from '@interfaces/functions'
 import { UserDocument } from '@interfaces/user'
 import { PetDocument } from '@interfaces/pet'
 import { EventDocument } from '@interfaces/event'
-import { MongooseId, SecondaryData } from '@interfaces/shared'
+import { MongooseId, EntityDocument } from '@interfaces/shared'
 // MOCKS
 import mocks from '@functions/mocks/dbOps.mocks'
 // FUNCTIONS
@@ -25,8 +25,8 @@ const checkObjectData: <T extends object>(mock: T, response: T) => void = (mock,
 describe('[Relationships]', () => {
   let loggedUser: UserDocument
   let createdPet: PetDocument
-  let selectedPetType: SecondaryData
-  let selectedColor: SecondaryData
+  let selectedPetType: EntityDocument
+  let selectedColor: EntityDocument
   let createdEvent: EventDocument
 
   beforeAll(async () => {

@@ -1,10 +1,15 @@
 // INTERFACES
 import { Model } from 'mongoose'
-import { MongooseDate, MongooseId, MongooseString, SecondaryData } from '@interfaces/shared'
-import { SelectableDataDocument } from '@interfaces/documents'
+import {
+  MongooseDate,
+  MongooseId,
+  MongooseString,
+  EntityObject,
+  EntityDocument
+} from '@interfaces/shared'
 
 interface FindByTsIdsParams {
-  model: Model<SelectableDataDocument>
+  model: Model<EntityDocument>
   ids: MongooseString | MongooseString[]
   parser?: string
 }
@@ -42,7 +47,7 @@ export const parseErrorMsg = {
 
 export const findByIds: (
   request: FindByTsIdsParams
-) => Promise<SecondaryData | SecondaryData[]> = async ({ model, ids, parser = '_id name' }) => {
+) => Promise<EntityObject | EntityObject[]> = async ({ model, ids, parser = '_id name' }) => {
   const findByManyIds = Array.isArray(ids)
 
   if (findByManyIds) {
@@ -51,8 +56,8 @@ export const findByIds: (
       ? findedList.map(({ _id, name }) => ({ id: _id as MongooseId, name: name }))
       : []
   } else {
-    const findedUnit = (await model.findOne({ _id: ids }, parser)) as SelectableDataDocument
-    return { id: findedUnit.id as MongooseId, name: findedUnit.name } as SecondaryData
+    const findedUnit = (await model.findOne({ _id: ids }, parser)) as EntityDocument
+    return { id: findedUnit.id as MongooseId, name: findedUnit.name } as EntityObject
   }
 }
 

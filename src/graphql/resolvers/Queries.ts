@@ -1,4 +1,3 @@
-import { Document } from 'mongoose'
 import { ApolloError } from 'apollo-server-errors'
 // MODELS
 import Color from '@models/color.model'
@@ -11,14 +10,13 @@ import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
 // INTERFACES
 import { UserAndToken, LoggedUser } from '@interfaces/user'
 import { PetDocument } from '@interfaces/pet'
-import { SelectableDataDocument } from '@interfaces/documents'
 import {
-  Quantity,
+  QuantityObject,
   TypedQuery,
-  SecondaryData,
+  EntityObject,
   QueryDef,
-  SimpleTypedQuery,
-  MongooseId
+  TypedSimpleQuery,
+  EntityDocument
 } from '@interfaces/shared'
 // FUNCTIONS
 import { findByIds, parseUniqueArray } from '@functions/parsers'
@@ -26,11 +24,11 @@ import { EventDocument } from '@interfaces/event'
 
 interface QueriesInterface {
   getUser: TypedQuery<QueryDef, UserAndToken, LoggedUser>
-  getPetTypes: SimpleTypedQuery<SecondaryData[]>
-  getColors: SimpleTypedQuery<SecondaryData[]>
+  getPetTypes: TypedSimpleQuery<EntityDocument[]>
+  getColors: TypedSimpleQuery<EntityDocument[]>
   getMyPets: TypedQuery<QueryDef, UserAndToken, PetDocument[]>
   getPet: TypedQuery<QueryDef, UserAndToken, PetDocument>
-  getMyPetsPopulation: TypedQuery<QueryDef, UserAndToken, Quantity[]>
+  getMyPetsPopulation: TypedQuery<QueryDef, UserAndToken, QuantityObject[]>
   getMyPetEvents: TypedQuery<QueryDef, UserAndToken, EventDocument[]>
 }
 
@@ -44,16 +42,8 @@ const Queries: QueriesInterface = {
       token: token as string
     }
   },
-  getPetTypes: async () =>
-    (await PetType.find()).map(({ _id, name }: SelectableDataDocument) => ({
-      id: _id as MongooseId,
-      name: name as string
-    })),
-  getColors: async () =>
-    (await Color.find()).map(({ _id, name }: SelectableDataDocument) => ({
-      id: _id as MongooseId,
-      name: name as string
-    })),
+  getPetTypes: async () => await PetType.find(),
+  getColors: async () => await Color.find(),
   getMyPets: async (_, query, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
@@ -94,21 +84,21 @@ const Queries: QueriesInterface = {
       const petTypeInfo = Promise.allSettled(
         petPopulation.map(
           pet =>
-            new Promise<SecondaryData | SecondaryData[]>(resolve =>
+            new Promise<EntityObject | EntityObject[]>(resolve =>
               resolve(findByIds({ model: PetType, ids: pet.petType }))
             )
         )
       )
       const petTypeList = (await petTypeInfo)
         .filter(({ status }) => status === 'fulfilled')
-        .map(_petType => (_petType as PromiseFulfilledResult<SecondaryData>).value)
+        .map(_petType => (_petType as PromiseFulfilledResult<EntityObject>).value)
       const parsedPetTypeList = parseUniqueArray({
         list: petTypeList,
         callback: info => ({
           name: info.name,
           quantity: petTypeList.filter(_info => _info === info).length
         })
-      }) as Quantity[]
+      }) as QuantityObject[]
 
       return [{ name: 'All', quantity: petPopulation.length }, ...parsedPetTypeList]
     }
