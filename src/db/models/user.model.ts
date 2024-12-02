@@ -108,28 +108,24 @@ userSchema.statics.findByCredentials = async (email, password) => {
 
 // ACCESIBLE TO INSTANCE
 userSchema.methods.generateAuthToken = async function () {
-  const user = this
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET ?? '')
+  const token = jwt.sign({ _id: this._id.toString() }, process.env.JWT_SECRET ?? '')
 
-  user.tokens = user.tokens.concat({ token })
-  await user.save()
+  this.tokens = this.tokens.concat({ token })
+  await this.save()
   return token
 }
 
 // ACCESIBLE TO MODEL. USED TO HASH THE PASSWORD BEFORE SAVING
 userSchema.pre('save', async function (next) {
-  const user = this
-
-  if (user.isModified('password')) {
-    user.password = await bcrypt.hash(user.password, Number(process.env.CRYPT_SALT))
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, Number(process.env.CRYPT_SALT))
   }
 
   next()
 })
 
 userSchema.methods.toJSON = function () {
-  const user = this
-  const userObj = user.toObject()
+  const userObj = this.toObject()
 
   delete userObj.password
   delete userObj.tokens

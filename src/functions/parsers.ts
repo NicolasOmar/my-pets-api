@@ -19,10 +19,10 @@ interface ParseUniqueArrayParams<ListType, CallbackType> {
   callback?: (item: ListType, itemI: number) => CallbackType
 }
 
-export const checkAllowedUpdates: <T extends object>(
-  obj: T,
-  allowedFields: string[]
-) => boolean = (obj, allowedFields) => {
+export const checkAllowedUpdates: <T extends object>(obj: T, allowedFields: string[]) => boolean = (
+  obj,
+  allowedFields
+) => {
   const updateFields = Object.keys(obj)
 
   return (

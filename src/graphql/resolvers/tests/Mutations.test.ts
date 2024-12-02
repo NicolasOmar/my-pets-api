@@ -422,10 +422,8 @@ describe('[Mutations]', () => {
 
       test('Should return an "alreadyExists" by trying to update the Pet with a name and petType already used', async () => {
         try {
-          const { id, ...originalPet } = modifiedPet as PetDocument
-
-          await Mutations.createPet(null, { petInfo: originalPet }, { loggedUser })
-          const [_, secondPet] = await Queries.getMyPets(null, {}, { loggedUser })
+          await Mutations.createPet(null, { petInfo: modifiedPet }, { loggedUser })
+          const secondPet = (await Queries.getMyPets(null, {}, { loggedUser }))[1]
 
           const updatedSecondPet = {
             ...secondPet,

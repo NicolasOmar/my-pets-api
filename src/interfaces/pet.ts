@@ -21,4 +21,4 @@ export interface PetObject {
 
 export interface PetDocument extends PetObject, Document {}
 
-export interface PetObjectCreate extends Omit<PetObject, 'user' | 'events'> {}
+export type PetObjectCreate = Omit<PetObject, 'user' | 'events'>
