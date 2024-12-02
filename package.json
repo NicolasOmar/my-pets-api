@@ -22,7 +22,7 @@
     "compile:ts": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json",
     "compile:gql": "graphql-codegen --config codegen.ts",
     "move:files": "copyfiles -u 1 src/**/*.gql dist/",
-    "test": "npm run env:test -- jest --runInBand",
+    "test": "npm run env:test -- jest --testPathPattern=src/ --runInBand",
     "test:ci": "npm test -- --coverage",
     "test:clear:cache": "npm test -- --clearCache",
     "test:clean:dev": "npm run test:clear:cache && npm test",

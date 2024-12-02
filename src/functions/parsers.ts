@@ -21,7 +21,7 @@ interface ParseUniqueArrayParams<ListType, CallbackType> {
 
 export const checkAllowedUpdates: <T extends object>(
   obj: T,
-  allowedFields: Array<string>
+  allowedFields: string[]
 ) => boolean = (obj, allowedFields) => {
   const updateFields = Object.keys(obj)
 

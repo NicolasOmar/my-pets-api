@@ -21,35 +21,35 @@ const encryptParser: (
     case CryptoMethods.AES:
       return isEncrypting
         ? cryptoJs.AES.encrypt(pass, cryptSecret).toString()
-        : cryptoJs.AES.decrypt(pass, cryptSecret).toString()
+        : cryptoJs.AES.decrypt(pass, cryptSecret).toString(cryptoJs.enc.Utf8)
     case CryptoMethods.DES:
       return isEncrypting
         ? cryptoJs.DES.encrypt(pass, cryptSecret).toString()
-        : cryptoJs.DES.decrypt(pass, cryptSecret).toString()
+        : cryptoJs.DES.decrypt(pass, cryptSecret).toString(cryptoJs.enc.Utf8)
     case CryptoMethods.TripleDES:
       return isEncrypting
         ? cryptoJs.TripleDES.encrypt(pass, cryptSecret).toString()
-        : cryptoJs.TripleDES.decrypt(pass, cryptSecret).toString()
+        : cryptoJs.TripleDES.decrypt(pass, cryptSecret).toString(cryptoJs.enc.Utf8)
     case CryptoMethods.RC4:
       return isEncrypting
         ? cryptoJs.RC4.encrypt(pass, cryptSecret).toString()
-        : cryptoJs.RC4.decrypt(pass, cryptSecret).toString()
+        : cryptoJs.RC4.decrypt(pass, cryptSecret).toString(cryptoJs.enc.Utf8)
     case CryptoMethods.RC4Drop:
       return isEncrypting
         ? cryptoJs.RC4Drop.encrypt(pass, cryptSecret).toString()
-        : cryptoJs.RC4Drop.decrypt(pass, cryptSecret).toString()
+        : cryptoJs.RC4Drop.decrypt(pass, cryptSecret).toString(cryptoJs.enc.Utf8)
     case CryptoMethods.Rabbit:
       return isEncrypting
         ? cryptoJs.Rabbit.encrypt(pass, cryptSecret).toString()
-        : cryptoJs.Rabbit.decrypt(pass, cryptSecret).toString()
+        : cryptoJs.Rabbit.decrypt(pass, cryptSecret).toString(cryptoJs.enc.Utf8)
     case CryptoMethods.RabbitLegacy:
       return isEncrypting
         ? cryptoJs.RabbitLegacy.encrypt(pass, cryptSecret).toString()
-        : cryptoJs.RabbitLegacy.decrypt(pass, cryptSecret).toString()
+        : cryptoJs.RabbitLegacy.decrypt(pass, cryptSecret).toString(cryptoJs.enc.Utf8)
     case CryptoMethods.Blowfish:
       return isEncrypting
         ? cryptoJs.Blowfish.encrypt(pass, cryptSecret).toString()
-        : cryptoJs.Blowfish.decrypt(pass, cryptSecret).toString()
+        : cryptoJs.Blowfish.decrypt(pass, cryptSecret).toString(cryptoJs.enc.Utf8)
   }
 }
 
