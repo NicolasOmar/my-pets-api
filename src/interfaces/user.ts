@@ -25,11 +25,32 @@ export interface UserModel extends Model<UserInterface> {
 
 export type LoggedUser = Omit<UserObject, 'password' | 'tokens'>
 
-export interface UserCreateResponse extends LoggedUser {
-  token: string
-}
-
 export interface UserAndToken {
   loggedUser: LoggedUser
   token?: string
+}
+
+// PAYLOADS
+export interface UserLoginPayload {
+  email: string
+  password: string
+}
+
+export interface UserCreatePayload {
+  userPayload: UserObject
+}
+
+export interface UserUpdatePayload {
+  name: string
+  lastName: string
+}
+
+export interface UserPassChangePayload {
+  oldPass: string
+  newPass: string
+}
+
+// RESPONSES
+export interface UserCreateResponse extends LoggedUser {
+  token: string
 }

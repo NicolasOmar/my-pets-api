@@ -19,6 +19,15 @@ export interface PetObject {
   events: MongooseId[]
 }
 
+export type PetObjectSimple = Omit<PetObject, 'user' | 'events'>
+
 export interface PetDocument extends PetObject, Document {}
 
-export type PetObjectCreate = Omit<PetObject, 'user' | 'events'>
+// PAYLOADS
+export interface PetCreatePayload {
+  petPayload: PetObjectSimple
+}
+
+export interface PetUpdatePayload extends PetCreatePayload {
+  id: string
+}

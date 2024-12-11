@@ -11,26 +11,29 @@ import { decryptPass } from '@functions/encrypt'
 import {
   LoggedUser,
   UserAndToken,
-  UserCreateResponse,
   UserDocument,
-  UserObject
+  UserCreatePayload,
+  UserLoginPayload,
+  UserPassChangePayload,
+  UserUpdatePayload,
+  UserCreateResponse
 } from '@interfaces/user'
-import { PetDocument, PetObjectCreate } from '@interfaces/pet'
-import { EventDocument, EventObject } from '@interfaces/event'
+import { PetDocument, PetCreatePayload, PetUpdatePayload } from '@interfaces/pet'
+import { EventCreatePayload, EventDocument } from '@interfaces/event'
 import { TypedMutation } from '@interfaces/shared'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
 import { ALLOWED_CREATE, ALLOWED_UPDATE } from '@constants/allowedFields.json'
 
 interface MutationsInterface {
-  loginUser: TypedMutation<{ email: string; password: string }, LoggedUser, UserAndToken>
-  createUser: TypedMutation<{ newUser: UserObject }, LoggedUser, UserCreateResponse>
-  updateUser: TypedMutation<Partial<UserDocument>, UserAndToken, UserDocument>
-  updatePass: TypedMutation<{ oldPass: string; newPass: string }, UserAndToken, boolean>
+  loginUser: TypedMutation<UserLoginPayload, LoggedUser, UserAndToken>
+  createUser: TypedMutation<UserCreatePayload, LoggedUser, UserCreateResponse>
+  updateUser: TypedMutation<UserUpdatePayload, UserAndToken, UserDocument>
+  updatePass: TypedMutation<UserPassChangePayload, UserAndToken, boolean>
   logout: TypedMutation<null, UserAndToken, boolean>
-  createPet: TypedMutation<{ petInfo: PetObjectCreate }, UserAndToken, PetDocument>
-  updatePet: TypedMutation<{ petInfo: PetDocument }, UserAndToken, boolean>
-  createEvent: TypedMutation<{ eventInfo: EventObject }, UserAndToken, EventDocument>
+  createPet: TypedMutation<PetCreatePayload, UserAndToken, PetDocument>
+  updatePet: TypedMutation<PetUpdatePayload, UserAndToken, boolean>
+  createEvent: TypedMutation<EventCreatePayload, UserAndToken, EventDocument>
 }
 
 const Mutations: MutationsInterface = {
@@ -44,11 +47,15 @@ const Mutations: MutationsInterface = {
       throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
-  createUser: async (_, { newUser }) => {
+  createUser: async (_, { userPayload }) => {
     try {
+      console.warn({
+        ...userPayload,
+        password: decryptPass(userPayload.password as string)
+      })
       const parsedNewUser = new User({
-        ...newUser,
-        password: decryptPass(newUser.password as string)
+        ...userPayload,
+        password: decryptPass(userPayload.password as string)
       })
 
       await parsedNewUser.save()
@@ -65,27 +72,16 @@ const Mutations: MutationsInterface = {
       throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
-  updateUser: async (_, updateArgs, context) => {
+  updateUser: async (_, { name, lastName }, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      if (!checkAllowedUpdates(updateArgs, ALLOWED_UPDATE.USER)) {
-        throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
-      }
-
       try {
-        const updatedUser = Object.keys(context.loggedUser).reduce((_totalObj, key) => {
-          const findedKey = updateArgs[key as keyof UserDocument] !== undefined
-
-          if (findedKey) {
-            return {
-              ..._totalObj,
-              key: updateArgs[key as keyof UserDocument]
-            }
-          } else {
-            return _totalObj
-          }
-        }, {})
+        const updatedUser = {
+          ...context.loggedUser,
+          name,
+          lastName
+        }
 
         const updateResponse = await (updatedUser as UserDocument).save()
 
@@ -95,24 +91,24 @@ const Mutations: MutationsInterface = {
       }
     }
   },
-  updatePass: async (_, args, context) => {
+  updatePass: async (_, passPayload, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      if (!checkAllowedUpdates(args, ALLOWED_UPDATE.PASSWORD)) {
+      if (!checkAllowedUpdates(passPayload, ALLOWED_UPDATE.PASSWORD)) {
         throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
       }
 
-      if (!args.oldPass) {
+      if (!passPayload.oldPass) {
         throw new ApolloError(ERROR_MSGS.PASSWORD, HTTP_CODES.NOT_FOUND)
       }
 
       try {
         const userWitCredentials = await User.findByCredentials(
           context.loggedUser.email,
-          decryptPass(args.oldPass)
+          decryptPass(passPayload.oldPass)
         )
-        userWitCredentials.password = decryptPass(args.newPass)
+        userWitCredentials.password = decryptPass(passPayload.newPass)
 
         await userWitCredentials.save()
 
@@ -141,15 +137,18 @@ const Mutations: MutationsInterface = {
       }
     }
   },
-  createPet: async (_, { petInfo }, context) => {
+  createPet: async (_, { petPayload }, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      if (!checkAllowedUpdates(petInfo, ALLOWED_CREATE.PET)) {
+      if (!checkAllowedUpdates(petPayload, ALLOWED_CREATE.PET)) {
         throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
       }
 
-      const petAlreadyCreated = await Pet.findOne({ name: petInfo.name, petType: petInfo.petType })
+      const petAlreadyCreated = await Pet.findOne({
+        name: petPayload.name,
+        petType: petPayload.petType
+      })
 
       if (petAlreadyCreated) {
         throw new ApolloError(
@@ -162,7 +161,7 @@ const Mutations: MutationsInterface = {
 
       try {
         const parsedNewPet = new Pet({
-          ...petInfo,
+          ...petPayload,
           user: findedUser?._id
         })
 
@@ -174,15 +173,18 @@ const Mutations: MutationsInterface = {
       }
     }
   },
-  updatePet: async (_, { petInfo }, context) => {
+  updatePet: async (_, { id, petPayload }, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      if (!checkAllowedUpdates(petInfo, ALLOWED_UPDATE.PET)) {
+      if (!checkAllowedUpdates(petPayload, ALLOWED_UPDATE.PET)) {
         throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
       }
 
-      const petAlreadyCreated = await Pet.findOne({ name: petInfo.name, petType: petInfo.petType })
+      const petAlreadyCreated = await Pet.findOne({
+        name: petPayload.name,
+        petType: petPayload.petType
+      })
 
       if (petAlreadyCreated) {
         throw new ApolloError(
@@ -192,28 +194,27 @@ const Mutations: MutationsInterface = {
       }
 
       try {
-        const { id, ...updateInfo } = petInfo
-        const response = await Pet.findOneAndUpdate({ _id: id }, { ...updateInfo })
+        const response = await Pet.findOneAndUpdate({ _id: id }, { ...petPayload })
         return response ? true : false
       } catch (error) {
         throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
       }
     }
   },
-  createEvent: async (_, { eventInfo }, context) => {
+  createEvent: async (_, { eventPayload }, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      if (!checkAllowedUpdates(eventInfo, ALLOWED_CREATE.EVENT)) {
+      if (!checkAllowedUpdates(eventPayload, ALLOWED_CREATE.EVENT)) {
         throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
       }
 
       try {
-        const parsedNewEvent = new Event(eventInfo)
+        const parsedNewEvent = new Event(eventPayload)
         await parsedNewEvent.save()
-        const findedPet = await Pet.findById(eventInfo.associatedPets[0])
+        const findedPet = await Pet.findById(eventPayload.associatedPets[0])
         await Pet.findOneAndUpdate(
-          { _id: eventInfo.associatedPets[0] },
+          { _id: eventPayload.associatedPets[0] },
           { events: [...(findedPet?.events ?? []), parsedNewEvent._id] }
         )
 

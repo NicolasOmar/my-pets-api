@@ -8,3 +8,8 @@ export interface EventObject {
 }
 
 export interface EventDocument extends EventObject, Document {}
+
+// PAYLOADS
+export interface EventCreatePayload {
+  eventPayload: EventObject
+}

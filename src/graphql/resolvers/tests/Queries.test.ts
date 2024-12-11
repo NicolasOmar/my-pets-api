@@ -8,7 +8,7 @@ import Mutation from '../Mutations'
 import mocks from '@functions/mocks/dbOps.mocks'
 // INTERFACES
 import { tableCases } from '@interfaces/functions'
-import { PetDocument, PetObjectCreate } from '@interfaces/pet'
+import { PetDocument, PetCreatePayload, PetObjectSimple } from '@interfaces/pet'
 import { UserAndToken, UserCreateResponse, UserObject } from '@interfaces/user'
 // FUNCTIONS
 import { clearAllTables, populateTable } from '@functions/dbOps'
@@ -21,7 +21,7 @@ const newUser = {
   ...mocks.testEnv.user,
   password: encryptPass(mocks.testEnv.user.password)
 } as UserObject
-let petInfo: PetObjectCreate
+let petInfo: PetCreatePayload
 let createdPet: PetDocument
 let loggedUser: UserCreateResponse
 let token: string
@@ -31,7 +31,7 @@ describe('[Queries]', () => {
   beforeAll(async () => {
     await populateTable(tableCases.petType)
     await populateTable(tableCases.color)
-    const newUserResponse = await Mutation.createUser(null, { newUser })
+    const newUserResponse = await Mutation.createUser(null, { userPayload: newUser })
     loggedUser = newUserResponse
     token = newUserResponse.token
 
@@ -39,13 +39,15 @@ describe('[Queries]', () => {
     const [petTypeId] = await Query.getPetTypes()
 
     petInfo = {
-      ...mocks.testEnv.pet,
-      petType: petTypeId.id,
-      hairColors: [colorId.id],
-      eyeColors: [colorId.id]
+      petPayload: {
+        ...mocks.testEnv.pet,
+        petType: petTypeId.id,
+        hairColors: [colorId.id],
+        eyeColors: [colorId.id]
+      }
     }
 
-    createdPet = await Mutation.createPet(null, { petInfo }, { loggedUser })
+    createdPet = await Mutation.createPet(null, petInfo, { loggedUser })
 
     const eventInfo = {
       ...mocks.testEnv.event,
@@ -53,7 +55,7 @@ describe('[Queries]', () => {
       associatedPets: [createdPet.id]
     }
 
-    await Mutation.createEvent(null, { eventInfo }, { loggedUser })
+    await Mutation.createEvent(null, { eventPayload: eventInfo }, { loggedUser })
 
     context = {
       loggedUser,
@@ -93,8 +95,8 @@ describe('[Queries]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should return an array of pets', async () => {
         const [getPet] = await Query.getMyPets(null, {}, { loggedUser })
-        const petKeys = Object.keys(petInfo) as Array<keyof PetObjectCreate>
-        petKeys.forEach(key => expect(petInfo[key]).toStrictEqual(getPet[key]))
+        const petKeys = Object.keys(petInfo.petPayload) as Array<keyof PetObjectSimple>
+        petKeys.forEach(key => expect(petInfo.petPayload[key]).toStrictEqual(getPet[key]))
       })
 
       test('Should return an array of pets if I search for a part of the name', async () => {
@@ -127,9 +129,9 @@ describe('[Queries]', () => {
       test('Should return one of my pets', async () => {
         const getPetInfo = await Query.getPet(null, { id: createdPet.id }, { loggedUser })
 
-        const petKeys = Object.keys(petInfo) as Array<keyof PetObjectCreate>
+        const petKeys = Object.keys(petInfo.petPayload) as Array<keyof PetObjectSimple>
 
-        petKeys.forEach(key => expect(petInfo[key]).toStrictEqual(getPetInfo[key]))
+        petKeys.forEach(key => expect(petInfo.petPayload[key]).toStrictEqual(getPetInfo[key]))
       })
     })
 

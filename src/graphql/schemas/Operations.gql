@@ -9,13 +9,12 @@ type Query {
 }
 
 type Mutation {
-  loginUser(email: String!, password: String!): User
-  createUser(newUser: UserCreatePayload): UserCreateResponse
-  updateUser(name: String!, lastName: String!): User
-  updatePass(oldPass: String!, newPass: String!): Boolean
-  createPet(petInfo: PetPayload!): Pet
-  updatePet(petInfo: PetPayload!): Boolean!
-  createEvent(eventInfo: EventCreatePayload!): Event
+  loginUser(userPayload: UserLoginPayload!): User
+  createUser(userPayload: UserCreatePayload!): UserCreateResponse
+  updateUser(userPayload: UserUpdatePayload!): User
+  updatePass(passPayload: UserPassChangePayload!): Boolean
   logout: Boolean!
-  # logoutAll: Boolean!
+  createPet(petPayload: PetCreatePayload!): Pet
+  updatePet(id: String!, petPayload: PetCreatePayload!): Boolean!
+  createEvent(eventPayload: EventCreatePayload!): Event
 }

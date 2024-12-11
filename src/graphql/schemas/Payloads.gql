@@ -1,3 +1,9 @@
+## USERS
+input UserLoginPayload {
+  email: String!,
+  password: String!
+}
+
 input UserCreatePayload {
   name: String!
   lastName: String!
@@ -6,8 +12,18 @@ input UserCreatePayload {
   password: String!
 }
 
-input PetPayload {
-  id: ID
+input UserUpdatePayload {
+  name: String!,
+  lastName: String!
+}
+
+input UserPassChangePayload {
+  oldPass: String!,
+  newPass: String!
+}
+
+## PETS
+input PetCreatePayload {
   name: String!
   petType: ID!
   birthday: String
@@ -18,11 +34,12 @@ input PetPayload {
   weight: Float
   gender: String!
   hairColors: [ID]
-  hasHeterochromia: Boolean
   eyeColors: [ID]
+  hasHeterochromia: Boolean
   passedAway: Boolean
 }
 
+## EVENTS
 input EventCreatePayload {
   description: String!
   date: String!

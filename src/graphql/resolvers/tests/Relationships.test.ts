@@ -38,7 +38,7 @@ describe('[Relationships]', () => {
     await populateTable(tableCases.petType)
     await populateTable(tableCases.color)
 
-    loggedUser = await Mutations.createUser(null, { newUser })
+    loggedUser = await Mutations.createUser(null, { userPayload: newUser })
     const [petType] = await Queries.getPetTypes()
     const [color] = await Queries.getColors()
 
@@ -51,7 +51,7 @@ describe('[Relationships]', () => {
 
     selectedPetType = petType
     selectedColor = color
-    createdPet = await Mutations.createPet(null, { petInfo }, { loggedUser })
+    createdPet = await Mutations.createPet(null, { petPayload: petInfo }, { loggedUser })
 
     const eventInfo = {
       ...mocks.testEnv.event,
@@ -59,7 +59,7 @@ describe('[Relationships]', () => {
       associatedPets: [createdPet._id] as MongooseId[]
     }
 
-    createdEvent = await Mutations.createEvent(null, { eventInfo }, { loggedUser })
+    createdEvent = await Mutations.createEvent(null, { eventPayload: eventInfo }, { loggedUser })
     // createdPet = {
     //   ...createdPet,
     //   events: [createdEvent.id]
