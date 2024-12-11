@@ -10,12 +10,12 @@ type Query {
 
 type Mutation {
   loginUser(email: String!, password: String!): User
-  createUser(newUser: UserInput): User
+  createUser(newUser: UserCreatePayload): UserCreateResponse
   updateUser(name: String!, lastName: String!): User
   updatePass(oldPass: String!, newPass: String!): Boolean
-  createPet(petInfo: PetInput!): Pet
-  updatePet(petInfo: PetInput!): Boolean!
-  createEvent(eventInfo: CreateEventInput!): Event
+  createPet(petInfo: PetPayload!): Pet
+  updatePet(petInfo: PetPayload!): Boolean!
+  createEvent(eventInfo: EventCreatePayload!): Event
   logout: Boolean!
   # logoutAll: Boolean!
 }

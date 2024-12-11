@@ -6,7 +6,7 @@ import Queries from '../Queries'
 import Relationships from '../Relationships'
 // INTERFACES
 import { tableCases } from '@interfaces/functions'
-import { UserDocument } from '@interfaces/user'
+import { UserCreateResponse, UserObject } from '@interfaces/user'
 import { PetDocument } from '@interfaces/pet'
 import { EventDocument } from '@interfaces/event'
 import { MongooseId, EntityDocument } from '@interfaces/shared'
@@ -23,7 +23,7 @@ const checkObjectData: <T extends object>(mock: T, response: T) => void = (mock,
 }
 
 describe('[Relationships]', () => {
-  let loggedUser: UserDocument
+  let loggedUser: UserCreateResponse
   let createdPet: PetDocument
   let selectedPetType: EntityDocument
   let selectedColor: EntityDocument
@@ -33,12 +33,12 @@ describe('[Relationships]', () => {
     const newUser = {
       ...mocks.testEnv.user,
       password: encryptPass(mocks.testEnv.user.password)
-    }
+    } as UserObject
 
     await populateTable(tableCases.petType)
     await populateTable(tableCases.color)
 
-    loggedUser = (await Mutations.createUser(null, { newUser })).loggedUser
+    loggedUser = await Mutations.createUser(null, { newUser })
     const [petType] = await Queries.getPetTypes()
     const [color] = await Queries.getColors()
 
@@ -81,7 +81,7 @@ describe('[Relationships]', () => {
   describe('[Pet]', () => {
     test('user', async () => {
       const testUserRes = await Relationships.Pet.user({ user: createdPet.user.toString() })
-      checkObjectData(loggedUser, testUserRes as UserDocument)
+      checkObjectData(loggedUser, testUserRes as unknown as UserCreateResponse)
     })
 
     test('petType', async () => {

@@ -8,7 +8,7 @@ import Event from '@models/event.model'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
 // INTERFACES
-import { UserAndToken, LoggedUser } from '@interfaces/user'
+import { UserAndToken, UserCreateResponse } from '@interfaces/user'
 import { PetDocument } from '@interfaces/pet'
 import {
   QuantityObject,
@@ -23,7 +23,7 @@ import { findByIds, parseUniqueArray } from '@functions/parsers'
 import { EventDocument } from '@interfaces/event'
 
 interface QueriesInterface {
-  getUser: TypedQuery<QueryDef, UserAndToken, LoggedUser>
+  getUser: TypedQuery<QueryDef, UserAndToken, UserCreateResponse>
   getPetTypes: TypedSimpleQuery<EntityDocument[]>
   getColors: TypedSimpleQuery<EntityDocument[]>
   getMyPets: TypedQuery<QueryDef, UserAndToken, PetDocument[]>
@@ -38,6 +38,7 @@ const Queries: QueriesInterface = {
     return {
       name: loggedUser.name,
       lastName: loggedUser.lastName,
+      userName: loggedUser.userName,
       email: loggedUser.email,
       token: token as string
     }

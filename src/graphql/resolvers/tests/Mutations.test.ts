@@ -7,7 +7,7 @@ import Mutations from '../Mutations'
 import Queries from '../Queries'
 // INTERFACES
 import { Error } from 'mongoose'
-import { UserDocument } from '@interfaces/user'
+import { UserCreateResponse, UserDocument, UserObject } from '@interfaces/user'
 import { PetDocument, PetObjectCreate } from '@interfaces/pet'
 import { EventObject } from '@interfaces/event'
 import { MongooseId, EntityDocument } from '@interfaces/shared'
@@ -25,7 +25,7 @@ import { ERROR_MSGS } from '@constants/errors'
 const newUser = {
   ...mocks.testEnv.user,
   password: encryptPass(mocks.testEnv.user.password)
-}
+} as UserObject
 
 describe('[Mutations]', () => {
   beforeAll(async () => {
@@ -94,7 +94,7 @@ describe('[Mutations]', () => {
 
       test('Should return an "LOGIN" Error trying to create an already created User', async () => {
         try {
-          await Mutations.createUser(null, { newUser: mocks.testEnv.user })
+          await Mutations.createUser(null, { newUser: mocks.testEnv.user as UserObject })
         } catch (error) {
           expect((error as Error).message).toBe(ERROR_MSGS.LOGIN)
         }
@@ -159,7 +159,7 @@ describe('[Mutations]', () => {
 
     describe('[SAD PATH]', () => {
       let token = null
-      let loggedUser: UserDocument | null = null
+      let loggedUser: UserCreateResponse | null = null
       const args = jest
         .fn()
         .mockReturnValueOnce({
@@ -200,7 +200,7 @@ describe('[Mutations]', () => {
 
       test('Should return a "UPDATES" Error trying to update with missing args', async () => {
         try {
-          await Mutations.updatePass(null, args(), { loggedUser: loggedUser as UserDocument })
+          await Mutations.updatePass(null, args(), { loggedUser: loggedUser as UserCreateResponse })
         } catch (error) {
           expect((error as Error).message).toBe(ERROR_MSGS.UPDATES)
         }
@@ -208,7 +208,7 @@ describe('[Mutations]', () => {
 
       test('Should return a "PASSWORD" Error trying to update a without the old pass', async () => {
         try {
-          await Mutations.updatePass(null, args(), { loggedUser: loggedUser as UserDocument })
+          await Mutations.updatePass(null, args(), { loggedUser: loggedUser as UserCreateResponse })
         } catch (error) {
           expect((error as Error).message).toBe(ERROR_MSGS.PASSWORD)
         }
@@ -216,7 +216,7 @@ describe('[Mutations]', () => {
 
       test('Should return a "minMaxValue" Error trying to update with a new pass with less than 6 characters', async () => {
         try {
-          await Mutations.updatePass(null, args(), { loggedUser: loggedUser as UserDocument })
+          await Mutations.updatePass(null, args(), { loggedUser: loggedUser as UserCreateResponse })
         } catch (error) {
           expect((error as Error).message).toBe(parseErrorMsg.minMaxValue('Password', 6, true))
         }
@@ -224,7 +224,7 @@ describe('[Mutations]', () => {
 
       test('Should return a "PASSWORD" Error trying to update with worng current/old password', async () => {
         try {
-          await Mutations.updatePass(null, args(), { loggedUser: loggedUser as UserDocument })
+          await Mutations.updatePass(null, args(), { loggedUser: loggedUser as UserCreateResponse })
         } catch (error) {
           expect((error as Error).message).toBe(ERROR_MSGS.PASSWORD)
         }
@@ -258,7 +258,7 @@ describe('[Mutations]', () => {
   })
 
   describe('[createPet]', () => {
-    let loggedUser: UserDocument
+    let loggedUser: UserCreateResponse
     let petInfo: PetObjectCreate
 
     beforeAll(async () => {
@@ -272,7 +272,7 @@ describe('[Mutations]', () => {
         hairColors: [colorId.id],
         eyeColors: [colorId.id]
       }
-      loggedUser = createdUser.loggedUser
+      loggedUser = createdUser
     })
 
     afterAll(async () => {
@@ -341,7 +341,7 @@ describe('[Mutations]', () => {
   })
 
   describe('[updatePet]', () => {
-    let loggedUser: UserDocument
+    let loggedUser: UserCreateResponse
     let colorList: EntityDocument[]
     let petTypeList: EntityDocument[]
     let petInfo: PetObjectCreate
@@ -350,7 +350,7 @@ describe('[Mutations]', () => {
     beforeAll(async () => {
       colorList = await Queries.getColors()
       petTypeList = await Queries.getPetTypes()
-      loggedUser = (await Mutations.createUser(null, { newUser })).loggedUser
+      loggedUser = await Mutations.createUser(null, { newUser })
 
       petInfo = {
         ...mocks.testEnv.pet,
@@ -411,7 +411,7 @@ describe('[Mutations]', () => {
             await Mutations.updatePet(
               null,
               { petInfo: removedPet },
-              { loggedUser: loggedUser as UserDocument }
+              { loggedUser: loggedUser as UserCreateResponse }
             )
           } catch (error) {
             expect((error as Error).message).toBe(ERROR_MSGS.UPDATES)
@@ -442,7 +442,7 @@ describe('[Mutations]', () => {
   })
 
   describe('createEvent', () => {
-    let loggedUser: UserDocument
+    let loggedUser: UserCreateResponse
     let colorList: EntityDocument[]
     let petTypeList: EntityDocument[]
     let petInfo: PetObjectCreate
@@ -452,7 +452,7 @@ describe('[Mutations]', () => {
     beforeAll(async () => {
       colorList = await Queries.getColors()
       petTypeList = await Queries.getPetTypes()
-      loggedUser = (await Mutations.createUser(null, { newUser })).loggedUser
+      loggedUser = await Mutations.createUser(null, { newUser })
 
       petInfo = {
         ...mocks.testEnv.pet,

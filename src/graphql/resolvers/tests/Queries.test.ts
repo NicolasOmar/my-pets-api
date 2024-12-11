@@ -9,7 +9,7 @@ import mocks from '@functions/mocks/dbOps.mocks'
 // INTERFACES
 import { tableCases } from '@interfaces/functions'
 import { PetDocument, PetObjectCreate } from '@interfaces/pet'
-import { UserAndToken, UserDocument } from '@interfaces/user'
+import { UserAndToken, UserCreateResponse, UserObject } from '@interfaces/user'
 // FUNCTIONS
 import { clearAllTables, populateTable } from '@functions/dbOps'
 import { encryptPass } from '@functions/encrypt'
@@ -20,10 +20,11 @@ import { ERROR_MSGS } from '@constants/errors'
 const newUser = {
   ...mocks.testEnv.user,
   password: encryptPass(mocks.testEnv.user.password)
-}
+} as UserObject
 let petInfo: PetObjectCreate
 let createdPet: PetDocument
-let loggedUser: UserDocument
+let loggedUser: UserCreateResponse
+let token: string
 let context: UserAndToken
 
 describe('[Queries]', () => {
@@ -31,7 +32,8 @@ describe('[Queries]', () => {
     await populateTable(tableCases.petType)
     await populateTable(tableCases.color)
     const newUserResponse = await Mutation.createUser(null, { newUser })
-    loggedUser = newUserResponse.loggedUser
+    loggedUser = newUserResponse
+    token = newUserResponse.token
 
     const [colorId] = await Query.getColors()
     const [petTypeId] = await Query.getPetTypes()
@@ -55,7 +57,7 @@ describe('[Queries]', () => {
 
     context = {
       loggedUser,
-      token: newUserResponse.token
+      token
     }
   })
 

@@ -1,4 +1,4 @@
-input UserInput {
+input UserCreatePayload {
   name: String!
   lastName: String!
   userName: String!
@@ -6,7 +6,7 @@ input UserInput {
   password: String!
 }
 
-input PetInput {
+input PetPayload {
   id: ID
   name: String!
   petType: ID!
@@ -23,7 +23,7 @@ input PetInput {
   passedAway: Boolean
 }
 
-input CreateEventInput {
+input EventCreatePayload {
   description: String!
   date: String!
   associatedPets: [ID]!

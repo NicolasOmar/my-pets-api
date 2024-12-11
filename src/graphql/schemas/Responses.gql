@@ -1,0 +1,7 @@
+type UserCreateResponse {
+  name: String!
+  lastName: String!
+  userName: String!
+  email: String!
+  token: String!
+}

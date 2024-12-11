@@ -8,7 +8,13 @@ import Event from '@models/event.model'
 import { checkAllowedUpdates, parseErrorMsg } from '@functions/parsers'
 import { decryptPass } from '@functions/encrypt'
 // INTERFACES
-import { BaseUser, LoggedUser, UserAndToken, UserDocument } from '@interfaces/user'
+import {
+  LoggedUser,
+  UserAndToken,
+  UserCreateResponse,
+  UserDocument,
+  UserObject
+} from '@interfaces/user'
 import { PetDocument, PetObjectCreate } from '@interfaces/pet'
 import { EventDocument, EventObject } from '@interfaces/event'
 import { TypedMutation } from '@interfaces/shared'
@@ -18,7 +24,7 @@ import { ALLOWED_CREATE, ALLOWED_UPDATE } from '@constants/allowedFields.json'
 
 interface MutationsInterface {
   loginUser: TypedMutation<{ email: string; password: string }, LoggedUser, UserAndToken>
-  createUser: TypedMutation<{ newUser: BaseUser }, LoggedUser, UserAndToken>
+  createUser: TypedMutation<{ newUser: UserObject }, LoggedUser, UserCreateResponse>
   updateUser: TypedMutation<Partial<UserDocument>, UserAndToken, UserDocument>
   updatePass: TypedMutation<{ oldPass: string; newPass: string }, UserAndToken, boolean>
   logout: TypedMutation<null, UserAndToken, boolean>
@@ -48,7 +54,13 @@ const Mutations: MutationsInterface = {
       await parsedNewUser.save()
       const token = await parsedNewUser.generateAuthToken()
 
-      return { loggedUser: parsedNewUser.toJSON() as UserDocument, token }
+      return {
+        name: parsedNewUser.name,
+        userName: parsedNewUser.userName,
+        lastName: parsedNewUser.lastName,
+        email: parsedNewUser.email,
+        token
+      }
     } catch (error) {
       throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
@@ -62,7 +74,7 @@ const Mutations: MutationsInterface = {
       }
 
       try {
-        const updatedDocument = Object.keys(context.loggedUser).reduce((_totalObj, key) => {
+        const updatedUser = Object.keys(context.loggedUser).reduce((_totalObj, key) => {
           const findedKey = updateArgs[key as keyof UserDocument] !== undefined
 
           if (findedKey) {
@@ -75,9 +87,9 @@ const Mutations: MutationsInterface = {
           }
         }, {})
 
-        await (updatedDocument as UserDocument).save()
+        const updateResponse = await (updatedUser as UserDocument).save()
 
-        return context.loggedUser.toJSON() as UserDocument
+        return updateResponse
       } catch (error) {
         throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
       }
@@ -96,10 +108,13 @@ const Mutations: MutationsInterface = {
       }
 
       try {
-        await User.findByCredentials(context.loggedUser.email, decryptPass(args.oldPass))
-        context.loggedUser.password = decryptPass(args.newPass)
+        const userWitCredentials = await User.findByCredentials(
+          context.loggedUser.email,
+          decryptPass(args.oldPass)
+        )
+        userWitCredentials.password = decryptPass(args.newPass)
 
-        await context.loggedUser.save()
+        await userWitCredentials.save()
 
         return true
       } catch (error) {
@@ -115,10 +130,11 @@ const Mutations: MutationsInterface = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
       try {
-        context.loggedUser.tokens = (context.loggedUser.tokens ?? []).filter(
+        const userWitCredentials = (await User.find({ email: context.loggedUser.email }))[0]
+        userWitCredentials.tokens = userWitCredentials.tokens.filter(
           _token => _token.token !== context.token
         )
-        await context.loggedUser.save()
+        await userWitCredentials.save()
         return true
       } catch (error) {
         throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)

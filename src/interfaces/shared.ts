@@ -22,9 +22,9 @@ export interface QueryDef {
 }
 
 export type TypedQuery<QueryDef, ContextDef, ResponseDef> = (
-  noIdea: null,
-  params: QueryDef,
-  requestedData?: ContextDef
+  hasNoUsage: null,
+  queryParams: QueryDef,
+  contextData?: ContextDef
 ) => Promise<ResponseDef>
 
 export type TypedSimpleQuery<ResponseDef> = () => Promise<ResponseDef>
