@@ -32,22 +32,22 @@ export interface UserAndToken {
 
 // PAYLOADS
 export interface UserLoginPayload {
-  email: string
-  password: string
+  payload: Pick<UserObject, 'email' | 'password'>
 }
 
 export interface UserCreatePayload {
-  userPayload: UserObject
+  payload: UserObject
 }
 
 export interface UserUpdatePayload {
-  name: string
-  lastName: string
+  payload: Pick<UserObject, 'name' | 'lastName'>
 }
 
 export interface UserPassChangePayload {
-  oldPass: string
-  newPass: string
+  payload: {
+    oldPass: string
+    newPass: string
+  }
 }
 
 // RESPONSES

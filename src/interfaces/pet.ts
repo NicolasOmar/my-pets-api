@@ -25,7 +25,7 @@ export interface PetDocument extends PetObject, Document {}
 
 // PAYLOADS
 export interface PetCreatePayload {
-  petPayload: PetObjectSimple
+  payload: PetObjectSimple
 }
 
 export interface PetUpdatePayload extends PetCreatePayload {

@@ -17,10 +17,6 @@ export interface QuantityObject {
   quantity: number
 }
 
-export interface QueryDef {
-  [queryKey: string]: string | number | null
-}
-
 export type TypedQuery<QueryDef, ContextDef, ResponseDef> = (
   hasNoUsage: null,
   queryParams: QueryDef,

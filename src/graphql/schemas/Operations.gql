@@ -1,20 +1,20 @@
 type Query {
-  getUser: User!
+  getUser: UserCreateResponse!
   getPetTypes: [AuxiliaryData]!
   getColors: [AuxiliaryData]!
   getMyPets(search: String): [Pet]!
-  getPet(id: ID!): Pet
+  getPet(petId: ID!): Pet
   getMyPetsPopulation: [AmountData]
   getMyPetEvents(petId: ID!): [Event]
 }
 
 type Mutation {
-  loginUser(userPayload: UserLoginPayload!): User
-  createUser(userPayload: UserCreatePayload!): UserCreateResponse
-  updateUser(userPayload: UserUpdatePayload!): User
-  updatePass(passPayload: UserPassChangePayload!): Boolean
+  loginUser(payload: UserLoginPayload!): User
+  createUser(payload: UserCreatePayload!): UserCreateResponse
+  updateUser(payload: UserUpdatePayload!): User
+  updatePass(payload: UserPassChangePayload!): Boolean
   logout: Boolean!
-  createPet(petPayload: PetCreatePayload!): Pet
-  updatePet(id: String!, petPayload: PetCreatePayload!): Boolean!
-  createEvent(eventPayload: EventCreatePayload!): Event
+  createPet(payload: PetCreatePayload!): Pet
+  updatePet(id: String!, payload: PetCreatePayload!): Boolean!
+  createEvent(payload: EventCreatePayload!): Event
 }

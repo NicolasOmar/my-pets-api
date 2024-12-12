@@ -38,7 +38,7 @@ describe('[Relationships]', () => {
     await populateTable(tableCases.petType)
     await populateTable(tableCases.color)
 
-    loggedUser = await Mutations.createUser(null, { userPayload: newUser })
+    loggedUser = await Mutations.createUser(null, { payload: newUser })
     const [petType] = await Queries.getPetTypes()
     const [color] = await Queries.getColors()
 
@@ -51,7 +51,7 @@ describe('[Relationships]', () => {
 
     selectedPetType = petType
     selectedColor = color
-    createdPet = await Mutations.createPet(null, { petPayload: petInfo }, { loggedUser })
+    createdPet = await Mutations.createPet(null, { payload: petInfo }, { loggedUser })
 
     const eventInfo = {
       ...mocks.testEnv.event,

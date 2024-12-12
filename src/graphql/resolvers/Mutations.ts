@@ -37,9 +37,9 @@ interface MutationsInterface {
 }
 
 const Mutations: MutationsInterface = {
-  loginUser: async (_, { email, password }) => {
+  loginUser: async (_, { payload }) => {
     try {
-      const userLogged = await User.findByCredentials(email, decryptPass(password))
+      const userLogged = await User.findByCredentials(payload.email, decryptPass(payload.password))
       const token = await userLogged.generateAuthToken()
 
       return { loggedUser: userLogged.toJSON() as UserDocument, token }
@@ -47,15 +47,11 @@ const Mutations: MutationsInterface = {
       throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
-  createUser: async (_, { userPayload }) => {
+  createUser: async (_, { payload }) => {
     try {
-      console.warn({
-        ...userPayload,
-        password: decryptPass(userPayload.password as string)
-      })
       const parsedNewUser = new User({
-        ...userPayload,
-        password: decryptPass(userPayload.password as string)
+        ...payload,
+        password: decryptPass(payload.password as string)
       })
 
       await parsedNewUser.save()
@@ -72,15 +68,15 @@ const Mutations: MutationsInterface = {
       throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
-  updateUser: async (_, { name, lastName }, context) => {
+  updateUser: async (_, { payload }, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
       try {
         const updatedUser = {
           ...context.loggedUser,
-          name,
-          lastName
+          name: payload.name,
+          lastName: payload.lastName
         }
 
         const updateResponse = await (updatedUser as UserDocument).save()
@@ -91,24 +87,24 @@ const Mutations: MutationsInterface = {
       }
     }
   },
-  updatePass: async (_, passPayload, context) => {
+  updatePass: async (_, { payload }, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      if (!checkAllowedUpdates(passPayload, ALLOWED_UPDATE.PASSWORD)) {
+      if (!checkAllowedUpdates(payload, ALLOWED_UPDATE.PASSWORD)) {
         throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
       }
 
-      if (!passPayload.oldPass) {
+      if (!payload.oldPass) {
         throw new ApolloError(ERROR_MSGS.PASSWORD, HTTP_CODES.NOT_FOUND)
       }
 
       try {
         const userWitCredentials = await User.findByCredentials(
           context.loggedUser.email,
-          decryptPass(passPayload.oldPass)
+          decryptPass(payload.oldPass)
         )
-        userWitCredentials.password = decryptPass(passPayload.newPass)
+        userWitCredentials.password = decryptPass(payload.newPass)
 
         await userWitCredentials.save()
 
@@ -137,17 +133,17 @@ const Mutations: MutationsInterface = {
       }
     }
   },
-  createPet: async (_, { petPayload }, context) => {
+  createPet: async (_, { payload }, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      if (!checkAllowedUpdates(petPayload, ALLOWED_CREATE.PET)) {
+      if (!checkAllowedUpdates(payload, ALLOWED_CREATE.PET)) {
         throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
       }
 
       const petAlreadyCreated = await Pet.findOne({
-        name: petPayload.name,
-        petType: petPayload.petType
+        name: payload.name,
+        petType: payload.petType
       })
 
       if (petAlreadyCreated) {
@@ -161,7 +157,7 @@ const Mutations: MutationsInterface = {
 
       try {
         const parsedNewPet = new Pet({
-          ...petPayload,
+          ...payload,
           user: findedUser?._id
         })
 
@@ -173,17 +169,17 @@ const Mutations: MutationsInterface = {
       }
     }
   },
-  updatePet: async (_, { id, petPayload }, context) => {
+  updatePet: async (_, { id, payload }, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      if (!checkAllowedUpdates(petPayload, ALLOWED_UPDATE.PET)) {
+      if (!checkAllowedUpdates(payload, ALLOWED_UPDATE.PET)) {
         throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
       }
 
       const petAlreadyCreated = await Pet.findOne({
-        name: petPayload.name,
-        petType: petPayload.petType
+        name: payload.name,
+        petType: payload.petType
       })
 
       if (petAlreadyCreated) {
@@ -194,7 +190,7 @@ const Mutations: MutationsInterface = {
       }
 
       try {
-        const response = await Pet.findOneAndUpdate({ _id: id }, { ...petPayload })
+        const response = await Pet.findOneAndUpdate({ _id: id }, { ...payload })
         return response ? true : false
       } catch (error) {
         throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)

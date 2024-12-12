@@ -14,22 +14,21 @@ import {
   QuantityObject,
   TypedQuery,
   EntityObject,
-  QueryDef,
   TypedSimpleQuery,
   EntityDocument
 } from '@interfaces/shared'
+import { EventDocument } from '@interfaces/event'
 // FUNCTIONS
 import { findByIds, parseUniqueArray } from '@functions/parsers'
-import { EventDocument } from '@interfaces/event'
 
 interface QueriesInterface {
-  getUser: TypedQuery<QueryDef, UserAndToken, UserCreateResponse>
+  getUser: TypedQuery<null, UserAndToken, UserCreateResponse>
   getPetTypes: TypedSimpleQuery<EntityDocument[]>
   getColors: TypedSimpleQuery<EntityDocument[]>
-  getMyPets: TypedQuery<QueryDef, UserAndToken, PetDocument[]>
-  getPet: TypedQuery<QueryDef, UserAndToken, PetDocument>
-  getMyPetsPopulation: TypedQuery<QueryDef, UserAndToken, QuantityObject[]>
-  getMyPetEvents: TypedQuery<QueryDef, UserAndToken, EventDocument[]>
+  getMyPets: TypedQuery<string | undefined, UserAndToken, PetDocument[]>
+  getPet: TypedQuery<string, UserAndToken, PetDocument>
+  getMyPetsPopulation: TypedQuery<null, UserAndToken, QuantityObject[]>
+  getMyPetEvents: TypedQuery<string, UserAndToken, EventDocument[]>
 }
 
 const Queries: QueriesInterface = {
@@ -45,25 +44,25 @@ const Queries: QueriesInterface = {
   },
   getPetTypes: async () => await PetType.find(),
   getColors: async () => await Color.find(),
-  getMyPets: async (_, query, context) => {
+  getMyPets: async (_, search, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     } else {
       const userResponse = await User.findOne({ userName: context.loggedUser.userName })
       const petFindQuery =
-        query?.search && query?.search !== ''
-          ? { user: userResponse?._id, name: new RegExp(query?.search as string) }
+        search && search !== ''
+          ? { user: userResponse?._id, name: new RegExp(search as string) }
           : { user: userResponse?._id }
 
       return await Pet.find(petFindQuery)
     }
   },
-  getPet: async (_, { id }, context) => {
+  getPet: async (_, petId, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     }
 
-    const foundedPet = await Pet.findOne({ _id: id })
+    const foundedPet = await Pet.findOne({ _id: petId })
 
     if (!foundedPet) {
       throw new ApolloError(ERROR_MSGS.MISSING_PET_DATA, HTTP_CODES.NOT_FOUND.toString())
@@ -104,7 +103,7 @@ const Queries: QueriesInterface = {
       return [{ name: 'All', quantity: petPopulation.length }, ...parsedPetTypeList]
     }
   },
-  getMyPetEvents: async (_, { petId }, context) => {
+  getMyPetEvents: async (_, petId, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     }
