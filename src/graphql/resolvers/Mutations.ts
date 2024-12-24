@@ -16,7 +16,8 @@ import {
   UserLoginPayload,
   UserPassChangePayload,
   UserUpdatePayload,
-  UserCreateResponse
+  UserCreateResponse,
+  UserObject
 } from '@interfaces/user'
 import { PetDocument, PetCreatePayload, PetUpdatePayload } from '@interfaces/pet'
 import { EventCreatePayload, EventDocument } from '@interfaces/event'
@@ -39,10 +40,11 @@ interface MutationsInterface {
 const Mutations: MutationsInterface = {
   loginUser: async (_, { payload }) => {
     try {
-      const userLogged = await User.findByCredentials(payload.email, decryptPass(payload.password))
+      const decryptedPass = decryptPass(payload.password)
+      const userLogged = await User.findByCredentials(payload.email, decryptedPass)
       const token = await userLogged.generateAuthToken()
-
-      return { loggedUser: userLogged.toJSON() as UserDocument, token }
+      
+      return { loggedUser: userLogged.toJSON() as LoggedUser, token }
     } catch (error) {
       throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
