@@ -146,7 +146,7 @@ describe('[Queries]', () => {
 
       test('Should return a MISSING_PET_DATA error by not passing the Pet ID', async () => {
         try {
-          await Query.getPet(null, '', { loggedUser })
+          await Query.getPet(null, { petId: '' }, { loggedUser })
         } catch (error) {
           expect((error as Error).message).toBe(ERROR_MSGS.MISSING_PET_DATA)
         }

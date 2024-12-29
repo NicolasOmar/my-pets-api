@@ -43,7 +43,7 @@ const Mutations: MutationsInterface = {
       const decryptedPass = decryptPass(payload.password)
       const userLogged = await User.findByCredentials(payload.email, decryptedPass)
       const token = await userLogged.generateAuthToken()
-      
+
       return { loggedUser: userLogged.toJSON() as LoggedUser, token }
     } catch (error) {
       throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
@@ -139,9 +139,9 @@ const Mutations: MutationsInterface = {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      if (!checkAllowedUpdates(payload, ALLOWED_CREATE.PET)) {
-        throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
-      }
+      // if (!checkAllowedUpdates(payload, ALLOWED_CREATE.PET)) {
+      //   throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
+      // }
 
       const petAlreadyCreated = await Pet.findOne({
         name: payload.name,
@@ -175,21 +175,22 @@ const Mutations: MutationsInterface = {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      if (!checkAllowedUpdates(payload, ALLOWED_UPDATE.PET)) {
-        throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
-      }
+      // if (!checkAllowedUpdates(payload, ALLOWED_UPDATE.PET)) {
+      //   throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
+      // }
 
-      const petAlreadyCreated = await Pet.findOne({
-        name: payload.name,
-        petType: payload.petType
-      })
+      // Ask for all pets, check for those with same id, name and petType
+      // const petAlreadyCreated = await Pet.findOne({
+      //   name: payload.name,
+      //   petType: payload.petType
+      // })
 
-      if (petAlreadyCreated) {
-        throw new ApolloError(
-          parseErrorMsg.alreadyExists('Pet', ' with this name and pet type'),
-          HTTP_CODES.INTERNAL_ERROR_SERVER
-        )
-      }
+      // if (petAlreadyCreated) {
+      //   throw new ApolloError(
+      //     parseErrorMsg.alreadyExists('Pet', ' with this name and pet type'),
+      //     HTTP_CODES.INTERNAL_ERROR_SERVER
+      //   )
+      // }
 
       try {
         const response = await Pet.findOneAndUpdate({ _id: id }, { ...payload })

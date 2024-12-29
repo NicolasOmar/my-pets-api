@@ -26,7 +26,7 @@ interface QueriesInterface {
   getPetTypes: TypedSimpleQuery<EntityDocument[]>
   getColors: TypedSimpleQuery<EntityDocument[]>
   getMyPets: TypedQuery<string | undefined, UserAndToken, PetDocument[]>
-  getPet: TypedQuery<string, UserAndToken, PetDocument>
+  getPet: TypedQuery<{ petId: string }, UserAndToken, PetDocument>
   getMyPetsPopulation: TypedQuery<null, UserAndToken, QuantityObject[]>
   getMyPetEvents: TypedQuery<string, UserAndToken, EventDocument[]>
 }
@@ -57,11 +57,10 @@ const Queries: QueriesInterface = {
       return await Pet.find(petFindQuery)
     }
   },
-  getPet: async (_, petId, context) => {
+  getPet: async (_, { petId }, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     }
-
     const foundedPet = await Pet.findOne({ _id: petId })
 
     if (!foundedPet) {

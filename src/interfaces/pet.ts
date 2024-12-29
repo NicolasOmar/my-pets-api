@@ -10,7 +10,7 @@ export interface PetObject {
   height: number
   length: number
   weight: number
-  gender: string
+  gender: boolean
   hairColors: MongooseId[]
   eyeColors: MongooseId[]
   hasHeterochromia: boolean

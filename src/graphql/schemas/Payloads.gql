@@ -29,14 +29,14 @@ input PetCreatePayload {
   birthday: String
   isAdopted: Boolean!
   adoptionDate: String
-  height: Float
-  length: Float
-  weight: Float
-  gender: String!
-  hairColors: [ID]
-  eyeColors: [ID]
-  hasHeterochromia: Boolean
-  passedAway: Boolean
+  height: Float!
+  length: Float!
+  weight: Float!
+  gender: Boolean!
+  hairColors: [ID!]
+  eyeColors: [ID!]
+  hasHeterochromia: Boolean!
+  passedAway: Boolean!
 }
 
 ## EVENTS

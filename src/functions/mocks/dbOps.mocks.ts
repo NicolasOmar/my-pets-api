@@ -15,7 +15,7 @@ export default {
       height: 10,
       length: 10,
       weight: 10,
-      gender: 'masculine',
+      gender: true,
       hasHeterochromia: false,
       passedAway: false
     },

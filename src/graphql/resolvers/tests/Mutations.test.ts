@@ -494,7 +494,7 @@ describe('[Mutations]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should create the event related to the created pet', async () => {
         await Mutations.createEvent(null, { eventPayload: eventToCreate }, { loggedUser })
-        const petOfTheEvent = await Queries.getPet(null, _id.toString(), { loggedUser })
+        const petOfTheEvent = await Queries.getPet(null, { petId: _id.toString() }, { loggedUser })
 
         expect(petOfTheEvent.events.length).toBe(1)
       })
@@ -506,7 +506,7 @@ describe('[Mutations]', () => {
         }
 
         await Mutations.createEvent(null, { eventPayload: secondEventToCreate }, { loggedUser })
-        const petOfTheEvent = await Queries.getPet(null, _id.toString(), { loggedUser })
+        const petOfTheEvent = await Queries.getPet(null, { petId: _id.toString() }, { loggedUser })
 
         expect(petOfTheEvent.events.length).toBe(2)
       })
