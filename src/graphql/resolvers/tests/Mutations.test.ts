@@ -493,7 +493,7 @@ describe('[Mutations]', () => {
 
     describe('[HAPPY PATH]', () => {
       test('Should create the event related to the created pet', async () => {
-        await Mutations.createEvent(null, { eventPayload: eventToCreate }, { loggedUser })
+        await Mutations.createEvent(null, { payload: eventToCreate }, { loggedUser })
         const petOfTheEvent = await Queries.getPet(null, { petId: _id.toString() }, { loggedUser })
 
         expect(petOfTheEvent.events.length).toBe(1)
@@ -505,7 +505,7 @@ describe('[Mutations]', () => {
           ...createEvent.events[1]
         }
 
-        await Mutations.createEvent(null, { eventPayload: secondEventToCreate }, { loggedUser })
+        await Mutations.createEvent(null, { payload: secondEventToCreate }, { loggedUser })
         const petOfTheEvent = await Queries.getPet(null, { petId: _id.toString() }, { loggedUser })
 
         expect(petOfTheEvent.events.length).toBe(2)
@@ -515,7 +515,7 @@ describe('[Mutations]', () => {
     describe('[SAD PATH]', () => {
       test('Should return a "MISSING_USER_DATA" Error trying to update a not logged User', async () => {
         try {
-          await Mutations.createEvent(null, { eventPayload: eventToCreate })
+          await Mutations.createEvent(null, { payload: eventToCreate })
         } catch (error) {
           expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
@@ -526,7 +526,7 @@ describe('[Mutations]', () => {
         eventKeys.forEach(async eventKey => {
           try {
             delete eventToCreate[eventKey]
-            await Mutations.createEvent(null, { eventPayload: eventToCreate }, { loggedUser })
+            await Mutations.createEvent(null, { payload: eventToCreate }, { loggedUser })
           } catch (error) {
             expect((error as Error).message).toBe(ERROR_MSGS.UPDATES)
             // expect(e.extensions.code).toBe(HTTP_CODES.UNPROCESSABLE_ENTITY)

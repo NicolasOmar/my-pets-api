@@ -59,7 +59,7 @@ describe('[Relationships]', () => {
       associatedPets: [createdPet._id] as MongooseId[]
     }
 
-    createdEvent = await Mutations.createEvent(null, { eventPayload: eventInfo }, { loggedUser })
+    createdEvent = await Mutations.createEvent(null, { payload: eventInfo }, { loggedUser })
     // createdPet = {
     //   ...createdPet,
     //   events: [createdEvent.id]

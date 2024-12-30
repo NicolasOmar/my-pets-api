@@ -202,20 +202,16 @@ const Mutations: MutationsInterface = {
       }
     }
   },
-  createEvent: async (_, { eventPayload }, context) => {
+  createEvent: async (_, { payload }, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      if (!checkAllowedUpdates(eventPayload, ALLOWED_CREATE.EVENT)) {
-        throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
-      }
-
       try {
-        const parsedNewEvent = new Event(eventPayload)
+        const parsedNewEvent = new Event(payload)
         await parsedNewEvent.save()
-        const findedPet = await Pet.findById(eventPayload.associatedPets[0])
+        const findedPet = await Pet.findById(payload.associatedPets[0])
         await Pet.findOneAndUpdate(
-          { _id: eventPayload.associatedPets[0] },
+          { _id: payload.associatedPets[0] },
           { events: [...(findedPet?.events ?? []), parsedNewEvent._id] }
         )
 

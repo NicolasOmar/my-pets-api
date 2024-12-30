@@ -55,7 +55,7 @@ describe('[Queries]', () => {
       associatedPets: [createdPet.id]
     }
 
-    await Mutation.createEvent(null, { eventPayload: eventInfo }, { loggedUser })
+    await Mutation.createEvent(null, { payload: eventInfo }, { loggedUser })
 
     context = {
       loggedUser,
