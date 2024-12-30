@@ -43,7 +43,7 @@ export interface UserUpdatePayload {
   payload: Pick<UserObject, 'name' | 'lastName'>
 }
 
-export interface UserPassChangePayload {
+export interface UserPassUpdatePayload {
   payload: {
     oldPass: string
     newPass: string

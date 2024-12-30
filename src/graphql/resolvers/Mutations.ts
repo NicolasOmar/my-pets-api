@@ -14,10 +14,9 @@ import {
   UserDocument,
   UserCreatePayload,
   UserLoginPayload,
-  UserPassChangePayload,
+  UserPassUpdatePayload,
   UserUpdatePayload,
-  UserCreateResponse,
-  UserObject
+  UserCreateResponse
 } from '@interfaces/user'
 import { PetDocument, PetCreatePayload, PetUpdatePayload } from '@interfaces/pet'
 import { EventCreatePayload, EventDocument } from '@interfaces/event'
@@ -29,8 +28,8 @@ import { ALLOWED_CREATE, ALLOWED_UPDATE } from '@constants/allowedFields.json'
 interface MutationsInterface {
   loginUser: TypedMutation<UserLoginPayload, LoggedUser, UserAndToken>
   createUser: TypedMutation<UserCreatePayload, LoggedUser, UserCreateResponse>
-  updateUser: TypedMutation<UserUpdatePayload, UserAndToken, UserDocument>
-  updatePass: TypedMutation<UserPassChangePayload, UserAndToken, boolean>
+  updateUser: TypedMutation<UserUpdatePayload, UserAndToken, UserCreateResponse>
+  updatePass: TypedMutation<UserPassUpdatePayload, UserAndToken, boolean>
   logout: TypedMutation<null, UserAndToken, boolean>
   createPet: TypedMutation<PetCreatePayload, UserAndToken, PetDocument>
   updatePet: TypedMutation<PetUpdatePayload, UserAndToken, boolean>
@@ -75,15 +74,18 @@ const Mutations: MutationsInterface = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
       try {
-        const updatedUser = {
+        const userLogged = await User.findOneAndUpdate(
+          { 'tokens.token': context.token },
+          { ...payload }
+        )
+        await userLogged?.save()
+
+        return {
           ...context.loggedUser,
           name: payload.name,
-          lastName: payload.lastName
+          lastName: payload.lastName,
+          token: context.token ?? ''
         }
-
-        const updateResponse = await (updatedUser as UserDocument).save()
-
-        return updateResponse
       } catch (error) {
         throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
       }

@@ -17,7 +17,7 @@ input UserUpdatePayload {
   lastName: String!
 }
 
-input UserPassChangePayload {
+input UserPassUpdatePayload {
   oldPass: String!,
   newPass: String!
 }

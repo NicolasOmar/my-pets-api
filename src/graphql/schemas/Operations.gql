@@ -15,8 +15,8 @@ type Mutation {
   ## USERS
   loginUser(payload: UserLoginPayload!): LoginUserResponse
   createUser(payload: UserCreatePayload!): UserCreateResponse
-  updateUser(payload: UserUpdatePayload!): User
-  updatePass(payload: UserPassChangePayload!): Boolean
+  updateUser(payload: UserUpdatePayload!): UserCreateResponse
+  updatePass(payload: UserPassUpdatePayload!): Boolean
   logout: Boolean!
   ## PETS
   createPet(payload: PetCreatePayload!): Pet
