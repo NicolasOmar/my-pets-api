@@ -13,3 +13,7 @@ export interface EventDocument extends EventObject, Document {}
 export interface EventCreatePayload {
   payload: EventObject
 }
+
+export interface EventGetPayload {
+  petId: string
+}

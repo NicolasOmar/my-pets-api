@@ -9,7 +9,7 @@ import Event from '@models/event.model'
 import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
 // INTERFACES
 import { UserAndToken, UserCreateResponse } from '@interfaces/user'
-import { PetDocument } from '@interfaces/pet'
+import { PetDocument, PetGetPayload } from '@interfaces/pet'
 import {
   QuantityObject,
   TypedQuery,
@@ -17,7 +17,7 @@ import {
   TypedSimpleQuery,
   EntityDocument
 } from '@interfaces/shared'
-import { EventDocument } from '@interfaces/event'
+import { EventDocument, EventGetPayload } from '@interfaces/event'
 // FUNCTIONS
 import { findByIds, parseUniqueArray } from '@functions/parsers'
 
@@ -26,9 +26,9 @@ interface QueriesInterface {
   getPetTypes: TypedSimpleQuery<EntityDocument[]>
   getColors: TypedSimpleQuery<EntityDocument[]>
   getMyPets: TypedQuery<string | undefined, UserAndToken, PetDocument[]>
-  getPet: TypedQuery<{ petId: string }, UserAndToken, PetDocument>
+  getPet: TypedQuery<PetGetPayload, UserAndToken, PetDocument>
   getMyPetsPopulation: TypedQuery<null, UserAndToken, QuantityObject[]>
-  getMyPetEvents: TypedQuery<string, UserAndToken, EventDocument[]>
+  getMyPetEvents: TypedQuery<EventGetPayload, UserAndToken, EventDocument[]>
 }
 
 const Queries: QueriesInterface = {
@@ -102,7 +102,7 @@ const Queries: QueriesInterface = {
       return [{ name: 'All', quantity: petPopulation.length }, ...parsedPetTypeList]
     }
   },
-  getMyPetEvents: async (_, petId, context) => {
+  getMyPetEvents: async (_, { petId }, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     }

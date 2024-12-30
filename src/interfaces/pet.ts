@@ -31,3 +31,7 @@ export interface PetCreatePayload {
 export interface PetUpdatePayload extends PetCreatePayload {
   id: string
 }
+
+export interface PetGetPayload {
+  petId: string
+}
