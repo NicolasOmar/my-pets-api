@@ -10,7 +10,6 @@ import { PetDocument } from '@interfaces/pet'
 import { UserDocument } from '@interfaces/user'
 import { EventDocument } from '@interfaces/event'
 // CONSTANTS
-import { ALLOWED_CREATE } from '@constants/allowedFields.json'
 // FUNCTIONS
 import { findByIds } from '@functions/parsers'
 
@@ -23,11 +22,11 @@ interface RelationshipsInterface {
     petType: TypedRelationship<{ petType: string }, EntityObject | EntityObject[]>
     hairColors: TypedRelationship<{ hairColors: string }, EntityObject | EntityObject[]>
     eyeColors: TypedRelationship<{ eyeColors: string }, EntityObject | EntityObject[]>
-    // events: TypedRelationship<{ events: string[] }, EntityObject | EntityObject[]>
+    events: TypedRelationship<{ events: string[] }, EntityObject | EventDocument[]>
   }
-  // Event: {
-  //   associatedPets: TypedRelationship<{ associatedPets: string[] }, PetDocument | PetDocument[]>
-  // }
+  Event: {
+    associatedPets: TypedRelationship<{ associatedPets: string[] }, PetDocument | PetDocument[]>
+  }
 }
 
 const Relationships: RelationshipsInterface = {
@@ -53,22 +52,17 @@ const Relationships: RelationshipsInterface = {
       await findByIds({
         model: Color,
         ids: eyeColors
-      })
-    // events: async ({ events }) =>
-    //   await findByIds({
-    //     model: Event,
-    //     ids: events,
-    //     parser: `_id ${ALLOWED_CREATE.EVENT.join(' ')}`
-    //   })
+      }),
+    events: async ({ events }) => {
+      const eventList = await Event.find().where('_id').in(events)
+      return eventList
+    }
+  },
+  Event: {
+    associatedPets: async ({ associatedPets }) => {
+      return await Pet.find().where('_id').in(associatedPets)
+    }
   }
-  // Event: {
-  //   associatedPets: async ({ associatedPets }) =>
-  //     await findByIds({
-  //       model: Pet,
-  //       ids: associatedPets,
-  //       parser: `_id ${ALLOWED_CREATE.PET.join(' ')}`
-  //     })
-  // }
 }
 
 export default Relationships

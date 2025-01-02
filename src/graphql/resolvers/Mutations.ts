@@ -5,13 +5,12 @@ import User from '@models/user.model'
 import Pet from '@models/pet.model'
 import Event from '@models/event.model'
 // FUNCTIONS
-import { checkAllowedUpdates, parseErrorMsg } from '@functions/parsers'
+import { parseErrorMsg } from '@functions/parsers'
 import { decryptPass } from '@functions/encrypt'
 // INTERFACES
 import {
   LoggedUser,
   UserAndToken,
-  UserDocument,
   UserCreatePayload,
   UserLoginPayload,
   UserPassUpdatePayload,
@@ -23,7 +22,6 @@ import { EventCreatePayload, EventDocument } from '@interfaces/event'
 import { TypedMutation } from '@interfaces/shared'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
-import { ALLOWED_CREATE, ALLOWED_UPDATE } from '@constants/allowedFields.json'
 
 interface MutationsInterface {
   loginUser: TypedMutation<UserLoginPayload, LoggedUser, UserAndToken>
@@ -95,10 +93,6 @@ const Mutations: MutationsInterface = {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      if (!checkAllowedUpdates(payload, ALLOWED_UPDATE.PASSWORD)) {
-        throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
-      }
-
       if (!payload.oldPass) {
         throw new ApolloError(ERROR_MSGS.PASSWORD, HTTP_CODES.NOT_FOUND)
       }
@@ -177,23 +171,6 @@ const Mutations: MutationsInterface = {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
-      // if (!checkAllowedUpdates(payload, ALLOWED_UPDATE.PET)) {
-      //   throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
-      // }
-
-      // Ask for all pets, check for those with same id, name and petType
-      // const petAlreadyCreated = await Pet.findOne({
-      //   name: payload.name,
-      //   petType: payload.petType
-      // })
-
-      // if (petAlreadyCreated) {
-      //   throw new ApolloError(
-      //     parseErrorMsg.alreadyExists('Pet', ' with this name and pet type'),
-      //     HTTP_CODES.INTERNAL_ERROR_SERVER
-      //   )
-      // }
-
       try {
         const response = await Pet.findOneAndUpdate({ _id: id }, { ...payload })
         return response ? true : false

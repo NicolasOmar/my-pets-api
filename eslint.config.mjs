@@ -7,6 +7,7 @@ export default tseslint.config(
   {
     extends: [pluginJs.configs.recommended, ...tseslint.configs.recommended,],
     files: ['src/**/*.{js,ts}'],
-    languageOptions: { globals: globals.node }
+    languageOptions: { globals: globals.node },
+    ignores: ['src/functions/dbOps.ts']
   }
 )

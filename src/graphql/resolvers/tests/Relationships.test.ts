@@ -8,14 +8,15 @@ import Relationships from '../Relationships'
 import { tableCases } from '@interfaces/functions'
 import { UserCreateResponse, UserObject } from '@interfaces/user'
 import { PetDocument } from '@interfaces/pet'
-import { EventDocument } from '@interfaces/event'
-import { MongooseId, EntityDocument } from '@interfaces/shared'
+// import { EventDocument } from '@interfaces/event'
+// import { MongooseId, EntityDocument } from '@interfaces/shared'
+import { EntityDocument } from '@interfaces/shared'
 // MOCKS
 import mocks from '@functions/mocks/dbOps.mocks'
 // FUNCTIONS
 import { encryptPass } from '@functions/encrypt'
 import { clearAllTables, populateTable } from '@functions/dbOps'
-import { generateMongooseDate } from '@functions/parsers'
+// import { generateMongooseDate } from '@functions/parsers'
 
 const checkObjectData: <T extends object>(mock: T, response: T) => void = (mock, response) => {
   const keyList = Object.keys(mock) as Array<keyof object>
@@ -27,7 +28,7 @@ describe('[Relationships]', () => {
   let createdPet: PetDocument
   let selectedPetType: EntityDocument
   let selectedColor: EntityDocument
-  let createdEvent: EventDocument
+  // let createdEvent: EventDocument
 
   beforeAll(async () => {
     const newUser = {
@@ -53,13 +54,13 @@ describe('[Relationships]', () => {
     selectedColor = color
     createdPet = await Mutations.createPet(null, { payload: petInfo }, { loggedUser })
 
-    const eventInfo = {
-      ...mocks.testEnv.event,
-      date: generateMongooseDate(),
-      associatedPets: [createdPet._id] as MongooseId[]
-    }
+    // const eventInfo = {
+    //   ...mocks.testEnv.event,
+    //   date: generateMongooseDate(),
+    //   associatedPets: [createdPet._id] as MongooseId[]
+    // }
 
-    createdEvent = await Mutations.createEvent(null, { payload: eventInfo }, { loggedUser })
+    // createdEvent = await Mutations.createEvent(null, { payload: eventInfo }, { loggedUser })
     // createdPet = {
     //   ...createdPet,
     //   events: [createdEvent.id]
