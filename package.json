@@ -57,7 +57,7 @@
     "@babel/register": "^7.25.9",
     "@eslint/compat": "^1.2.4",
     "@eslint/eslintrc": "^3.2.0",
-    "@eslint/js": "^9.16.0",
+    "@eslint/js": "^9.17.0",
     "env-cmd": "^10.1.0",
     "eslint": "^9.16.0",
     "eslint-plugin-node": "^11.1.0",
