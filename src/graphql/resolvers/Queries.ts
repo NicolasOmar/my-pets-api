@@ -61,6 +61,11 @@ const Queries: QueriesInterface = {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     }
+
+    if (petId === '') {
+      throw new ApolloError(ERROR_MSGS.MISSING_PET_DATA, HTTP_CODES.NOT_FOUND.toString())
+    }
+
     const foundedPet = await Pet.findOne({ _id: petId })
 
     if (!foundedPet) {
@@ -105,6 +110,10 @@ const Queries: QueriesInterface = {
   getMyPetEvents: async (_, { petId }, context) => {
     if (!context?.loggedUser) {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
+    }
+
+    if (petId === '') {
+      throw new ApolloError(ERROR_MSGS.MISSING_PET_DATA, HTTP_CODES.NOT_FOUND.toString())
     }
 
     return await Event.find({ associatedPets: petId })

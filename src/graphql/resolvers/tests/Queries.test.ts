@@ -16,6 +16,23 @@ import { encryptPass } from '@functions/encrypt'
 import { generateMongooseDate } from '@functions/parsers'
 // CONSTANTS
 import { ERROR_MSGS } from '@constants/errors'
+import { MongooseId } from '@interfaces/shared'
+
+const parseDocumentToSimple = (document: PetDocument) => ({
+  name: document.name,
+  petType: document.petType.toString(),
+  birthday: document.birthday,
+  isAdopted: document.isAdopted,
+  adoptionDate: document.adoptionDate,
+  height: document.height,
+  length: document.length,
+  weight: document.weight,
+  gender: document.gender,
+  hairColors: document.hairColors.map(color => color.toString()),
+  eyeColors: document.eyeColors.map(color => color.toString()),
+  hasHeterochromia: document.hasHeterochromia,
+  passedAway: document.passedAway
+})
 
 const newUser = {
   ...mocks.testEnv.user,
@@ -52,7 +69,7 @@ describe('[Queries]', () => {
     const eventInfo = {
       ...mocks.testEnv.event,
       date: generateMongooseDate(),
-      associatedPets: [createdPet.id]
+      associatedPets: [createdPet._id as MongooseId]
     }
 
     await Mutation.createEvent(null, { payload: eventInfo }, { loggedUser })
@@ -96,7 +113,8 @@ describe('[Queries]', () => {
       test('Should return an array of pets', async () => {
         const [getPet] = await Query.getMyPets(null, undefined, { loggedUser })
         const petKeys = Object.keys(petInfo.payload) as Array<keyof PetObjectSimple>
-        petKeys.forEach(key => expect(petInfo.payload[key]).toStrictEqual(getPet[key]))
+        const formatterResponse = parseDocumentToSimple(getPet)
+        petKeys.forEach(key => expect(petInfo.payload[key]).toStrictEqual(formatterResponse[key]))
       })
 
       test('Should return an array of pets if I search for a part of the name', async () => {
@@ -127,18 +145,23 @@ describe('[Queries]', () => {
   describe('[getPet]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should return one of my pets', async () => {
-        const getPetInfo = await Query.getPet(null, createdPet.id, { loggedUser })
+        const getPetInfo = await Query.getPet(
+          null,
+          { petId: createdPet._id as string },
+          { loggedUser }
+        )
 
         const petKeys = Object.keys(petInfo.payload) as Array<keyof PetObjectSimple>
 
-        petKeys.forEach(key => expect(petInfo.payload[key]).toStrictEqual(getPetInfo[key]))
+        const formatterResponse = parseDocumentToSimple(getPetInfo)
+        petKeys.forEach(key => expect(petInfo.payload[key]).toStrictEqual(formatterResponse[key]))
       })
     })
 
     describe('[SAD PATH]', () => {
       test('Should return a USER_MISSING_DATA error by not passing the loggedUser', async () => {
         try {
-          await Query.getPet(null, createdPet.id)
+          await Query.getPet(null, { petId: createdPet._id as string })
         } catch (error) {
           expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
@@ -183,7 +206,11 @@ describe('[Queries]', () => {
   describe('[getMyPetEvents]', () => {
     describe('[HAPPY PATH]', () => {
       test('Should return the list of events', async () => {
-        const getEventsInfo = await Query.getMyPetEvents(null, createdPet.id, { loggedUser })
+        const getEventsInfo = await Query.getMyPetEvents(
+          null,
+          { petId: createdPet._id as string },
+          { loggedUser }
+        )
         expect(mocks.testEnv.event.description).toStrictEqual(getEventsInfo[0].description)
       })
     })
@@ -191,7 +218,7 @@ describe('[Queries]', () => {
     describe('[SAD PATH]', () => {
       test('Should return a USER_MISSING_DATA error by not passing the loggedUser', async () => {
         try {
-          await Query.getMyPetEvents(null, createdPet.id)
+          await Query.getMyPetEvents(null, { petId: createdPet._id as string })
         } catch (error) {
           expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
