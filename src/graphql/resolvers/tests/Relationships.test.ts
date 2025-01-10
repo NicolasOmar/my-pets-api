@@ -10,12 +10,14 @@ import { UserCreateResponse, UserObject } from '@interfaces/user'
 import { PetDocument } from '@interfaces/pet'
 // import { EventDocument } from '@interfaces/event'
 // import { MongooseId, EntityDocument } from '@interfaces/shared'
-import { EntityDocument } from '@interfaces/shared'
+import { EntityDocument, MongooseId } from '@interfaces/shared'
 // MOCKS
 import mocks from '@functions/mocks/dbOps.mocks'
 // FUNCTIONS
 import { encryptPass } from '@functions/encrypt'
 import { clearAllTables, populateTable } from '@functions/dbOps'
+import { generateMongooseDate } from '@functions/parsers'
+import { EventDocument } from '@interfaces/event'
 // import { generateMongooseDate } from '@functions/parsers'
 
 const checkObjectData: <T extends object>(mock: T, response: T) => void = (mock, response) => {
@@ -28,7 +30,7 @@ describe('[Relationships]', () => {
   let createdPet: PetDocument
   let selectedPetType: EntityDocument
   let selectedColor: EntityDocument
-  // let createdEvent: EventDocument
+  let createdEvent: EventDocument
 
   beforeAll(async () => {
     const newUser = {
@@ -54,17 +56,17 @@ describe('[Relationships]', () => {
     selectedColor = color
     createdPet = await Mutations.createPet(null, { payload: petInfo }, { loggedUser })
 
-    // const eventInfo = {
-    //   ...mocks.testEnv.event,
-    //   date: generateMongooseDate(),
-    //   associatedPets: [createdPet._id] as MongooseId[]
-    // }
+    const eventInfo = {
+      ...mocks.testEnv.event,
+      date: generateMongooseDate(),
+      associatedPets: [createdPet._id] as MongooseId[]
+    }
 
-    // createdEvent = await Mutations.createEvent(null, { payload: eventInfo }, { loggedUser })
-    // createdPet = {
-    //   ...createdPet,
-    //   events: [createdEvent.id]
-    // }
+    createdEvent = await Mutations.createEvent(null, { payload: eventInfo }, { loggedUser })
+    createdPet = {
+      ...createdPet,
+      events: [createdEvent._id] as MongooseId[]
+    } as PetDocument
   })
 
   afterAll(async () => await clearAllTables())
@@ -82,28 +84,44 @@ describe('[Relationships]', () => {
   describe('[Pet]', () => {
     test('user', async () => {
       const testUserRes = await Relationships.Pet.user({ user: createdPet.user.toString() })
-      checkObjectData(loggedUser, testUserRes as unknown as UserCreateResponse)
+      const formatterUser = {
+        ...testUserRes?.toJSON(),
+        token: testUserRes?.tokens[0].token
+      }
+      checkObjectData(loggedUser, formatterUser as UserCreateResponse)
     })
 
     test('petType', async () => {
       const testPetTypeRes = await Relationships.Pet.petType({
         petType: selectedPetType.id.toString()
       })
-      checkObjectData(selectedPetType, testPetTypeRes)
+      const formattedPetType = {
+        id: (selectedPetType._id as MongooseId).toString(),
+        name: selectedPetType.name
+      }
+      checkObjectData(formattedPetType, testPetTypeRes)
     })
 
     test('hairColors', async () => {
       const testHairColorsRes = await Relationships.Pet.hairColors({
         hairColors: selectedColor.id.toString()
       })
-      checkObjectData(selectedColor, testHairColorsRes)
+      const formattedHairColor = {
+        id: (selectedColor._id as MongooseId).toString(),
+        name: selectedColor.name
+      }
+      checkObjectData(formattedHairColor, testHairColorsRes)
     })
 
     test('eyeColors', async () => {
       const testEyeColorsRes = await Relationships.Pet.eyeColors({
         eyeColors: selectedColor.id.toString()
       })
-      checkObjectData(selectedColor, testEyeColorsRes)
+      const formattedEyeColor = {
+        id: (selectedColor._id as MongooseId).toString(),
+        name: selectedColor.name
+      }
+      checkObjectData(formattedEyeColor, testEyeColorsRes)
     })
 
     // test('events', async () => {
