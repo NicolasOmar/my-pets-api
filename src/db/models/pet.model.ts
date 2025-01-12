@@ -1,7 +1,9 @@
 import { model, Schema } from 'mongoose'
 // import validator from 'validator'
+// INTERFACES
+import { PetDocument } from '@interfaces/pet'
 // FUNCTIONS
-import { parseErrorMsg } from '../../functions/parsers'
+import { parseErrorMsg } from '@functions/parsers'
 
 // const validateDate = (value, field, beforeDate = null) => {
 //   if (value) {
@@ -14,7 +16,7 @@ import { parseErrorMsg } from '../../functions/parsers'
 //   }
 // }
 
-const petSchema = new Schema({
+const petSchema = new Schema<PetDocument>({
   name: {
     type: String,
     required: [true, parseErrorMsg.missingValue('Name', 'Pet')],
@@ -47,7 +49,7 @@ const petSchema = new Schema({
     type: Number
   },
   gender: {
-    type: String,
+    type: Boolean,
     required: [true, parseErrorMsg.missingValue('Gender', 'Pet')]
   },
   hairColors: {
@@ -77,6 +79,6 @@ const petSchema = new Schema({
   }
 })
 
-const Pet = model('Pet', petSchema)
+const Pet = model<PetDocument>('Pet', petSchema)
 
 export default Pet

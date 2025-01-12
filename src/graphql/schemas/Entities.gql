@@ -1,3 +1,8 @@
+## USERS
+type Token {
+  token: String!
+}
+
 type User {
   id: ID!
   name: String!
@@ -5,10 +10,11 @@ type User {
   userName: String
   email: String!
   password: String
-  token: String!
+  tokens: [Token]!
   pets: [Pet]!
 }
 
+## PETS
 type Pet {
   id: ID!
   name: String!
@@ -19,7 +25,7 @@ type Pet {
   height: Float
   length: Float
   weight: Float
-  gender: String!
+  gender: Boolean!
   hairColors: [AuxiliaryData]
   hasHeterochromia: Boolean
   eyeColors: [AuxiliaryData]
@@ -28,6 +34,15 @@ type Pet {
   events: [Event]
 }
 
+## EVENT
+type Event {
+  id: ID!
+  description: String!
+  date: String!
+  associatedPets: [Pet]!
+}
+
+## OTHER
 type AuxiliaryData {
   id: ID!
   name: String!
@@ -36,11 +51,4 @@ type AuxiliaryData {
 type AmountData {
   name: String!
   quantity: Int!
-}
-
-type Event {
-  id: ID!
-  description: String!
-  date: String!
-  associatedPets: [Pet]!
 }

@@ -106,3 +106,4 @@ dist
 .DS_Store
 !*.env
 build/
+src/graphql/generated

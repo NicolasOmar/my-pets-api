@@ -1,0 +1,20 @@
+## USERS
+type UserResponseBase {
+  name: String!
+  lastName: String!
+  userName: String!
+  email: String!
+}
+
+type LoginUserResponse {
+  loggedUser: UserResponseBase!
+  token: String!
+}
+
+type UserCreateResponse {
+  name: String!
+  lastName: String!
+  userName: String!
+  email: String!
+  token: String!
+}

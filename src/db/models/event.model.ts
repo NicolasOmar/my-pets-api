@@ -1,6 +1,8 @@
 import { Schema, model } from 'mongoose'
+// INTERFACES
+import { EventDocument } from '@interfaces/event'
 // FUNCTIONS
-import { parseErrorMsg } from '../../functions/parsers'
+import { parseErrorMsg } from '@functions/parsers'
 
 const eventSchema = new Schema({
   description: {
@@ -10,7 +12,7 @@ const eventSchema = new Schema({
     maxlength: [200, parseErrorMsg.minMaxValue('Name', 200, false)]
   },
   date: {
-    type: String,
+    type: Date,
     required: [true, parseErrorMsg.missingValue('Date', 'Event')]
   },
   associatedPets: {
@@ -20,6 +22,6 @@ const eventSchema = new Schema({
   }
 })
 
-const Event = model('Event', eventSchema)
+const Event = model<EventDocument>('Event', eventSchema)
 
 export default Event

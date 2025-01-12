@@ -1,0 +1,47 @@
+## USERS
+input UserLoginPayload {
+  email: String!,
+  password: String!
+}
+
+input UserCreatePayload {
+  name: String!
+  lastName: String!
+  userName: String!
+  email: String!
+  password: String!
+}
+
+input UserUpdatePayload {
+  name: String!,
+  lastName: String!
+}
+
+input UserPassUpdatePayload {
+  oldPass: String!,
+  newPass: String!
+}
+
+## PETS
+input PetCreatePayload {
+  name: String!
+  petType: ID!
+  birthday: String
+  isAdopted: Boolean!
+  adoptionDate: String
+  height: Float!
+  length: Float!
+  weight: Float!
+  gender: Boolean!
+  hairColors: [ID!]
+  eyeColors: [ID!]
+  hasHeterochromia: Boolean!
+  passedAway: Boolean!
+}
+
+## EVENTS
+input EventCreatePayload {
+  description: String!
+  date: String!
+  associatedPets: [ID]!
+}
