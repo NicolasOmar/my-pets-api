@@ -13,7 +13,7 @@ import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
 // SCHEMAS SPLITED BY CONCERNS
 const EntityTypes = readFileSync('./src/graphql/schemas/Entities.gql', { encoding: 'utf-8' })
 const PayloadTypes = readFileSync('./src/graphql/schemas/Payloads.gql', { encoding: 'utf-8' })
-const ResponseTypes = readFileSync('./src/graphql/schemas/responses.gql', { encoding: 'utf-8' })
+const ResponseTypes = readFileSync('./src/graphql/schemas/Responses.gql', { encoding: 'utf-8' })
 const OperationTypes = readFileSync('./src/graphql/schemas/Operations.gql', { encoding: 'utf-8' })
 
 const server = new ApolloServer({
