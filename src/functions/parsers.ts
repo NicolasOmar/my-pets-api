@@ -1,5 +1,5 @@
 // INTERFACES
-import { Model } from 'mongoose'
+import mongoose, { Model } from 'mongoose'
 import {
   MongooseDate,
   MongooseId,
@@ -7,6 +7,8 @@ import {
   EntityObject,
   EntityDocument
 } from '@interfaces/shared'
+// CONSTANTS
+import { ERROR_MSGS, SERVER_MSGS } from '@constants/errors'
 
 interface FindByTsIdsParams {
   model: Model<EntityDocument>
@@ -81,4 +83,27 @@ export const parseUniqueArray: <ListType, CallbackType>({
 export const generateMongooseDate = () => {
   const date = new Date().toJSON().split('T')[0]
   return date as unknown as MongooseDate
+}
+
+export const parseErrorMessage: (error: unknown, entityName?: string) => string = (
+  error,
+  entityName
+) => {
+  const { message } = error as mongoose.Error
+  const failedValidationMsg = `${entityName ?? 'Entity'} ${SERVER_MSGS.FAILED_VALIDATION}`
+
+  if (message.startsWith(SERVER_MSGS.IS_DUPLICATED)) {
+    return parseErrorMsg.alreadyExists(entityName)
+  }
+
+  if (message.split(failedValidationMsg).length > 1) {
+    return message.split(': ')[2]
+  }
+
+  switch (message) {
+    case SERVER_MSGS.MISSING_ENCRYPTION:
+      return ERROR_MSGS.NEEDS_ENCRYPTION
+    default:
+      return message
+  }
 }

@@ -1,5 +1,7 @@
-export enum MONGO_CODES {
-  ALREADY_CREATED = 11000
+export enum SERVER_MSGS {
+  IS_DUPLICATED = 'E11000 duplicate key error collection:',
+  MISSING_ENCRYPTION = 'Malformed UTF-8 data',
+  FAILED_VALIDATION = 'validation failed:'
 }
 
 export enum ERROR_MSGS {
@@ -7,11 +9,12 @@ export enum ERROR_MSGS {
   EMAIL = 'The user needs a valid mail format (@site.com) to be created',
   UPDATES = 'Invalid update data',
   LOGIN = 'Your email and/or password is incorrect. Try again with other credentials',
-  PASSWORD = 'The provided password is not the current one. Try again with the correct one',
-  NON_ENCRYPTED_DATA = 'Malformed UTF-8 data',
+  PROVIDED_PASSWORDS = 'The provided passwords are not correct. Try again with the correct ones',
+  NEEDS_ENCRYPTION = 'It seems your data is not correctly encrypted. Please contact your administrator',
   AUTHENTICATE = 'Please authenticate to keep using the app',
   MISSING_USER_DATA = 'Missing user data',
-  MISSING_PET_DATA = 'There is no such Pet with the name provided'
+  MISSING_PET_DATA = 'There is no such Pet with the name provided',
+  DUPLICATED_ENTITY = 'Is duplicated'
 }
 
 export enum HTTP_CODES {

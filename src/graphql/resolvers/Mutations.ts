@@ -1,11 +1,11 @@
-import mongoose, { Error } from 'mongoose'
+import mongoose from 'mongoose'
 import { ApolloError } from 'apollo-server-errors'
 // DB MODELS
 import User from '@models/user.model'
 import Pet from '@models/pet.model'
 import Event from '@models/event.model'
 // FUNCTIONS
-import { parseErrorMsg } from '@functions/parsers'
+import { parseErrorMessage, parseErrorMsg } from '@functions/parsers'
 import { decryptPass } from '@functions/encrypt'
 // INTERFACES
 import {
@@ -43,7 +43,8 @@ const Mutations: MutationsInterface = {
 
       return { loggedUser: userLogged.toJSON() as LoggedUser, token }
     } catch (error) {
-      throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
+      const errorMsg = parseErrorMessage(error)
+      throw new ApolloError(errorMsg, HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
   createUser: async (_, { payload }) => {
@@ -64,7 +65,8 @@ const Mutations: MutationsInterface = {
         token
       }
     } catch (error) {
-      throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
+      const errorMsg = parseErrorMessage(error, 'User')
+      throw new ApolloError(errorMsg, HTTP_CODES.INTERNAL_ERROR_SERVER)
     }
   },
   updateUser: async (_, { payload }, context) => {
@@ -85,7 +87,8 @@ const Mutations: MutationsInterface = {
           token: context.token ?? ''
         }
       } catch (error) {
-        throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
+        const errorMsg = parseErrorMessage(error)
+        throw new ApolloError(errorMsg, HTTP_CODES.INTERNAL_ERROR_SERVER)
       }
     }
   },
@@ -94,7 +97,7 @@ const Mutations: MutationsInterface = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
     } else {
       if (!payload.oldPass) {
-        throw new ApolloError(ERROR_MSGS.PASSWORD, HTTP_CODES.NOT_FOUND)
+        throw new ApolloError(ERROR_MSGS.PROVIDED_PASSWORDS, HTTP_CODES.NOT_FOUND)
       }
 
       try {
@@ -108,9 +111,7 @@ const Mutations: MutationsInterface = {
 
         return true
       } catch (error) {
-        const parsedError = error as Error
-        const errorMsg =
-          parsedError.message === ERROR_MSGS.LOGIN ? ERROR_MSGS.PASSWORD : parsedError.message
+        const errorMsg = parseErrorMessage(error, 'User')
         throw new ApolloError(errorMsg, HTTP_CODES.INTERNAL_ERROR_SERVER)
       }
     }
