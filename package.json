@@ -1,6 +1,6 @@
 {
   "name": "my-pets-api",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "description": "GraphQL server based on NodeJs to give back-end support a web client based on React",
   "author": "Nicolás Omar González Passerino",
   "license": "MIT",
@@ -53,12 +53,12 @@
     "graphql": "^16.10.0",
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.9.3",
+    "mongoose": "^8.9.4",
     "validator": "^13.12.0"
   },
   "devDependencies": {
     "@babel/register": "^7.25.9",
-    "@eslint/js": "^9.17.0",
+    "@eslint/js": "^9.18.0",
     "@graphql-codegen/cli": "^5.0.3",
     "@graphql-codegen/typescript": "^4.1.2",
     "@graphql-codegen/typescript-resolvers": "^4.4.1",
@@ -72,7 +72,7 @@
     "babel-plugin-import-graphql": "^2.8.1",
     "copyfiles": "^2.4.1",
     "env-cmd": "^10.1.0",
-    "eslint": "^9.17.0",
+    "eslint": "^9.18.0",
     "globals": "^15.14.0",
     "graphql-depth-limit": "^1.1.0",
     "husky": "^9.1.7",
@@ -84,8 +84,8 @@
     "ts-jest": "^29.2.5",
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.2",
-    "typescript-eslint": "^8.19.0"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.19.1"
   },
   "lint-staged": {
     "src/**/*.(ts|js)": [
