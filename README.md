@@ -41,28 +41,38 @@ GraphQL server based on NodeJs to give back-end support a web client based on [R
 
 ## Dependencies
 ![express dependency][badge-dependency-express]
+![typescript dependency][badge-dependency-typescript]
 ![graphql dependency][badge-dependency-graphql]
 ![apollo-server dependency][badge-dependency-apollo-server]
+![nodemon dependency][badge-dependency-nodemon]
+![hbs dependency][badge-dependency-hbs]
 ![mongoose dependency][badge-dependency-mongoose]
 ![bcryptjs dependency][badge-dependency-bcryptjs]
 ![crypto-js dependency][badge-dependency-crypto-js]
 ![babel-node dependency][badge-dependency-babel-node]
 ![jest dependency][badge-dependency-jest]
+![ts-jest dependency][badge-dependency-ts-jest]
 ![eslint dependency][badge-dependency-eslint]
 ![prettier dependency][badge-dependency-prettier]
-![nodemon dependency][badge-dependency-nodemon]
+![lint-staged dependency][badge-dependency-lint-staged]
+![husky dependency][badge-dependency-husky]
 
 [badge-dependency-express]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/express/main?logo=express
+[badge-dependency-typescript]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/typescript/main?logo=typescript
 [badge-dependency-graphql]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/graphql/main?logo=graphql
 [badge-dependency-apollo-server]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/apollo-server-express/main?logo=apollographql
+[badge-dependency-nodemon]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/nodemon/main?logo=nodemon
+[badge-dependency-hbs]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/hbs/main?logo=hbs
 [badge-dependency-mongoose]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/mongoose/main?logo=mongoose
 [badge-dependency-bcryptjs]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/bcryptjs/main
 [badge-dependency-crypto-js]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/crypto-js/main
 [badge-dependency-babel-node]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/@babel/node/main?logo=babel
 [badge-dependency-jest]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/jest/main?logo=jest
+[badge-dependency-ts-jest]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/ts-jest/main?logo=ts-jest
 [badge-dependency-eslint]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/eslint/main?logo=eslint
 [badge-dependency-prettier]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/prettier/main?logo=prettier
-[badge-dependency-nodemon]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/nodemon/main?logo=nodemon
+[badge-dependency-lint-staged]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/lint-staged/main?logo=lint-staged
+[badge-dependency-husky]: https://img.shields.io/github/package-json/dependency-version/nicolasomar/my-pets-api/dev/husky/main?logo=husky
 
 ## What do I need?
 Before cloning this repo, I recommend installing the following software:
@@ -100,9 +110,9 @@ Once you have cloned the repo, it will show you the following folders:
 - `tests:` Specific Jest configurations to test using a custom Mongoose connection.
 
 ## Find out more
-| [Project Status](https://github.com/users/NicolasOmar/projects/1/views/1) | [Storybook site](https://my-pets-storybook.netlify.app/) | [React Repo](https://github.com/NicolasOmar/my-pets) |
-| :--- | :--- | :--- |
-| Project board for project status tracking | Site dedicated to show and test all the created front-end components | React front-end repository |
+| [Project Status](https://github.com/users/NicolasOmar/projects/1/views/1) | [React Repo](https://github.com/NicolasOmar/my-pets) |
+| :--- | :--- |
+| Project board for project status tracking | React front-end repository |
 
 ## License
 **MIT**
