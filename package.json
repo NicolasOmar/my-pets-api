@@ -41,10 +41,10 @@
   },
   "dependencies": {
     "@babel/cli": "^7.26.4",
-    "@babel/core": "^7.26.0",
+    "@babel/core": "^7.26.7",
     "@babel/node": "^7.26.0",
     "@babel/plugin-transform-runtime": "^7.25.9",
-    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-env": "^7.26.7",
     "apollo-server-errors": "^3.3.1",
     "apollo-server-express": "^3.13.0",
     "bcryptjs": "^2.4.3",
@@ -58,7 +58,7 @@
   },
   "devDependencies": {
     "@babel/register": "^7.25.9",
-    "@eslint/js": "^9.18.0",
+    "@eslint/js": "^9.19.0",
     "@graphql-codegen/cli": "^5.0.3",
     "@graphql-codegen/typescript": "^4.1.2",
     "@graphql-codegen/typescript-resolvers": "^4.4.1",
@@ -66,18 +66,18 @@
     "@types/crypto-js": "^4.2.2",
     "@types/graphql-depth-limit": "^1.1.6",
     "@types/jest": "^29.5.14",
-    "@types/jsonwebtoken": "^9.0.7",
+    "@types/jsonwebtoken": "^9.0.8",
     "@types/mongoose": "^5.11.97",
     "@types/validator": "^13.12.2",
     "babel-plugin-import-graphql": "^2.8.1",
     "copyfiles": "^2.4.1",
     "env-cmd": "^10.1.0",
-    "eslint": "^9.18.0",
+    "eslint": "^9.19.0",
     "globals": "^15.14.0",
     "graphql-depth-limit": "^1.1.0",
     "husky": "^9.1.7",
     "jest": "^29.7.0",
-    "lint-staged": "^15.4.1",
+    "lint-staged": "^15.4.3",
     "nodemon": "^3.1.9",
     "npm-check-updates": "^17.1.14",
     "prettier": "^3.4.2",
@@ -85,7 +85,7 @@
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.20.0"
+    "typescript-eslint": "^8.21.0"
   },
   "lint-staged": {
     "src/**/*.(ts|js)": [
