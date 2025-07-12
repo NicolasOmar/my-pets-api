@@ -84,7 +84,7 @@
     "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3",
-    "typescript-eslint": "^8.33.1"
+    "typescript-eslint": "^8.34.1"
   },
   "lint-staged": {
     "src/**/*.(ts|js)": [
