@@ -107,3 +107,4 @@ dist
 !*.env
 build/
 src/graphql/generated
+.env
