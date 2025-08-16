@@ -12,7 +12,7 @@ jobs:
     
     steps:
     - name: 1/7 | Checkout repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
       with:
         # Disabling shallow clone is recommended for improving relevancy of reporting
         fetch-depth: 0
