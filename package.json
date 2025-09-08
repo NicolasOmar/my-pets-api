@@ -59,9 +59,9 @@
   "devDependencies": {
     "@babel/register": "^7.28.3",
     "@eslint/js": "^9.35.0",
-    "@graphql-codegen/cli": "^5.0.7",
-    "@graphql-codegen/typescript": "^4.1.6",
-    "@graphql-codegen/typescript-resolvers": "^4.5.1",
+    "@graphql-codegen/cli": "^6.0.0",
+    "@graphql-codegen/typescript": "^5.0.0",
+    "@graphql-codegen/typescript-resolvers": "^5.0.0",
     "@types/crypto-js": "^4.2.2",
     "@types/graphql-depth-limit": "^1.1.6",
     "@types/jest": "^30.0.0",
