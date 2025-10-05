@@ -60,7 +60,7 @@
     "@babel/register": "^7.28.3",
     "@eslint/js": "^9.36.0",
     "@graphql-codegen/cli": "^6.0.0",
-    "@graphql-codegen/typescript": "^5.0.0",
+    "@graphql-codegen/typescript": "^5.0.2",
     "@graphql-codegen/typescript-resolvers": "^5.0.0",
     "@types/crypto-js": "^4.2.2",
     "@types/graphql-depth-limit": "^1.1.6",
@@ -78,12 +78,12 @@
     "jest": "^30.2.0",
     "lint-staged": "^16.2.3",
     "nodemon": "^3.1.10",
-    "npm-check-updates": "^18.3.0",
+    "npm-check-updates": "^19.0.0",
     "prettier": "^3.6.2",
     "ts-jest": "^29.4.4",
     "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "typescript-eslint": "^8.44.1"
   },
   "lint-staged": {
