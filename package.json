@@ -54,7 +54,7 @@
     "hbs": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.18.2",
-    "validator": "^13.15.15"
+    "validator": "^13.15.20"
   },
   "devDependencies": {
     "@babel/register": "^7.28.3",
