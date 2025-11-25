@@ -79,7 +79,7 @@ const Queries: QueriesInterface = {
       throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
     } else {
       const foundedUser = await User.findOne({ userName: context.loggedUser.userName })
-      const petPopulation = await Pet.find({ user: foundedUser?.id })
+      const petPopulation = await Pet.find({ user: foundedUser?._id })
 
       if (petPopulation.length === 0) {
         return [{ name: 'All', quantity: 0 }]

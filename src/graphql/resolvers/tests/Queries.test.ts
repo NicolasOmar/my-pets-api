@@ -20,7 +20,7 @@ import { MongooseId } from '@interfaces/shared'
 
 const parseDocumentToSimple = (document: PetDocument) => ({
   name: document.name,
-  petType: document.petType.toString(),
+  petType: document.petType,
   birthday: document.birthday,
   isAdopted: document.isAdopted,
   adoptionDate: document.adoptionDate,
@@ -28,8 +28,8 @@ const parseDocumentToSimple = (document: PetDocument) => ({
   length: document.length,
   weight: document.weight,
   gender: document.gender,
-  hairColors: document.hairColors.map(color => color.toString()),
-  eyeColors: document.eyeColors.map(color => color.toString()),
+  hairColors: document.hairColors.map(color => color),
+  eyeColors: document.eyeColors.map(color => color),
   hasHeterochromia: document.hasHeterochromia,
   passedAway: document.passedAway
 })
@@ -58,9 +58,9 @@ describe('[Queries]', () => {
     petInfo = {
       payload: {
         ...mocks.testEnv.pet,
-        petType: petTypeId.id,
-        hairColors: [colorId.id],
-        eyeColors: [colorId.id]
+        petType: petTypeId._id,
+        hairColors: [colorId._id],
+        eyeColors: [colorId._id]
       }
     }
 
@@ -147,7 +147,7 @@ describe('[Queries]', () => {
       test('Should return one of my pets', async () => {
         const getPetInfo = await Query.getPet(
           null,
-          { petId: createdPet._id as string },
+          { petId: createdPet._id.toString() },
           { loggedUser }
         )
 
@@ -161,7 +161,7 @@ describe('[Queries]', () => {
     describe('[SAD PATH]', () => {
       test('Should return a USER_MISSING_DATA error by not passing the loggedUser', async () => {
         try {
-          await Query.getPet(null, { petId: createdPet._id as string })
+          await Query.getPet(null, { petId: createdPet._id.toString() })
         } catch (error) {
           expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
@@ -208,7 +208,7 @@ describe('[Queries]', () => {
       test('Should return the list of events', async () => {
         const getEventsInfo = await Query.getMyPetEvents(
           null,
-          { petId: createdPet._id as string },
+          { petId: createdPet._id.toString() },
           { loggedUser }
         )
         expect(mocks.testEnv.event.description).toStrictEqual(getEventsInfo[0].description)
@@ -218,7 +218,7 @@ describe('[Queries]', () => {
     describe('[SAD PATH]', () => {
       test('Should return a USER_MISSING_DATA error by not passing the loggedUser', async () => {
         try {
-          await Query.getMyPetEvents(null, { petId: createdPet._id as string })
+          await Query.getMyPetEvents(null, { petId: createdPet._id.toString() })
         } catch (error) {
           expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }

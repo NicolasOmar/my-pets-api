@@ -270,16 +270,16 @@ describe('[Mutations]', () => {
     let petInfo: PetCreatePayload
 
     beforeAll(async () => {
-      const colorId = (await Queries.getColors()).map(({ id }) => ({ id }))[0]
-      const petTypeId = (await Queries.getPetTypes()).map(({ id }) => ({ id }))[0]
+      const colorId = (await Queries.getColors()).map(({ _id }) => ({ _id }))[0]
+      const petTypeId = (await Queries.getPetTypes()).map(({ _id }) => ({ _id }))[0]
       const createdUser = await Mutations.createUser(null, { payload: newUser })
 
       petInfo = {
         payload: {
           ...mocks.testEnv.pet,
-          petType: petTypeId.id,
-          hairColors: [colorId.id],
-          eyeColors: [colorId.id]
+          petType: petTypeId._id,
+          hairColors: [colorId._id],
+          eyeColors: [colorId._id]
         }
       }
       loggedUser = createdUser
@@ -340,13 +340,13 @@ describe('[Mutations]', () => {
 
       petInfo = {
         ...mocks.testEnv.pet,
-        petType: petTypeList[0].id,
-        hairColors: [colorList[0].id],
-        eyeColors: [petTypeList[0].id]
+        petType: petTypeList[0]._id,
+        hairColors: [colorList[0]._id],
+        eyeColors: [petTypeList[0]._id]
       }
 
       const createdPet = await Mutations.createPet(null, { payload: petInfo }, { loggedUser })
-      modifiedPet = await Queries.getPet(null, { petId: createdPet._id as string }, { loggedUser })
+      modifiedPet = await Queries.getPet(null, { petId: createdPet._id.toString() }, { loggedUser })
     })
 
     afterAll(async () => {
@@ -361,13 +361,13 @@ describe('[Mutations]', () => {
 
         await Mutations.updatePet(
           null,
-          { id: modifiedPet._id as string, payload: nameModified },
+          { id: modifiedPet._id.toString(), payload: nameModified },
           { loggedUser }
         )
 
         const updatedPet = await Queries.getPet(
           null,
-          { petId: modifiedPet._id as string },
+          { petId: modifiedPet._id.toString() },
           { loggedUser }
         )
         expect(updatedPet.name).toBe(nameToUpdate)
@@ -383,7 +383,7 @@ describe('[Mutations]', () => {
             name: nameToUpdate
           } as PetDocument
 
-          await Mutations.updatePet(null, { id: modifiedPet._id as string, payload: nameModified })
+          await Mutations.updatePet(null, { id: modifiedPet._id.toString(), payload: nameModified })
         } catch (error) {
           expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
@@ -397,16 +397,16 @@ describe('[Mutations]', () => {
               payload: {
                 ...mocks.testEnv.pet,
                 name: 'This is modified',
-                petType: petTypeList[0].id,
-                hairColors: [colorList[0].id],
-                eyeColors: [petTypeList[0].id]
+                petType: petTypeList[0]._id,
+                hairColors: [colorList[0]._id],
+                eyeColors: [petTypeList[0]._id]
               }
             },
             { loggedUser }
           )
           const secondFindedPet = await Queries.getPet(
             null,
-            { petId: secondPetCreated._id as string },
+            { petId: secondPetCreated._id.toString() },
             { loggedUser }
           )
           const updatedSecondPet = {
@@ -416,7 +416,7 @@ describe('[Mutations]', () => {
 
           await Mutations.updatePet(
             null,
-            { id: secondPetCreated.id, payload: updatedSecondPet },
+            { id: secondPetCreated._id.toString(), payload: updatedSecondPet },
             { loggedUser }
           )
         } catch (error) {
@@ -443,13 +443,13 @@ describe('[Mutations]', () => {
 
       petInfo = {
         ...mocks.testEnv.pet,
-        petType: petTypeList[0].id,
-        hairColors: [colorList[0].id],
-        eyeColors: [petTypeList[0].id]
+        petType: petTypeList[0]._id,
+        hairColors: [colorList[0]._id],
+        eyeColors: [petTypeList[0]._id]
       }
 
       const createdPet = await Mutations.createPet(null, { payload: petInfo }, { loggedUser })
-      _id = (await Queries.getPet(null, { petId: createdPet._id as string }, { loggedUser }))
+      _id = (await Queries.getPet(null, { petId: createdPet._id.toString() }, { loggedUser }))
         ._id as MongooseId
 
       eventToCreate = {

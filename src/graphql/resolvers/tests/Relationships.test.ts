@@ -47,9 +47,9 @@ describe('[Relationships]', () => {
 
     const petInfo = {
       ...mocks.testEnv.pet,
-      petType: petType.id,
-      hairColors: [color.id],
-      eyeColors: [color.id]
+      petType: petType._id,
+      hairColors: [color._id],
+      eyeColors: [color._id]
     }
 
     selectedPetType = petType
@@ -93,10 +93,10 @@ describe('[Relationships]', () => {
 
     test('petType', async () => {
       const testPetTypeRes = await Relationships.Pet.petType({
-        petType: selectedPetType.id.toString()
+        petType: selectedPetType._id.toString()
       })
       const formattedPetType = {
-        id: (selectedPetType._id as MongooseId).toString(),
+        id: selectedPetType._id,
         name: selectedPetType.name
       }
       checkObjectData(formattedPetType, testPetTypeRes)
@@ -104,10 +104,10 @@ describe('[Relationships]', () => {
 
     test('hairColors', async () => {
       const testHairColorsRes = await Relationships.Pet.hairColors({
-        hairColors: selectedColor.id.toString()
+        hairColors: selectedColor._id.toString()
       })
       const formattedHairColor = {
-        id: (selectedColor._id as MongooseId).toString(),
+        id: selectedColor._id,
         name: selectedColor.name
       }
       checkObjectData(formattedHairColor, testHairColorsRes)
@@ -115,10 +115,10 @@ describe('[Relationships]', () => {
 
     test('eyeColors', async () => {
       const testEyeColorsRes = await Relationships.Pet.eyeColors({
-        eyeColors: selectedColor.id.toString()
+        eyeColors: selectedColor._id.toString()
       })
       const formattedEyeColor = {
-        id: (selectedColor._id as MongooseId).toString(),
+        id: selectedColor._id,
         name: selectedColor.name
       }
       checkObjectData(formattedEyeColor, testEyeColorsRes)

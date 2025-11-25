@@ -59,7 +59,7 @@ export const findByIds: (
       : []
   } else {
     const findedUnit = (await model.findOne({ _id: ids }, parser)) as EntityDocument
-    return { id: findedUnit.id as MongooseId, name: findedUnit.name } as EntityObject
+    return { id: findedUnit._id, name: findedUnit.name } as EntityObject
   }
 }
 
