@@ -1,4 +1,4 @@
-import { ApolloError } from 'apollo-server-errors'
+import { GraphQLError } from 'graphql'
 // MODELS
 import Color from '@models/color.model'
 import PetType from '@models/petType.model'
@@ -46,7 +46,9 @@ const Queries: QueriesInterface = {
   getColors: async () => await Color.find(),
   getMyPets: async (_, search, context) => {
     if (!context?.loggedUser) {
-      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
     } else {
       const userResponse = await User.findOne({ userName: context.loggedUser.userName })
       const petFindQuery =
@@ -59,24 +61,32 @@ const Queries: QueriesInterface = {
   },
   getPet: async (_, { petId }, context) => {
     if (!context?.loggedUser) {
-      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
     }
 
     if (petId === '') {
-      throw new ApolloError(ERROR_MSGS.MISSING_PET_DATA, HTTP_CODES.NOT_FOUND.toString())
+      throw new GraphQLError(ERROR_MSGS.MISSING_PET_DATA, {
+        extensions: { code: HTTP_CODES.NOT_FOUND }
+      })
     }
 
     const foundedPet = await Pet.findOne({ _id: petId })
 
     if (!foundedPet) {
-      throw new ApolloError(ERROR_MSGS.MISSING_PET_DATA, HTTP_CODES.NOT_FOUND.toString())
+      throw new GraphQLError(ERROR_MSGS.MISSING_PET_DATA, {
+        extensions: { code: HTTP_CODES.NOT_FOUND }
+      })
     }
 
     return foundedPet as PetDocument
   },
   getMyPetsPopulation: async (_, __, context) => {
     if (!context?.loggedUser) {
-      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
     } else {
       const foundedUser = await User.findOne({ userName: context.loggedUser.userName })
       const petPopulation = await Pet.find({ user: foundedUser?._id })
@@ -109,11 +119,15 @@ const Queries: QueriesInterface = {
   },
   getMyPetEvents: async (_, { petId }, context) => {
     if (!context?.loggedUser) {
-      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
     }
 
     if (petId === '') {
-      throw new ApolloError(ERROR_MSGS.MISSING_PET_DATA, HTTP_CODES.NOT_FOUND.toString())
+      throw new GraphQLError(ERROR_MSGS.MISSING_PET_DATA, {
+        extensions: { code: HTTP_CODES.NOT_FOUND }
+      })
     }
 
     return await Event.find({ associatedPets: petId })

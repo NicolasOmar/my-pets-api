@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { ApolloError } from 'apollo-server-errors'
+import { GraphQLError } from 'graphql'
 // DB MODELS
 import User from '@models/user.model'
 import Pet from '@models/pet.model'
@@ -44,7 +44,9 @@ const Mutations: MutationsInterface = {
       return { loggedUser: userLogged.toJSON() as LoggedUser, token }
     } catch (error) {
       const errorMsg = parseErrorMessage(error)
-      throw new ApolloError(errorMsg, HTTP_CODES.INTERNAL_ERROR_SERVER)
+      throw new GraphQLError(errorMsg, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
     }
   },
   createUser: async (_, { payload }) => {
@@ -66,12 +68,16 @@ const Mutations: MutationsInterface = {
       }
     } catch (error) {
       const errorMsg = parseErrorMessage(error, 'User')
-      throw new ApolloError(errorMsg, HTTP_CODES.INTERNAL_ERROR_SERVER)
+      throw new GraphQLError(errorMsg, {
+        extensions: { code: HTTP_CODES.INTERNAL_ERROR_SERVER }
+      })
     }
   },
   updateUser: async (_, { payload }, context) => {
     if (!context?.loggedUser) {
-      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
     } else {
       try {
         const userLogged = await User.findOneAndUpdate(
@@ -88,16 +94,22 @@ const Mutations: MutationsInterface = {
         }
       } catch (error) {
         const errorMsg = parseErrorMessage(error)
-        throw new ApolloError(errorMsg, HTTP_CODES.INTERNAL_ERROR_SERVER)
+        throw new GraphQLError(errorMsg, {
+          extensions: { code: HTTP_CODES.INTERNAL_ERROR_SERVER }
+        })
       }
     }
   },
   updatePass: async (_, { payload }, context) => {
     if (!context?.loggedUser) {
-      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
     } else {
       if (!payload.oldPass) {
-        throw new ApolloError(ERROR_MSGS.PROVIDED_PASSWORDS, HTTP_CODES.NOT_FOUND)
+        throw new GraphQLError(ERROR_MSGS.PROVIDED_PASSWORDS, {
+          extensions: { code: HTTP_CODES.NOT_FOUND }
+        })
       }
 
       try {
@@ -112,13 +124,17 @@ const Mutations: MutationsInterface = {
         return true
       } catch (error) {
         const errorMsg = parseErrorMessage(error, 'User')
-        throw new ApolloError(errorMsg, HTTP_CODES.INTERNAL_ERROR_SERVER)
+        throw new GraphQLError(errorMsg, {
+          extensions: { code: HTTP_CODES.INTERNAL_ERROR_SERVER }
+        })
       }
     }
   },
   logout: async (_, __, context) => {
     if (!context?.loggedUser || !context?.token) {
-      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
     } else {
       try {
         const userWitCredentials = (await User.find({ email: context.loggedUser.email }))[0]
@@ -128,13 +144,17 @@ const Mutations: MutationsInterface = {
         await userWitCredentials.save()
         return true
       } catch (error) {
-        throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
+        throw new GraphQLError((error as mongoose.Error).message, {
+          extensions: { code: HTTP_CODES.INTERNAL_ERROR_SERVER }
+        })
       }
     }
   },
   createPet: async (_, { payload }, context) => {
     if (!context?.loggedUser) {
-      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
     } else {
       // if (!checkAllowedUpdates(payload, ALLOWED_CREATE.PET)) {
       //   throw new ApolloError(ERROR_MSGS.UPDATES, HTTP_CODES.UNPROCESSABLE_ENTITY)
@@ -146,10 +166,9 @@ const Mutations: MutationsInterface = {
       })
 
       if (petAlreadyCreated) {
-        throw new ApolloError(
-          parseErrorMsg.alreadyExists('Pet', ' with this name and pet type'),
-          HTTP_CODES.INTERNAL_ERROR_SERVER
-        )
+        throw new GraphQLError(parseErrorMsg.alreadyExists('Pet', ' with this name and pet type'), {
+          extensions: { code: HTTP_CODES.INTERNAL_ERROR_SERVER }
+        })
       }
 
       const findedUser = await User.findOne({ userName: context.loggedUser.userName })
@@ -164,25 +183,33 @@ const Mutations: MutationsInterface = {
 
         return parsedNewPet.toJSON()
       } catch (error) {
-        throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
+        throw new GraphQLError((error as mongoose.Error).message, {
+          extensions: { code: HTTP_CODES.INTERNAL_ERROR_SERVER }
+        })
       }
     }
   },
   updatePet: async (_, { id, payload }, context) => {
     if (!context?.loggedUser) {
-      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
     } else {
       try {
         const response = await Pet.findOneAndUpdate({ _id: id }, { ...payload })
         return response ? true : false
       } catch (error) {
-        throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
+        throw new GraphQLError((error as mongoose.Error).message, {
+          extensions: { code: HTTP_CODES.INTERNAL_ERROR_SERVER }
+        })
       }
     }
   },
   createEvent: async (_, { payload }, context) => {
     if (!context?.loggedUser) {
-      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED)
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
     } else {
       try {
         const parsedNewEvent = new Event(payload)
@@ -195,7 +222,9 @@ const Mutations: MutationsInterface = {
 
         return parsedNewEvent.toJSON()
       } catch (error) {
-        throw new ApolloError((error as mongoose.Error).message, HTTP_CODES.INTERNAL_ERROR_SERVER)
+        throw new GraphQLError((error as mongoose.Error).message, {
+          extensions: { code: HTTP_CODES.INTERNAL_ERROR_SERVER }
+        })
       }
     }
   }
