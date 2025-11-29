@@ -9,9 +9,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "saturday"
+      day: "sunday"
       time: "09:30"
-      timezone: "America/Argentina/Cordoba"
+      timezone: "Europe/Madrid"
     assignees:
       - "nicolasomar"
     target-branch: "main"
@@ -21,9 +21,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "saturday"
+      day: "sunday"
       time: "09:30"
-      timezone: "America/Argentina/Cordoba"
+      timezone: "Europe/Madrid"
     assignees:
       - "nicolasomar"
     target-branch: "main"
