@@ -11,7 +11,8 @@
       "@models/*": ["src/db/models/*"],
       "@resolvers/*": ["src/graphql/resolvers/*"],
       "@schemas/*": ["src/graphql/schemas/*"],
-      "@interfaces/*": ["src/interfaces/*"]
+      "@interfaces/*": ["src/interfaces/*"],
+      "graphql": ["node_modules/graphql"]
     },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     "typeRoots": ["node_modules/@types", "globals"],                                  /* Specify multiple folders that act like './node_modules/@types'. */
     "resolveJsonModule": true,                        /* Enable importing .json files. */

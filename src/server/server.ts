@@ -1,44 +1,33 @@
-import { ApolloServer, ApolloError } from 'apollo-server-express'
-import jwt from 'jsonwebtoken'
-import depthLimit from 'graphql-depth-limit'
+// npm install @apollo/server express graphql cors
+import { ApolloServer } from '@apollo/server'
+import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer'
+import express from 'express'
+import http from 'http'
 import { readFileSync } from 'fs'
 // RESOLVERS SPLITED BY OPERATIONS
 import Query from '@resolvers/Queries'
 import Mutation from '@resolvers/Mutations'
 import Relationships from '@resolvers/Relationships'
 // MODELS
-import User from '../db/models/user.model'
+// import User from '../db/models/user.model'
 // CONSTANTS
-import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
+// import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
 // SCHEMAS SPLITED BY CONCERNS
 const EntityTypes = readFileSync('./src/graphql/schemas/Entities.gql', { encoding: 'utf-8' })
 const PayloadTypes = readFileSync('./src/graphql/schemas/Payloads.gql', { encoding: 'utf-8' })
 const ResponseTypes = readFileSync('./src/graphql/schemas/Responses.gql', { encoding: 'utf-8' })
 const OperationTypes = readFileSync('./src/graphql/schemas/Operations.gql', { encoding: 'utf-8' })
 
-const server = new ApolloServer({
+interface MyContext {
+  token?: string
+}
+
+const app = express()
+const httpServer = http.createServer(app)
+const server = new ApolloServer<MyContext>({
   typeDefs: [EntityTypes, PayloadTypes, ResponseTypes, OperationTypes],
   resolvers: { Query, Mutation, ...Relationships },
-  context: async ({ req }) => {
-    const token = req.headers['authorization']
-      ? req.headers['authorization'].replace('Bearer ', '')
-      : null
-
-    if (!token) return
-
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET ?? '')
-    const loggedUser = await User.findOne({
-      _id: (decodedToken as jwt.JwtPayload)._id,
-      'tokens.token': token
-    })
-
-    if (!loggedUser || !token) {
-      throw new ApolloError(ERROR_MSGS.MISSING_USER_DATA, HTTP_CODES.UNAUTHORIZED.toString())
-    }
-
-    return { loggedUser, token }
-  },
-  validationRules: [depthLimit(3)]
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
 })
 
-export default server
+export { server, httpServer, app }
