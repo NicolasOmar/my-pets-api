@@ -1,16 +1,21 @@
 // EXPRESS INSTANCE
-import app from '../src/server/app'
+import { expressMiddleware } from '@as-integrations/express5'
 // APOLLO SERVER INSTANCE
-import server from '../src/server/server'
+import { app, server } from '../dist/server/server'
 // FUNCTIONS
-import { clearAllTables, populateTable } from '../src/functions/dbOps'
+import { clearAllTables, populateTable } from '../dist/functions/dbOps'
+import '../dist/db/mongoose'
 
 const runDbGenerator = async () => {
   const [_, __, closeTime = null] = process.argv
   const exitIn = (closeTime !== 0 && closeTime > 0 && !!closeTime && +closeTime) || 5
 
   await server.start()
-  server.applyMiddleware({ app })
+
+  app.use(
+    '/graphql',
+    expressMiddleware(server)
+  )
 
   console.log('Database population process started')
 

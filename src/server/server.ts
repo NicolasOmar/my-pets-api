@@ -8,6 +8,7 @@ import { readFileSync } from 'fs'
 import Query from '@resolvers/Queries'
 import Mutation from '@resolvers/Mutations'
 import Relationships from '@resolvers/Relationships'
+import { User } from 'src/graphql/generated/resolved'
 // MODELS
 // import User from '../db/models/user.model'
 // CONSTANTS
@@ -18,13 +19,14 @@ const PayloadTypes = readFileSync('./src/graphql/schemas/Payloads.gql', { encodi
 const ResponseTypes = readFileSync('./src/graphql/schemas/Responses.gql', { encoding: 'utf-8' })
 const OperationTypes = readFileSync('./src/graphql/schemas/Operations.gql', { encoding: 'utf-8' })
 
-interface MyContext {
+interface AuthContext {
+  loggedUser?: User
   token?: string
 }
 
 const app = express()
 const httpServer = http.createServer(app)
-const server = new ApolloServer<MyContext>({
+const server = new ApolloServer<AuthContext>({
   typeDefs: [EntityTypes, PayloadTypes, ResponseTypes, OperationTypes],
   resolvers: { Query, Mutation, ...Relationships },
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]

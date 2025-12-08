@@ -29,7 +29,7 @@
     "test:clean:ci": "npm run test:clear:cache && npm run test:ci",
     "env:local": "env-cmd -f ./env/local.env",
     "env:test": "env-cmd -f ./env/test.env",
-    "db:create": "npm run env:local -- babel-node scripts/generate-db.js",
+    "db:create:local": "npm run build && npm run env:local -- babel-node scripts/generate-db.js",
     "setup": "npm ci && husky install",
     "lint": "eslint --max-warnings 0",
     "prettier": "prettier src/**/*.ts --check",

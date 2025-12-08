@@ -1,6 +1,8 @@
 import express from 'express'
 import cors from 'cors'
 import { expressMiddleware } from '@as-integrations/express5'
+import jwt from 'jsonwebtoken'
+import { GraphQLError } from 'graphql'
 // import path from 'path'
 import 'hbs'
 // // EXPRESS INSTANCE
@@ -17,6 +19,11 @@ import { server, httpServer, app } from './server/server'
 // app.set('views', viewsPath)
 // // SETUP STATIC DIRECTORY TO SERVE
 // app.use(express.static(publicPath))
+// MONGOOSE MODELS
+import User from '@models/user.model'
+// CONSTANTS
+import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
+// DATABASE CONNECTION
 import './db/mongoose'
 
 const startServer = async () => {
@@ -40,7 +47,28 @@ const startServer = async () => {
     cors<cors.CorsRequest>(),
     express.json(),
     expressMiddleware(server, {
-      context: async ({ req }) => ({ token: req.headers.token })
+      context: async ({ req }) => {
+        const token = req.headers['authorization']
+          ? req.headers['authorization'].replace('Bearer ', '')
+          : null
+
+        if (!token) return {}
+
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET ?? '')
+        const loggedUser = await User.findOne({
+          _id: (decodedToken as jwt.JwtPayload)._id,
+          'tokens.token': token
+        })
+        console.warn(req.headers['authorization'], loggedUser)
+
+        if (!loggedUser || !token) {
+          throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+            extensions: { code: HTTP_CODES.UNAUTHORIZED }
+          })
+        }
+
+        return { loggedUser, token }
+      }
     })
   )
 
