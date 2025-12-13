@@ -24,8 +24,6 @@ const parseDocumentToSimple = (document: PetDocument) => ({
   birthday: document.birthday,
   isAdopted: document.isAdopted,
   adoptionDate: document.adoptionDate,
-  height: document.height,
-  length: document.length,
   weight: document.weight,
   gender: document.gender,
   hairColors: document.hairColors.map(color => color),

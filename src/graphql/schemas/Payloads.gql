@@ -29,8 +29,6 @@ input PetCreatePayload {
   birthday: String
   isAdopted: Boolean!
   adoptionDate: String
-  height: Float!
-  length: Float!
   weight: Float!
   gender: Boolean!
   hairColors: [ID!]

@@ -7,8 +7,6 @@ export interface PetObject {
   birthday: MongooseDate | null
   isAdopted: boolean
   adoptionDate: MongooseDate | null
-  height: number
-  length: number
   weight: number
   gender: boolean
   hairColors: MongooseId[]

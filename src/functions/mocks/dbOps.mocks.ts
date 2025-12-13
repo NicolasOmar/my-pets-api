@@ -12,8 +12,6 @@ export default {
       birthday: null,
       isAdopted: true,
       adoptionDate: null,
-      height: 10,
-      length: 10,
       weight: 10,
       gender: true,
       hasHeterochromia: false,
