@@ -43,7 +43,7 @@ jobs:
         fail_ci_if_error: true
         verbose: true
     - name: 7/7 | Run SonarCloud Scanner
-      uses: sonarsource/sonarqube-scan-action@v6
+      uses: sonarsource/sonarqube-scan-action@v7
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
