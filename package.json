@@ -59,7 +59,7 @@
   },
   "devDependencies": {
     "@babel/register": "^7.28.3",
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^9.39.2",
     "@graphql-codegen/cli": "^6.1.0",
     "@graphql-codegen/typescript": "^5.0.6",
     "@graphql-codegen/typescript-resolvers": "^5.1.4",
@@ -74,20 +74,20 @@
     "babel-plugin-import-graphql": "^2.8.1",
     "copyfiles": "^2.4.1",
     "env-cmd": "^11.0.0",
-    "eslint": "^9.39.1",
+    "eslint": "^9.39.2",
     "globals": "^16.5.0",
     "graphql-depth-limit": "^1.1.0",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
     "lint-staged": "^16.2.7",
     "nodemon": "^3.1.11",
-    "npm-check-updates": "^19.1.2",
+    "npm-check-updates": "^19.2.0",
     "prettier": "^3.7.4",
     "ts-jest": "^29.4.6",
     "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.48.1"
+    "typescript-eslint": "^8.49.0"
   },
   "lint-staged": {
     "src/**/*.(ts|js)": [
