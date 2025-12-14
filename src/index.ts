@@ -59,7 +59,6 @@ const startServer = async () => {
           _id: (decodedToken as jwt.JwtPayload)._id,
           'tokens.token': token
         })
-        console.warn(req.headers['authorization'], loggedUser)
 
         if (!loggedUser || !token) {
           throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {

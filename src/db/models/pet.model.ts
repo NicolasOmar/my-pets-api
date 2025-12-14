@@ -39,12 +39,6 @@ const petSchema = new Schema<PetDocument>({
   adoptionDate: {
     type: Date
   },
-  height: {
-    type: Number
-  },
-  length: {
-    type: Number
-  },
   weight: {
     type: Number
   },
