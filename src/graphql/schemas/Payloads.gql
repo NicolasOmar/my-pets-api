@@ -43,3 +43,9 @@ input EventCreatePayload {
   date: String!
   associatedPets: [ID]!
 }
+
+input EventUpdatePayload {
+  description: String!
+  date: String!
+  associatedPets: [ID!]
+}
