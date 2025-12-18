@@ -9,6 +9,7 @@ type Query {
   getColors: [AuxiliaryData]!
   ## EVENTS
   getMyPetEvents(petId: ID!): [Event]
+  getEvent(eventId: ID!): Event
 }
 
 type Mutation {

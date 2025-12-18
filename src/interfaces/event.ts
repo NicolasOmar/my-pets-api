@@ -14,6 +14,10 @@ export interface EventCreatePayload {
   payload: EventObject
 }
 
-export interface EventGetPayload {
+export interface PetEventsGetPayload {
   petId: string
+}
+
+export interface EventGetPayload {
+  eventId: string
 }
