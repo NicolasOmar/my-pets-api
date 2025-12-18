@@ -17,7 +17,7 @@ import {
   TypedSimpleQuery,
   EntityDocument
 } from '@interfaces/shared'
-import { EventDocument, EventGetPayload } from '@interfaces/event'
+import { EventDocument, EventGetPayload, PetEventsGetPayload } from '@interfaces/event'
 // FUNCTIONS
 import { findByIds, parseUniqueArray } from '@functions/parsers'
 
@@ -28,7 +28,8 @@ interface QueriesInterface {
   getMyPets: TypedQuery<string | undefined, UserAndToken, PetDocument[]>
   getPet: TypedQuery<PetGetPayload, UserAndToken, PetDocument>
   getMyPetsPopulation: TypedQuery<null, UserAndToken, QuantityObject[]>
-  getMyPetEvents: TypedQuery<EventGetPayload, UserAndToken, EventDocument[]>
+  getMyPetEvents: TypedQuery<PetEventsGetPayload, UserAndToken, EventDocument[]>
+  getEvent: TypedQuery<EventGetPayload, UserAndToken, EventDocument>
 }
 
 const Queries: QueriesInterface = {
@@ -131,6 +132,29 @@ const Queries: QueriesInterface = {
     }
 
     return await Event.find({ associatedPets: petId })
+  },
+  getEvent: async (_, { eventId }, context) => {
+    if (!context?.loggedUser) {
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
+    }
+
+    if (eventId === '') {
+      throw new GraphQLError(ERROR_MSGS.MISSING_EVENT_ID, {
+        extensions: { code: HTTP_CODES.NOT_FOUND }
+      })
+    }
+
+    const foundedEvent = await Event.findOne({ _id: eventId })
+
+    if (!foundedEvent) {
+      throw new GraphQLError(ERROR_MSGS.MISSING_EVENT_DATA, {
+        extensions: { code: HTTP_CODES.NOT_FOUND }
+      })
+    }
+
+    return foundedEvent
   }
 }
 

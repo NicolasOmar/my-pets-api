@@ -14,7 +14,9 @@ export enum ERROR_MSGS {
   AUTHENTICATE = 'Please authenticate to keep using the app',
   MISSING_USER_DATA = 'Missing user data',
   MISSING_PET_DATA = 'There is no such Pet with the name provided',
-  DUPLICATED_ENTITY = 'Is duplicated'
+  DUPLICATED_ENTITY = 'Is duplicated',
+  MISSING_EVENT_ID = 'There is no such Event ID provided',
+  MISSING_EVENT_DATA = 'There is no such Event with the name provided'
 }
 
 export enum HTTP_CODES {

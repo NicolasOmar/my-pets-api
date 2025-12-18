@@ -231,4 +231,34 @@ describe('[Queries]', () => {
       })
     })
   })
+
+  describe('[getEvent]', () => {
+    describe('[HAPPY PATH]', () => {
+      test('Should retrieve an existing Event', async () => {
+        const getEventsInfo = await Query.getMyPetEvents(
+          null,
+          { petId: createdPet._id.toString() },
+          { loggedUser }
+        )
+
+        const retrievedEvent = await Query.getEvent(
+          null,
+          { eventId: getEventsInfo[0]._id.toString() },
+          { loggedUser }
+        )
+        expect(retrievedEvent).toBeDefined()
+        expect(retrievedEvent._id.toString()).toBe(getEventsInfo[0]._id.toString())
+      })
+    })
+
+    describe('[SAD PATH]', () => {
+      test('Should throw an error if user data is missing', async () => {
+        try {
+          await Query.getEvent(null, { eventId: 'invalid-id' })
+        } catch (error) {
+          expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
+        }
+      })
+    })
+  })
 })

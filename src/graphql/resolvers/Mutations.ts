@@ -18,7 +18,7 @@ import {
   UserCreateResponse
 } from '@interfaces/user'
 import { PetDocument, PetCreatePayload, PetUpdatePayload } from '@interfaces/pet'
-import { EventCreatePayload, EventDocument } from '@interfaces/event'
+import { EventCreatePayload, EventDocument, EventUpdatePayload } from '@interfaces/event'
 import { TypedMutation } from '@interfaces/shared'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
@@ -32,6 +32,7 @@ interface MutationsInterface {
   createPet: TypedMutation<PetCreatePayload, UserAndToken, PetDocument>
   updatePet: TypedMutation<PetUpdatePayload, UserAndToken, boolean>
   createEvent: TypedMutation<EventCreatePayload, UserAndToken, EventDocument>
+  updateEvent: TypedMutation<EventUpdatePayload, UserAndToken, boolean>
 }
 
 const Mutations: MutationsInterface = {
@@ -221,6 +222,22 @@ const Mutations: MutationsInterface = {
         )
 
         return parsedNewEvent.toJSON()
+      } catch (error) {
+        throw new GraphQLError((error as mongoose.Error).message, {
+          extensions: { code: HTTP_CODES.INTERNAL_ERROR_SERVER }
+        })
+      }
+    }
+  },
+  updateEvent: async (_, { id, payload }, context) => {
+    if (!context?.loggedUser) {
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
+    } else {
+      try {
+        const response = await Event.findOneAndUpdate({ _id: id }, { ...payload })
+        return response ? true : false
       } catch (error) {
         throw new GraphQLError((error as mongoose.Error).message, {
           extensions: { code: HTTP_CODES.INTERNAL_ERROR_SERVER }

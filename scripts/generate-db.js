@@ -11,7 +11,6 @@ const runDbGenerator = async () => {
   const exitIn = (closeTime !== 0 && closeTime > 0 && !!closeTime && +closeTime) || 5
 
   await server.start()
-
   app.use(
     '/graphql',
     expressMiddleware(server)
