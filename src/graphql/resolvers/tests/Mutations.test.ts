@@ -459,6 +459,12 @@ describe('[Mutations]', () => {
       }
     })
 
+    afterAll(async () => {
+      await clearTable(tableCases.user)
+      await clearTable(tableCases.pet)
+      await clearTable(tableCases.event)
+    })
+
     describe('[HAPPY PATH]', () => {
       test('Should create the event related to the created pet', async () => {
         await Mutations.createEvent(null, { payload: eventToCreate }, { loggedUser })
@@ -484,6 +490,97 @@ describe('[Mutations]', () => {
       test('Should return a "MISSING_USER_DATA" Error trying to update a not logged User', async () => {
         try {
           await Mutations.createEvent(null, { payload: eventToCreate })
+        } catch (error) {
+          expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
+        }
+      })
+    })
+  })
+
+  describe('[updateEvent]', () => {
+    let loggedUser: UserCreateResponse
+    let colorList: EntityDocument[]
+    let petTypeList: EntityDocument[]
+    let petInfo: PetObjectSimple
+    let eventToCreate: EventObject
+    let _id: MongooseId
+
+    beforeAll(async () => {
+      colorList = await Queries.getColors()
+      petTypeList = await Queries.getPetTypes()
+      loggedUser = await Mutations.createUser(null, { payload: newUser })
+
+      petInfo = {
+        ...mocks.testEnv.pet,
+        petType: petTypeList[0]._id,
+        hairColors: [colorList[0]._id],
+        eyeColors: [petTypeList[0]._id]
+      }
+
+      const createdPet = await Mutations.createPet(null, { payload: petInfo }, { loggedUser })
+      _id = (await Queries.getPet(null, { petId: createdPet._id.toString() }, { loggedUser }))
+        ._id as MongooseId
+
+      eventToCreate = {
+        ...mocks.testEnv.event,
+        date: generateMongooseDate(),
+        associatedPets: [_id]
+      }
+    })
+
+    afterAll(async () => {
+      await clearTable(tableCases.user)
+      await clearTable(tableCases.pet)
+      await clearTable(tableCases.event)
+    })
+
+    describe('[HAPPY PATH]', () => {
+      test('Should update an existing Event', async () => {
+        const createdEvent = await Mutations.createEvent(
+          null,
+          { payload: eventToCreate },
+          { loggedUser }
+        )
+        const updatePayload = {
+          description: 'Updated Event Description',
+          date: createdEvent.date,
+          associatedPets: createdEvent.associatedPets
+        }
+
+        const updateRes = await Mutations.updateEvent(
+          null,
+          { id: createdEvent._id.toString(), payload: updatePayload },
+          { loggedUser } // Provide the loggedUser in the context
+        )
+        expect(updateRes).toBe(true)
+
+        const updatedEvent = await Queries.getEvent(
+          null,
+          { eventId: createdEvent._id.toString() },
+          { loggedUser }
+        )
+        expect(updatedEvent.description).toBe(updatePayload.description)
+      })
+    })
+
+    describe('[SAD PATH]', () => {
+      test('Should throw an error if user data is missing', async () => {
+        const updatePayload = {
+          description: 'Updated Event Description',
+          date: generateMongooseDate(),
+          associatedPets: [_id]
+        }
+        const createdEvent = await Mutations.createEvent(
+          null,
+          { payload: eventToCreate },
+          { loggedUser }
+        )
+
+        try {
+          await Mutations.updateEvent(null, {
+            id: createdEvent._id.toString(),
+            payload: updatePayload
+          })
         } catch (error) {
           expect((error as Error).message).toBe(ERROR_MSGS.MISSING_USER_DATA)
         }
