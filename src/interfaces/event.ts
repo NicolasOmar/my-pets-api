@@ -18,6 +18,10 @@ export interface EventUpdatePayload extends EventCreatePayload {
   id: string
 }
 
+export interface EventDeletePayload {
+  id: string
+}
+
 export interface PetEventsGetPayload {
   petId: string
 }
