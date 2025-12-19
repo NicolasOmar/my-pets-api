@@ -18,7 +18,12 @@ import {
   UserCreateResponse
 } from '@interfaces/user'
 import { PetDocument, PetCreatePayload, PetUpdatePayload } from '@interfaces/pet'
-import { EventCreatePayload, EventDocument, EventUpdatePayload } from '@interfaces/event'
+import {
+  EventCreatePayload,
+  EventDeletePayload,
+  EventDocument,
+  EventUpdatePayload
+} from '@interfaces/event'
 import { TypedMutation } from '@interfaces/shared'
 // CONSTANTS
 import { ERROR_MSGS, HTTP_CODES } from '@constants/errors'
@@ -33,6 +38,7 @@ interface MutationsInterface {
   updatePet: TypedMutation<PetUpdatePayload, UserAndToken, boolean>
   createEvent: TypedMutation<EventCreatePayload, UserAndToken, EventDocument>
   updateEvent: TypedMutation<EventUpdatePayload, UserAndToken, boolean>
+  deleteEvent: TypedMutation<EventDeletePayload, UserAndToken, boolean>
 }
 
 const Mutations: MutationsInterface = {
@@ -237,6 +243,32 @@ const Mutations: MutationsInterface = {
     } else {
       try {
         const response = await Event.findOneAndUpdate({ _id: id }, { ...payload })
+        return response ? true : false
+      } catch (error) {
+        throw new GraphQLError((error as mongoose.Error).message, {
+          extensions: { code: HTTP_CODES.INTERNAL_ERROR_SERVER }
+        })
+      }
+    }
+  },
+  deleteEvent: async (_, { id }, context) => {
+    if (!context?.loggedUser) {
+      throw new GraphQLError(ERROR_MSGS.MISSING_USER_DATA, {
+        extensions: { code: HTTP_CODES.UNAUTHORIZED }
+      })
+    } else {
+      try {
+        const eventToDelete = await Event.findById(id)
+
+        for (const petId of eventToDelete!.associatedPets) {
+          const pet = await Pet.findById(petId)
+          if (pet) {
+            pet.events = pet.events.filter(eventId => eventId.toString() !== id)
+            await pet.save()
+          }
+        }
+
+        const response = await Event.findByIdAndDelete(id)
         return response ? true : false
       } catch (error) {
         throw new GraphQLError((error as mongoose.Error).message, {
