@@ -35,8 +35,7 @@
     "prettier": "prettier src/**/*.ts --check",
     "prettier:fix": "prettier src/**/*.ts --write",
     "lint-staged": "lint-staged -v",
-    "update": "npm run update:deps && npm run update:doctor",
-    "update:deps": "ncu -i --format group",
+    "update": "ncu -i --format group --doctor --doctorTest 'npm run update:doctor'",
     "update:doctor": "npm run prettier && npm run lint && npm run build && npm run test:clean:ci"
   },
   "dependencies": {
@@ -87,7 +86,7 @@
     "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.50.0"
+    "typescript-eslint": "^8.50.1"
   },
   "lint-staged": {
     "src/**/*.(ts|js)": [
