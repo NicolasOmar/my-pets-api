@@ -10,7 +10,7 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
-      time: "09:30"
+      time: "09:10"
       timezone: "Europe/Madrid"
     assignees:
       - "nicolasomar"
@@ -22,7 +22,7 @@ updates:
     schedule:
       interval: "weekly"
       day: "sunday"
-      time: "09:30"
+      time: "09:10"
       timezone: "Europe/Madrid"
     assignees:
       - "nicolasomar"
