@@ -1,10 +1,10 @@
 # My Pets API
-GraphQL server based on NodeJs to give back-end support a web client based on [React](https://my-pets-prod.netlify.app/).
+A standalone GraphQL server built with Node.js provides the backend API for the MyPets web client, which is developed using [React](https://my-pets-prod.netlify.app/).
 
 ## Table of contents
 
 - [Status](#status)
-- [Dependencies](#dependencies)
+- [Project Stack](#project-stack)
 - [What do I need?](#what-do-i-need)
 - [Setup](#setup)
 - [How to run it](#how-to-run-it)
@@ -12,8 +12,12 @@ GraphQL server based on NodeJs to give back-end support a web client based on [R
 - [Find out more](#find-out-more)
 - [License](#license)
 
-## Status
+## Purpose
+In 2020, after welcoming our first pet, my wife and I searched for a tool to help us manage events and changes related to our pets—both current and future. After exploring several options, we realized none fully met our needs, so we decided to create our own solution. That’s how MyPets was born.
 
+Over nearly six years, the project has gone through multiple technology changes and periods of slow progress due to shifting priorities and other commitments. In 2026, the goal is to release a stable, user-friendly version that any family with pets can use—not just us.
+
+## Status
 ![Project version][badge-repo-version]
 [![Code Coverage][badge-code-coverage]][link-code-coverage]
 [![Quality Gate Status][badge-soundcloud-quality]][link-soundcloud-status]
@@ -39,7 +43,7 @@ GraphQL server based on NodeJs to give back-end support a web client based on [R
 [badge-github-commits]: https://img.shields.io/github/commit-activity/m/nicolasomar/my-pets-api?logo=github
 [badge-github-last-commit]: https://img.shields.io/github/last-commit/nicolasomar/my-pets-api?logo=github
 
-## Dependencies
+## Project Stack
 ![express dependency][badge-dependency-express]
 ![typescript dependency][badge-dependency-typescript]
 ![graphql dependency][badge-dependency-graphql]
