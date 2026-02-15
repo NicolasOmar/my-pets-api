@@ -73,7 +73,7 @@
     "babel-plugin-import-graphql": "^2.8.1",
     "copyfiles": "^2.4.1",
     "env-cmd": "^11.0.0",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "globals": "^17.3.0",
     "graphql-depth-limit": "^1.1.0",
     "husky": "^9.1.7",
