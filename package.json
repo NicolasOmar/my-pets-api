@@ -59,9 +59,9 @@
   "devDependencies": {
     "@babel/register": "^7.28.6",
     "@eslint/js": "^9.39.2",
-    "@graphql-codegen/cli": "^6.1.1",
-    "@graphql-codegen/typescript": "^5.0.7",
-    "@graphql-codegen/typescript-resolvers": "^5.1.5",
+    "@graphql-codegen/cli": "^6.1.2",
+    "@graphql-codegen/typescript": "^5.0.8",
+    "@graphql-codegen/typescript-resolvers": "^5.1.6",
     "@types/cors": "^2.8.19",
     "@types/crypto-js": "^4.2.2",
     "@types/express": "^5.0.6",
@@ -79,14 +79,14 @@
     "husky": "^9.1.7",
     "jest": "^30.2.0",
     "lint-staged": "^16.2.7",
-    "nodemon": "^3.1.11",
-    "npm-check-updates": "^19.3.2",
+    "nodemon": "^3.1.14",
+    "npm-check-updates": "^19.4.1",
     "prettier": "^3.8.1",
     "ts-jest": "^29.4.6",
     "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3",
-    "typescript-eslint": "^8.55.0"
+    "typescript-eslint": "^8.56.0"
   },
   "lint-staged": {
     "src/**/*.(ts|js)": [
